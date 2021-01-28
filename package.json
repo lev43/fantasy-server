@@ -1,0 +1,20 @@
+{
+  "name": "fantasy_server",
+  "version": "1.0.0",
+  "description": "Server of game Fantasy",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gnome-terminal -e 'node server.js'"
+  },
+  "author": "lev43",
+  "license": "ISC",
+  "dependencies": {
+    "node-ssh": "^11.1.1",
+    "sha1": "^1.1.1",
+    "socket.io": "^3.1.0",
+    "ssh2": "^0.8.9",
+    "ws": "^7.4.2",
+    "xterm": "^4.9.0"
+  }
+}
