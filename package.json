@@ -10,11 +10,6 @@
   "author": "lev43",
   "license": "ISC",
   "dependencies": {
-    "node-ssh": "^11.1.1",
-    "sha1": "^1.1.1",
-    "socket.io": "^3.1.0",
-    "ssh2": "^0.8.9",
-    "ws": "^7.4.2",
-    "xterm": "^4.9.0"
+    "ws": "^7.4.2"
   }
 }

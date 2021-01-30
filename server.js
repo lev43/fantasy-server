@@ -1,18 +1,19 @@
 const fs = require('fs');
 const http = require('http');
 const WebSocket = require('ws');
+
+
+const DATA = require('./src/DATA.js')
+const {js, sj, log, con} = require('./src/functions.js')
 const Game = require('./src/Game.js')
+
 
 const host = '0.0.0.0';
 const port = 6852;
 var html = {}
 
-function js(json){
-  return JSON.stringify(json)
-}
-function sj(str){
-  return JSON.parse(str)
-}
+
+html.index = fs.readFileSync('./src/html/index.html', 'utf-8')
 
 const server = http.createServer(function(req, res){
   switch(req.url){
@@ -23,59 +24,52 @@ const server = http.createServer(function(req, res){
 })
 
 const wss = new WebSocket.Server({ server });
-var users = {};
-var ids = {};
-function generateID(key){
-  let id;
-  while(users[id] || !id){
-    id = Math.floor(Math.random()*100000)
-  }
-  ids[key] = id
-  return id
-}
+
 
 wss.on('connection', function connection(ws, request, client) {
   ws.on('message', function incoming(message) {
     let data = sj(message)
+
     let type = data.type
-    let id = ids[data.password]
     let content = data.content
+
+
     switch(type){
       case 'player-message':
-        //console.log(content)
-        for(user in users){
-          users[user].send(js({type: 'msg', id: id, content: content}))
-        }
+        Game.player(data.password, content)
         break;
+
       case 'player-key':
-        //console.log(content)
-        let id_ = ids[content]
-        if(!id_)id_ = generateID(content)
-        if(users[id_]){
+        let id = Game.id.get(content)
+        if(!id)id = Game.id.generate(content)
+
+        if(Game.users.has(id)){
           ws.send(js({type: 'err', content: 'Этим персонажем уже играют'}))
           ws.close()
+
         }else{
-          users[id_] = ws
-          console.log(`Socket connect to ${id_}`)
+          Game.users.new(id, ws)
+          log(`New player on id <${id}>`)
+          log(`Socket(${request.connection.remoteAddress})[${id}] connect`)
+
+
+          function close(){
+            log(`Socket(${request.connection.remoteAddress})[${id}] disconnect`)
+            Game.users.del(id)
+          }
+          ws.on('close', close)
         }
-        function close(ws, request, client){
-          console.log(`Socket on ${id_} is closed`)
-          delete users[id_]
-        }
-        ws.on('close', close)
         break;
+
       default:
-        console.log(message)
+        log(message)
     }
   });
 
-  ws.on('pong', msg => {
-    console.log(`pong: ${msg}`)
-  })
+  ws.on('pong', msg => {})
 });
 
-html.index = fs.readFileSync('./index.html', 'utf-8')
-html.icon = fs.readFileSync('./favicon.ico', 'utf-8')
+
 server.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
+  con(`Сервер запущен на http://${host}:${port}`);
 });
