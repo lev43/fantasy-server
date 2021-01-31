@@ -6,18 +6,20 @@ function date(){
   return date_.toDateString()
 }
 
-function log(data, name, url){
-  fs.stat(`${DATA}/<${date()}> logs/`, (err, stat)=>{
+function log(data, name, url, time=true){
+  fs.stat(`${DATA}/logs/<${date()}>/`, (err, stat)=>{
     if(err)if(err.code == 'ENOENT')
-      fs.mkdirSync(`${DATA}/<${date()}> logs/`)
+      fs.mkdirSync(`${DATA}/logs/<${date()}>/`)
     else console.log('Some other error: ', err.code);
 
 
-    fs.stat(`${DATA}/${`/<${date()}> logs/`}${(url?url+'/':'')}${name?name:'last'}_log.txt`, function(err, stat) {
+    let url_ = `${DATA}/logs/${`/<${date()}>/`}${(url?url+'/':'')}${name?name:'last'}_log.txt`,
+        data_ = `${time?`<${date_.toLocaleTimeString()}>`:''} ${data}\n`
+    fs.stat(url_, function(err, stat) {
       if(!err) {
-        fs.appendFile(`${DATA}/<${date()}> logs/${(url?url+'/':'')}${name?name:'last'}_log.txt`, data+'\n', 'utf-8', (err)=>{if(err)throw err})
+        fs.appendFile(url_, data_, 'utf-8', (err)=>{if(err)throw err})
       } else if(err.code == 'ENOENT') {
-        fs.writeFile(`${DATA}/<${date()}> logs/${(url?url+'/':'')}${name?name:'last'}_log.txt`, data+'\n', (err)=>{if(err)throw err})
+        fs.writeFile(url_, data_, (err)=>{if(err)throw err})
       } else {
           console.log('Some other error: ', err.code);
       }
