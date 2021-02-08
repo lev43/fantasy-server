@@ -1,13 +1,19 @@
+//Данный файл запускается лишь один раз
+
 const fs = require('fs')
 const events = require('events');
-const {jsonToStr, strToJson, log, mapToArr} = require('./functions.js')
+const {jsonToStr, strToJson, log, mapToArr} = require('./functions.js');
+const { LocationMap } = require('./Maps.js');
 const DATA = global.DATA
 
+
 class Game extends events{
-  saves = ['id']
-  users = new Map()
-  cmds = new Map()
-  generateID(hash){
+  saves = {id: Map, location: LocationMap}//Для всех сохраняемых хранилищ
+  users = new Map()//Хранит WebSockets пользователей во время игры
+  cmds = new Map()//Хранит комманды которые используют пользователи
+  location = new LocationMap()
+  id = new Map()
+  generateID(hash){//Используется для генерации юникальных айди для всех обьектов в игре
     let id;
     while(this.id.has(id) || !id){
       id = Math.floor(Math.random()*1000000000)
@@ -16,16 +22,17 @@ class Game extends events{
     this.id.set(hash ? hash : id, id)
     return id
   }
-  load(){
-    this.saves.forEach(s => {
+  load(){//Подгружает из файлов данные игры перед началом
+    for(let s in this.saves){
       try{
         fs.statSync(`${DATA}/saves/save-${s}.json`)
-        this[s] = new Map(strToJson(fs.readFileSync(`${DATA}/saves/save-${s}.json`, 'utf-8')))
-      }catch(err){
+        if(!this.saves.con)this[s] = new this.saves[s](strToJson(fs.readFileSync(`${DATA}/saves/save-${s}.json`, 'utf-8')))
+      }catch(err){//На случай если файла еще нету
         if(err.code!='ENOENT')console.log(err)
-        else this[s] = new Map()
+        //else this[s] = new this.saves[s]()
       }
-    })
+    }
+    
 
     fs.readdir('./src/cmds/', 'utf-8', (err, files)=>{
       if(err)throw err
@@ -37,18 +44,19 @@ class Game extends events{
         })
     })
   }
-  save(){
-    for(let s in this.saves)
+  save(){//Сохраняем хранилища указанные в saves
+    for(let s in this.saves){
       fs.writeFileSync(`${DATA}/saves/save-${s}.json`, jsonToStr(mapToArr(this[s])))
+    }
   }
-  player(hash, message){
+  player(hash, message){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
     let id = this.id.get(hash)
     if(!id)return
 
     let args = message.split(' ')
     let command = args.shift()
     let cmd = this.cmds.get(command)
-    if(cmd)message = message.slice(command.length)
+    if(cmd)message = message.slice(command.length)//Если есть комманда, ее стоит вырезать поскольку некоторые комманды работаю с текстом сообщения
 
     if(cmd){
       cmd.run(id, message)
@@ -59,7 +67,7 @@ class Game extends events{
 global.Game = new Game()
 const game = global.Game
 
-game.on('message', (id, msg)=>{
+game.on('message', (id, msg)=>{//Комманда рассылки сообщения всем
   game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
   log(`Message<${id}>: ${msg}`, 'messages')
 })

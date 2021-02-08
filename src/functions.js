@@ -34,7 +34,7 @@ if(!global.f)global.f = {
   strToJson(str){
     return JSON.parse(str)
   },
-  log: log,
+  log: log, //Требовалось использование log в других функциях, при попытке создать ее тут, возникали проблемы
   con(data, name, url){
     console.log(data)
 

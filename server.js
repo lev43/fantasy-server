@@ -7,7 +7,9 @@ const DATA = require('./src/DATA.js')
 const {jsonToStr, strToJson, log, con} = require('./src/functions.js')
 const Game = require('./src/Game.js')
 
+
 Game.load()
+Game.location.add({name: 'hehehe'})
 setInterval(()=>{
   Game.save()
 }, 1000)
@@ -67,7 +69,7 @@ wss.on('connection', function connection(ws, request, client) {
         break;
 
       default:
-        log(message)
+        con(message)
     }
   });
 

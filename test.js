@@ -1,16 +1,17 @@
-const { mapToArr } = require("./src/functions")
+const { writeFileSync, readFileSync } = require("fs")
 
-let m = new Map([['a', 'b'], ['b', 'c']]), arr = []
+class Location{
+  name
+  id
+  constructor(par = {name, id}){
+    for(let i in par){
+      if(par[i])this[i] = par[i]
+    }
+    if(!this.id)this.id = Math.random()
+  }
+}
 
-console.log(m.get('a'), m.get('b'), m.get('c'))
+writeFileSync('t.json', JSON.stringify(new Location({name: 'test'})))
 
-m.forEach((value, key)=>{
-  arr.push([key, value])
-})
-
-m = new Map(arr)
-m.set('c', 'a')
-
-console.log(m.get('a'), m.get('b'), m.get('c'))
-
-console.log(JSON.stringify(arr))
+console.log(readFileSync('t.json', 'utf8'))
+console.log(new Location(JSON.parse(readFileSync('t.json'))))
