@@ -27,11 +27,11 @@ function log(data, name, url, time=true){
   })
 }
 
-global.f = {
-  js(json){
+if(!global.f)global.f = {
+  jsonToStr(json){
     return JSON.stringify(json)
   },
-  sj(str){
+  strToJson(str){
     return JSON.parse(str)
   },
   log: log,
@@ -39,6 +39,11 @@ global.f = {
     console.log(data)
 
     log(data, name, url)
+  },
+  mapToArr(map){
+    let arr = []
+    if(map)map.forEach((value, key) => arr.push([key, value]))
+    return arr
   }
 }
 

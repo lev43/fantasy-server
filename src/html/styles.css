@@ -1,0 +1,10 @@
+#channel-p{
+  position: relative;
+  top: 0%;
+  width: max-content;
+  height: max-content;
+}
+
+#channel{
+  white-space: pre-line;
+}

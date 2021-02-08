@@ -4,8 +4,13 @@ const WebSocket = require('ws');
 
 
 const DATA = require('./src/DATA.js')
-const {js, sj, log, con} = require('./src/functions.js')
+const {jsonToStr, strToJson, log, con} = require('./src/functions.js')
 const Game = require('./src/Game.js')
+
+Game.load()
+setInterval(()=>{
+  Game.save()
+}, 1000)
 
 
 const host = '0.0.0.0';
@@ -28,7 +33,7 @@ const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws, request, client) {
   ws.on('message', function incoming(message) {
-    let data = sj(message)
+    let data = strToJson(message)
 
     let type = data.type
     let content = data.content
@@ -41,21 +46,21 @@ wss.on('connection', function connection(ws, request, client) {
 
       case 'player-key':
         let id = Game.id.get(content)
-        if(!id)id = Game.id.generate(content)
+        if(!id)id = Game.generateID(content)
 
         if(Game.users.has(id)){
-          ws.send(js({type: 'err', content: 'Этим персонажем уже играют'}))
+          ws.send(jsonToStr({type: 'err', content: 'Этим персонажем уже играют'}))
           ws.close()
 
         }else{
-          Game.users.new(id, ws)
+          Game.users.set(id, ws)
           log(`New player on id <${id}>`)
           log(`Socket(${request.connection.remoteAddress})[${id}] connect`)
 
 
           function close(){
             log(`Socket(${request.connection.remoteAddress})[${id}] disconnect`)
-            Game.users.del(id)
+            Game.users.delete(id)
           }
           ws.on('close', close)
         }
