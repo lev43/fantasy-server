@@ -9,16 +9,14 @@ const Game = require('./src/Game.js')
 
 
 Game.load()
-Game.location.add({name: 'hehehe'})
+//Game.location.add({name: 'hehehe'})
 setInterval(()=>{
   Game.save()
 }, 1000)
 
-
 const host = '0.0.0.0';
 const port = 6852;
 var html = {}
-
 
 html.index = fs.readFileSync('./src/html/index.html', 'utf-8')
 
@@ -80,3 +78,5 @@ wss.on('connection', function connection(ws, request, client) {
 server.listen(port, host, () => {
   con(`Сервер запущен на http://${host}:${port}`);
 });
+
+require('./console.js')

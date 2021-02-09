@@ -3,7 +3,7 @@ const DATA = global.DATA
 
 var date_ = new Date()
 function date(){
-  return date_.toDateString()
+  return date_.toLocaleDateString()
 }
 
 function log(data, name, url, time=true){

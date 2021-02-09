@@ -9,7 +9,7 @@ class LocationMap extends Map{
   }
   add(par = {name, id}){
     let loc = new Location(par)
-    super.set(loc.id, loc)
+    return super.set(loc.id, loc)
   }
 }
 
