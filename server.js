@@ -77,6 +77,10 @@ wss.on('connection', function connection(ws, request, client) {
 
 server.listen(port, host, () => {
   con(`Сервер запущен на http://${host}:${port}`);
-});
 
-require('./console.js')
+  setInterval(()=>{
+    global.Game.update()
+  })
+
+  require('./console.js')
+});

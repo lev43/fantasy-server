@@ -41,6 +41,12 @@ const cmds = new Map([
           name: args[0]
         })
         con(`Successfully`)
+      }],
+      ['enemy', (line, args) => {
+        global.Game.enemy.add({
+          id: args[0]
+        })
+        con(`Successfully`)
       }]
     ])
     command(line, args, cmds, 'add')
@@ -54,6 +60,15 @@ const cmds = new Map([
           return
         }
         if(global.Game.location.delete(args[0]))
+             con(`Успешно`)
+        else con(`Не удалось`)
+      }],
+      ['enemy', (line, args) => {
+        if(!args[0]){
+          con(`delete enemy <id>`)
+          return
+        }
+        if(global.Game.enemy.delete(args[0]))
              con(`Успешно`)
         else con(`Не удалось`)
       }]
@@ -72,6 +87,26 @@ const cmds = new Map([
           global.Game.location.get(args[0]).name = args[1]
           con(`Успешно`)
         }else con(`Нету локации ${args[0]}`)
+      }],
+      ['location-spawn', (line, args) => {
+        if(!args[0]){
+          con(`edit location-spawn <id>`)
+          return
+        }
+        if(global.Game.location.has(args[0])){
+          global.Game.location.spawn = args[0]
+          con(`Успешно`)
+        }else con(`Нету локации ${args[0]}`)
+      }],
+      ['enemy', (line, args) => {
+        if(args.length < 2){
+          con(`edit location <id> <location-id>`)
+          return
+        }
+        if(global.Game.enemy.has(args[0]) && global.Game.location.has(args[1])){
+          global.Game.location.get(args[0]).location = args[1]
+          con(`Успешно`)
+        }else con(`Нету локации ${args[0]}`)
       }]
     ])
     command(line, args, cmds, 'edit')
@@ -85,8 +120,20 @@ const cmds = new Map([
             con(global.Game.location.get(args[0]))
           else con(`Нету локации ${args[0]}`)
         }else{
+          con('spawn: ' + global.Game.location.spawn)
           global.Game.location.forEach((location, id) => {
-            con(location)
+            if(id != 'spawn')con(location)
+          })
+        }
+      }],
+      ['enemy', (line, args) => {
+        if(args[0]){
+          if(global.Game.enemy.has(args[0]))
+            con(global.Game.enemy.get(args[0]))
+          else con(`Нету существа ${args[0]}`)
+        }else{
+          global.Game.enemy.forEach((enemy, id) => {
+            con(enemy)
           })
         }
       }]
