@@ -30,6 +30,10 @@ function command(line, args, cmds, name = null){
 const cmds = new Map([
   ['!', () => {}],
 
+  ['send-all', (line, args) => {
+    global.Game.emit('server-message', args.join(' '))
+  }],
+
   ['add', (line, args) => {
     const cmds = new Map([
       ['location', (line, args) => {
@@ -41,6 +45,15 @@ const cmds = new Map([
           name: args[0]
         })
         con(`Successfully`)
+      }],
+      ['road', (line, args) => {
+        if(args.length < 2){
+          con(`add location-road <id1> <id2> [mod]\nДобавить в id1 путь до id2`)
+          return
+        }
+        if(global.Game.location.addRoad(args[0], args[1], args[2]))
+          con(`Successfully`)
+        else con(`Not successfully, one or two location is not defined`)
       }],
       ['enemy', (line, args) => {
         global.Game.enemy.add({
@@ -60,8 +73,17 @@ const cmds = new Map([
           return
         }
         if(global.Game.location.delete(args[0]))
-             con(`Успешно`)
-        else con(`Не удалось`)
+             con(`Successfully`)
+        else con(`No successfully`)
+      }],
+      ['road', (line, args) => {
+        if(args.length < 2){
+          con(`delete location-road <id1> <id2> [mod]\nУдалить путь до id2 из путей id1`)
+          return
+        }
+        if(global.Game.location.deleteRoad(args[0], args[1], args[2]))
+             con(`Successfully`)
+        else con(`No successfully`)
       }],
       ['enemy', (line, args) => {
         if(!args[0]){
@@ -69,8 +91,8 @@ const cmds = new Map([
           return
         }
         if(global.Game.enemy.delete(args[0]))
-             con(`Успешно`)
-        else con(`Не удалось`)
+             con(`Successfully`)
+        else con(`No successfully`)
       }]
     ])
     command(line, args, cmds, 'delete')
@@ -85,8 +107,8 @@ const cmds = new Map([
         }
         if(global.Game.location.has(args[0])){
           global.Game.location.get(args[0]).name = args[1]
-          con(`Успешно`)
-        }else con(`Нету локации ${args[0]}`)
+          con(`Successfully`)
+        }else con(`No location ${args[0]}`)
       }],
       ['location-spawn', (line, args) => {
         if(!args[0]){
@@ -95,8 +117,8 @@ const cmds = new Map([
         }
         if(global.Game.location.has(args[0])){
           global.Game.location.spawn = args[0]
-          con(`Успешно`)
-        }else con(`Нету локации ${args[0]}`)
+          con(`successfully`)
+        }else con(`No location ${args[0]}`)
       }],
       ['enemy', (line, args) => {
         if(args.length < 2){
@@ -105,8 +127,8 @@ const cmds = new Map([
         }
         if(global.Game.enemy.has(args[0]) && global.Game.location.has(args[1])){
           global.Game.location.get(args[0]).location = args[1]
-          con(`Успешно`)
-        }else con(`Нету локации ${args[0]}`)
+          con(`Successfully`)
+        }else con(`No location ${args[0]}`)
       }]
     ])
     command(line, args, cmds, 'edit')
@@ -118,7 +140,7 @@ const cmds = new Map([
         if(args[0]){
           if(global.Game.location.has(args[0]))
             con(global.Game.location.get(args[0]))
-          else con(`Нету локации ${args[0]}`)
+          else con(`No location ${args[0]}`)
         }else{
           con('spawn: ' + global.Game.location.spawn)
           global.Game.location.forEach((location, id) => {
@@ -130,7 +152,7 @@ const cmds = new Map([
         if(args[0]){
           if(global.Game.enemy.has(args[0]))
             con(global.Game.enemy.get(args[0]))
-          else con(`Нету существа ${args[0]}`)
+          else con(`No enemy ${args[0]}`)
         }else{
           global.Game.enemy.forEach((enemy, id) => {
             con(enemy)
@@ -154,7 +176,7 @@ rl.on('line', line => {
 
 	rl.prompt();
 }).on('close', ()=>{
-  con('Отключение сервера');
+  con('Close server');
   global.Game.save()
 	process.exit(0);
 });

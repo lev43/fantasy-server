@@ -30,6 +30,11 @@ const server = http.createServer(function(req, res){
 
 const wss = new WebSocket.Server({ server });
 
+wss.on('error', (err) => {
+  if(err.code === 'EADDRINUSE')console.log('Порт занят')
+  else throw err
+  process.exit(0)
+})
 
 wss.on('connection', function connection(ws, request, client) {
   ws.on('message', function incoming(message) {
@@ -80,7 +85,7 @@ server.listen(port, host, () => {
 
   setInterval(()=>{
     global.Game.update()
-  })
+  }, 1000)
 
   require('./console.js')
 });

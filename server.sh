@@ -1,0 +1,1 @@
+screen -dmS server node server

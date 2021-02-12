@@ -12,8 +12,8 @@
 
     
     <script>
-      const host = 'localhost:6852'
       //const host = 'smokeofanarchy.duckdns.org:6852'
+      const host = 'localhost:6852'
 
 
       function hash(data){
@@ -62,6 +62,10 @@
         console.log("WebSocket close")
         alert("Соединение закрыто")
         document.body.innerHTML = close
+      }
+
+      ws.onerror = (err) => { 
+        console.log(err)
       }
 
       ws.onmessage = (message)=>{

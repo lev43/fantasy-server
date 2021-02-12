@@ -3,7 +3,9 @@ const DATA = global.DATA
 
 var date_ = new Date()
 function date(){
-  return date_.toLocaleDateString()
+  let d = date_.toLocaleDateString()
+  if(d.split('/'))d = d.split('/').join('.')
+  return d
 }
 
 function log(data, name, url, time=true){
@@ -13,7 +15,7 @@ function log(data, name, url, time=true){
     else console.log('Some other error: ', err.code);
 
 
-    let url_ = `${DATA}/logs/${`/<${date()}>/`}${(url?url+'/':'')}${name?name:'last'}_log.txt`,
+    const url_ = `${DATA}/logs/${`/<${date()}>/`}${(url?url+'/':'')}${name?name:'last'}_log.txt`,
         data_ = `${time?`<${date_.toLocaleTimeString()}>`:''} ${data}\n`
     fs.stat(url_, function(err, stat) {
       if(!err) {

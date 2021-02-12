@@ -37,8 +37,8 @@ class Game extends events{
 
     fs.readdir('./src/cmds/', 'utf-8', (err, files)=>{
       if(err)throw err
-      console.log(files)
-      files.filter(file=> file.split('.').pop() == 'js')
+      //console.log(files)
+      files.filter(file=> file.split('.').pop() === 'js')
         .forEach(cmd_name => {
           let cmd = require('./cmds/' + cmd_name)
           this.#cmds.set(cmd.help.name, cmd)
@@ -60,12 +60,18 @@ class Game extends events{
     if(cmd)message = message.slice(command.length)//Если есть комманда, ее стоит вырезать поскольку некоторые комманды работаю с текстом сообщения
 
     if(cmd){
-      cmd.run(id, message)
+      cmd.run(id, message, args)
     }else this.emit('message', id, message, args)
   }
   update(){
+    if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: 'spawn'})
+    if(!this.location.spawn)this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
+
     this.users.forEach((user, id) => {
       if(!this.enemy.has(id))this.enemy.add({id})
+    })
+    this.enemy.forEach((enemy, id) => {
+      if(!enemy.location || !this.location.has(enemy.location))enemy.location = this.location.spawn
     })
   }
 }
@@ -76,6 +82,19 @@ const game = global.Game
 game.on('message', (id, msg)=>{//Комманда рассылки сообщения всем
   game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
   log(`Message<${id}>: ${msg}`, 'messages')
+})
+
+game.on('private-server-message', (id, msg) => {
+  game.users.get(id)?.send(jsonToStr({type: 'msg', content: msg}))
+})
+
+game.on('private-message', (id1, id2, msg) => {
+  game.users.get(id1)?.send(jsonToStr({type: 'msg', content: `${id2}: ${msg}`}))
+})
+
+game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
+  game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `SERVER: ${msg}`})))
+  log(`Message<SERVER>: ${msg}`, 'messages')
 })
 
 module.exports = global.Game
