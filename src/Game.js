@@ -57,11 +57,12 @@ class Game extends events{
     let args = message.split(' ')
     let command = args.shift()
     let cmd = this.#cmds.get(command)
+    let enemy = this.enemy.get(id)
     if(cmd)message = message.slice(command.length)//Если есть комманда, ее стоит вырезать поскольку некоторые комманды работаю с текстом сообщения
 
     if(cmd){
       cmd.run(id, message, args)
-    }else this.emit('message', id, message, args)
+    }else this.emit('local-message', enemy.location, id, message)
   }
   update(){
     if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: 'spawn'})
@@ -76,25 +77,29 @@ class Game extends events{
   }
 }
 
-global.Game = new Game()
-const game = global.Game
+Game = new Game()
 
-game.on('message', (id, msg)=>{//Комманда рассылки сообщения всем
-  game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
+Game.on('global-message', (id, msg)=>{//Комманда рассылки сообщения всем
+  Game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
   log(`Message<${id}>: ${msg}`, 'messages')
 })
 
-game.on('private-server-message', (id, msg) => {
-  game.users.get(id)?.send(jsonToStr({type: 'msg', content: msg}))
+Game.on('private-server-message', (id, msg) => {
+  Game.users.get(id)?.send(jsonToStr({type: 'msg', content: msg}))
 })
 
-game.on('private-message', (id1, id2, msg) => {
-  game.users.get(id1)?.send(jsonToStr({type: 'msg', content: `${id2}: ${msg}`}))
+Game.on('private-message', (id1, id2, msg) => {
+  Game.users.get(id1)?.send(jsonToStr({type: 'msg', content: `${id2}: ${msg}`}))
 })
 
-game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
-  game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `SERVER: ${msg}`})))
+Game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
+  Game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `SERVER: ${msg}`})))
   log(`Message<SERVER>: ${msg}`, 'messages')
 })
 
-module.exports = global.Game
+Game.on('local-message', (locationID, id, msg) => {
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID).forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
+  log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
+})
+
+module.exports = Game

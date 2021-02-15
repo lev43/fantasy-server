@@ -31,7 +31,7 @@ const cmds = new Map([
   ['!', () => {}],
 
   ['send-all', (line, args) => {
-    global.Game.emit('server-message', args.join(' '))
+    Game.emit('server-message', args.join(' '))
   }],
 
   ['add', (line, args) => {
@@ -41,7 +41,7 @@ const cmds = new Map([
           con(`add location <name>`)
           return
         }
-        global.Game.location.add({
+        Game.location.add({
           name: args[0]
         })
         con(`Successfully`)
@@ -51,12 +51,12 @@ const cmds = new Map([
           con(`add location-road <id1> <id2> [mod]\nДобавить в id1 путь до id2`)
           return
         }
-        if(global.Game.location.addRoad(args[0], args[1], args[2]))
+        if(Game.location.addRoad(args[0], args[1], args[2]))
           con(`Successfully`)
         else con(`Not successfully, one or two location is not defined`)
       }],
       ['enemy', (line, args) => {
-        global.Game.enemy.add({
+        Game.enemy.add({
           id: args[0]
         })
         con(`Successfully`)
@@ -72,7 +72,7 @@ const cmds = new Map([
           con(`delete location <id>`)
           return
         }
-        if(global.Game.location.delete(args[0]))
+        if(Game.location.delete(args[0]))
              con(`Successfully`)
         else con(`No successfully`)
       }],
@@ -81,7 +81,7 @@ const cmds = new Map([
           con(`delete location-road <id1> <id2> [mod]\nУдалить путь до id2 из путей id1`)
           return
         }
-        if(global.Game.location.deleteRoad(args[0], args[1], args[2]))
+        if(Game.location.deleteRoad(args[0], args[1], args[2]))
              con(`Successfully`)
         else con(`No successfully`)
       }],
@@ -90,7 +90,7 @@ const cmds = new Map([
           con(`delete enemy <id>`)
           return
         }
-        if(global.Game.enemy.delete(args[0]))
+        if(Game.enemy.delete(args[0]))
              con(`Successfully`)
         else con(`No successfully`)
       }]
@@ -105,8 +105,8 @@ const cmds = new Map([
           con(`edit location <id> <name>`)
           return
         }
-        if(global.Game.location.has(args[0])){
-          global.Game.location.get(args[0]).name = args[1]
+        if(Game.location.has(args[0])){
+          Game.location.get(args[0]).name = args[1]
           con(`Successfully`)
         }else con(`No location ${args[0]}`)
       }],
@@ -115,8 +115,8 @@ const cmds = new Map([
           con(`edit location-spawn <id>`)
           return
         }
-        if(global.Game.location.has(args[0])){
-          global.Game.location.spawn = args[0]
+        if(Game.location.has(args[0])){
+          Game.location.spawn = args[0]
           con(`successfully`)
         }else con(`No location ${args[0]}`)
       }],
@@ -125,8 +125,8 @@ const cmds = new Map([
           con(`edit location <id> <location-id>`)
           return
         }
-        if(global.Game.enemy.has(args[0]) && global.Game.location.has(args[1])){
-          global.Game.location.get(args[0]).location = args[1]
+        if(Game.enemy.has(args[0]) && Game.location.has(args[1])){
+          Game.location.get(args[0]).location = args[1]
           con(`Successfully`)
         }else con(`No location ${args[0]}`)
       }]
@@ -138,23 +138,23 @@ const cmds = new Map([
     const cmds = new Map([
       ['location', (line, args) => {
         if(args[0]){
-          if(global.Game.location.has(args[0]))
-            con(global.Game.location.get(args[0]))
+          if(Game.location.has(args[0]))
+            con(Game.location.get(args[0]))
           else con(`No location ${args[0]}`)
         }else{
-          con('spawn: ' + global.Game.location.spawn)
-          global.Game.location.forEach((location, id) => {
+          con('spawn: ' + Game.location.spawn)
+          Game.location.forEach((location, id) => {
             if(id != 'spawn')con(location)
           })
         }
       }],
       ['enemy', (line, args) => {
         if(args[0]){
-          if(global.Game.enemy.has(args[0]))
-            con(global.Game.enemy.get(args[0]))
+          if(Game.enemy.has(args[0]))
+            con(Game.enemy.get(args[0]))
           else con(`No enemy ${args[0]}`)
         }else{
-          global.Game.enemy.forEach((enemy, id) => {
+          Game.enemy.forEach((enemy, id) => {
             con(enemy)
           })
         }
@@ -177,6 +177,6 @@ rl.on('line', line => {
 	rl.prompt();
 }).on('close', ()=>{
   con('Close server');
-  global.Game.save()
+  Game.save()
 	process.exit(0);
 });

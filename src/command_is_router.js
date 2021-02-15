@@ -14,7 +14,7 @@ function command_is_router(help = {name}){
 
   return async(id, message, args) => {
     if(!args[0]){
-      global.Game.emit('private-server-message', id, help.no_cmd)
+      Game.emit('private-server-message', id, help.no_cmd)
       return
     }
     let cmd = cmds.get(args[0])
@@ -22,7 +22,7 @@ function command_is_router(help = {name}){
 
     if(cmd){
       cmd.run(id, message, args.slice(1))
-    }else global.Game.emit('private-server-message', id, help.no_cmd)
+    }else Game.emit('private-server-message', id, help.no_cmd)
   }
 }
 

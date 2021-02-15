@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 
 const DATA = require('./src/DATA.js')
 const {jsonToStr, strToJson, log, con} = require('./src/functions.js')
-const Game = require('./src/Game.js')
+Game = require('./src/Game.js')
 
 
 Game.load()
@@ -84,7 +84,7 @@ server.listen(port, host, () => {
   con(`Сервер запущен на http://${host}:${port}`);
 
   setInterval(()=>{
-    global.Game.update()
+    Game.update()
   }, 1000)
 
   require('./console.js')

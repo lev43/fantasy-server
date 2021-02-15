@@ -11,5 +11,17 @@
   "license": "ISC",
   "dependencies": {
     "ws": "^7.4.2"
-  }
+  },
+  "devDependencies": {
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lev43/fantasy-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lev43/fantasy-server/issues"
+  },
+  "homepage": "https://github.com/lev43/fantasy-server#readme"
 }

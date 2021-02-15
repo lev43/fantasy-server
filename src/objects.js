@@ -4,7 +4,7 @@ class MyObject{
     for(let i in par){
       if(par[i])this[i] = par[i]
     }
-    if(!this.id)this.id = global.Game.generateID()
+    if(!this.id)this.id = Game.generateID()
   }
 }
 
@@ -35,8 +35,11 @@ class Enemy extends MyObject{
   location
   constructor(par = {id, location}){
     super(par)
-    if(!par.location)this.location = global.Game.location.spawn
+    if(!par.location)this.location = Game.location.spawn
     else this.location = par.location
+  }
+  send(msg){
+    Game.users.get(this.id)?.send(msg)
   }
 }
 
