@@ -29,6 +29,9 @@ class Location extends MyObject{
       enumerable: false
     })
   }
+  send(id, msg){
+    Game.emit('local-message', this.id, id, msg)
+  }
 }
 
 class Enemy extends MyObject{

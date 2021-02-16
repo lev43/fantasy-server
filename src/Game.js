@@ -66,7 +66,7 @@ class Game extends events{
   }
   update(){
     if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: 'spawn'})
-    if(!this.location.spawn)this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
+    if(!this.location.spawn || !this.location.has(this.location.spawn))this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
 
     this.users.forEach((user, id) => {
       if(!this.enemy.has(id))this.enemy.add({id})
@@ -83,23 +83,32 @@ Game.on('global-message', (id, msg)=>{//Комманда рассылки соо
   Game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
   log(`Message<${id}>: ${msg}`, 'messages')
 })
-
 Game.on('private-server-message', (id, msg) => {
   Game.users.get(id)?.send(jsonToStr({type: 'msg', content: msg}))
 })
-
 Game.on('private-message', (id1, id2, msg) => {
   Game.users.get(id1)?.send(jsonToStr({type: 'msg', content: `${id2}: ${msg}`}))
 })
-
 Game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
   Game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `SERVER: ${msg}`})))
   log(`Message<SERVER>: ${msg}`, 'messages')
 })
-
 Game.on('local-message', (locationID, id, msg) => {
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID).forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID).forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: `${id ? id+': ' : ''}${msg}`})))
   log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
+})
+
+Game.on('enemy-move', (id, locationID1, locationID2) => {
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
+    .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: 
+      `${id} перешел на локацию ${Game.location.get(locationID2).name}`
+    })))
+  log(`${id} перешел на локацию ${Game.location.get(locationID2).name}`, 'messages');
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID2 && enemy.id != id)
+    .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: 
+      `${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`
+    })))
+  log(`${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`, 'messages')
 })
 
 module.exports = Game

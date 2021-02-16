@@ -5,9 +5,10 @@ module.exports.run = async(id, message, args) => {
 
     if(Game.location.has(loc), Game.location.hasRoad(enemy.location, loc)){
       Game.emit('private-server-message', id, `Вы пошли на локацию ${Game.location.get(loc).name}`)
+      Game.emit('enemy-move', id, enemy.location, loc)
       enemy.location = loc
     }else{
-      Game.emit('private-server-message', id, `Вы не можете пойти туда (${i+1}|${loc})`)
+      Game.emit('private-server-message', id, `Вы не можете пойти туда (${i+1} ${loc})`)
     }
   })
 }

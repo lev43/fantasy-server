@@ -6,7 +6,7 @@ module.exports.run = async(id, message) => {
     location.roads_save.forEach((road, i) => {
       roads.push(`(${i+1})` + Game.location.get(road).name + `<${road}>`)
     });
-    roads.join('\n')
+    roads = roads.join('\n')
   }else roads = 'Нету дорог'
   Game.emit('private-server-message', id, `Вы осматриваете дороги\n` + roads)
 }

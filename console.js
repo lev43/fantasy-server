@@ -10,20 +10,26 @@ const rl=readline.createInterface({
 rl.prompt();
 //У меня есть много подкомманд которые работают одинаково
 function help(cmds_, name = null){
-  con(`Комманды${name ? ' ' + name : ''}:`)
+  con(`Commands${name ? ' ' + name : ''}:`)
   cmds_.forEach((fun, cmd) => con(cmd) )
 }
-function command(line, args, cmds, name = null){
+function command(line, args, cmds, parameters, name = null){
   if(!args[0]){
     help(cmds, name)
     return
   }
   const command = cmds.get(args[0]);
+  if(!parameters){
+    parameters = {}
+    args.forEach(arg => {if(arg.split(':')[1])parameters[arg.split(':').shift()] = arg.split(':')[1]})
+    if(Object.keys(parameters).length < 1)parameters = null
+  }
+  //console.log(parameters)
 
   log(line)
 
-  if(command)command(line, args.slice(1));
-  else con(`${name ? name + ': ' : ''}Не найдена комманда '${args[0]}'`);
+  if(command)command(line, args.slice(1), parameters);
+  else con(`${name ? name + ': ' : ''} Command '${args[0]}' where not found`);
 }
 
 
@@ -34,133 +40,163 @@ const cmds = new Map([
     Game.emit('server-message', args.join(' '))
   }],
 
-  ['add', (line, args) => {
+  ['send-local', (line, args) => {
+    Game.emit('local-message', args[0], args.slice(1).join(' '))
+  }],
+
+  ['add', (line, args, parameters) => {
     const cmds = new Map([
-      ['location', (line, args) => {
-        if(!args[0]){
-          con(`add location <name>`)
+      ['location', (line, args, parameters) => {
+        if(!parameters.name){
+          con(`add location {!name}`)
           return
         }
         Game.location.add({
-          name: args[0]
+          name: parameters.name
         })
         con(`Successfully`)
       }],
-      ['road', (line, args) => {
-        if(args.length < 2){
-          con(`add location-road <id1> <id2> [mod]\nДобавить в id1 путь до id2`)
+      ['road', (line, args, parameters) => {
+        const {id1, id2, mode} = parameters
+        if(!id1 || !id2){
+          con(`add road {!id1, !id2, mode}`)
           return
         }
-        if(Game.location.addRoad(args[0], args[1], args[2]))
+        if(Game.location.addRoad(id1, id2, mode))
           con(`Successfully`)
         else con(`Not successfully, one or two location is not defined`)
       }],
-      ['enemy', (line, args) => {
+      ['enemy', (line, args, parameters) => {
         Game.enemy.add({
-          id: args[0]
+          id: parameters?.id
         })
         con(`Successfully`)
       }]
     ])
-    command(line, args, cmds, 'add')
+    command(line, args, cmds, parameters, 'add')
   }],
 
-  ['delete', (line, args) => {
+  ['delete', (line, args, parameters) => {
     const cmds = new Map([
-      ['location', (line, args) => {
-        if(!args[0]){
-          con(`delete location <id>`)
+      ['location', (line, args, parameters) => {
+        if(!parameters.id){
+          con(`delete location {!id}`)
           return
         }
-        if(Game.location.delete(args[0]))
+        if(Game.location.delete(parameters.id))
              con(`Successfully`)
         else con(`No successfully`)
       }],
-      ['road', (line, args) => {
-        if(args.length < 2){
-          con(`delete location-road <id1> <id2> [mod]\nУдалить путь до id2 из путей id1`)
+      ['road', (line, args, parameters) => {
+        const {id1, id2, mode} = parameters
+        if(!id1 || !id2){
+          con(`delete road {!id1, !id2 mode}`)
           return
         }
-        if(Game.location.deleteRoad(args[0], args[1], args[2]))
+        if(Game.location.deleteRoad(id1, id2, mode))
              con(`Successfully`)
         else con(`No successfully`)
       }],
-      ['enemy', (line, args) => {
-        if(!args[0]){
-          con(`delete enemy <id>`)
+      ['enemy', (line, args, parameters) => {
+        if(!parameters.id){
+          con(`delete enemy {!id}`)
           return
         }
-        if(Game.enemy.delete(args[0]))
+        if(Game.enemy.delete(parameters.id))
              con(`Successfully`)
         else con(`No successfully`)
       }]
     ])
-    command(line, args, cmds, 'delete')
+    command(line, args, cmds, parameters, 'delete')
   }],
 
-  ['edit', (line, args) => {
+  ['edit', (line, args, parameters) => {
     const cmds = new Map([
-      ['location', (line, args) => {
-        if(args.length < 2){
-          con(`edit location <id> <name>`)
+      ['location', (line, args, parameters) => {
+        const {id, name} = parameters
+        if(!id){
+          con(`edit location {!id, name}`)
           return
         }
-        if(Game.location.has(args[0])){
-          Game.location.get(args[0]).name = args[1]
-          con(`Successfully`)
-        }else con(`No location ${args[0]}`)
+        if(Game.location.has(id)){
+          let location = Game.location.get(id)
+          for(let par in parameters){
+            if(par != 'id'){
+              con(`${location[par]}->${parameters[par]}`)
+              location[par] = parameters[par]
+            }
+          }
+        }
       }],
-      ['location-spawn', (line, args) => {
-        if(!args[0]){
-          con(`edit location-spawn <id>`)
+      ['location-spawn', (line, args, parameters) => {
+        if(!parameters.id){
+          con(`edit location-spawn {!id}`)
           return
         }
-        if(Game.location.has(args[0])){
-          Game.location.spawn = args[0]
+        if(Game.location.has(parameters.id)){
+          Game.location.spawn = parameters.id
           con(`successfully`)
-        }else con(`No location ${args[0]}`)
+        }else con(`No location ${parameters.id}`)
       }],
-      ['enemy', (line, args) => {
-        if(args.length < 2){
-          con(`edit location <id> <location-id>`)
+      ['enemy', (line, args, parameters) => {
+        const {id, loc} = parameters
+        if(!id){
+          con(`edit enemy {!id, loc}`)
           return
         }
-        if(Game.enemy.has(args[0]) && Game.location.has(args[1])){
-          Game.location.get(args[0]).location = args[1]
-          con(`Successfully`)
-        }else con(`No location ${args[0]}`)
+        if(Game.enemy.has(id)){
+          let enemy = Game.enemy.get(id)
+          for(let par in parameters){
+            if(par != 'id'){
+              con(`${enemy[par]}->${parameters[par]}`)
+              enemy[par] = parameters[par]
+            }
+          }
+        }else con(`No enemy ${id}`)
       }]
     ])
-    command(line, args, cmds, 'edit')
+    command(line, args, cmds, parameters, 'edit')
   }],
 
-  ['find', (line, args) => {
+  ['find', (line, args, parameters) => {
     const cmds = new Map([
       ['location', (line, args) => {
-        if(args[0]){
-          if(Game.location.has(args[0]))
-            con(Game.location.get(args[0]))
-          else con(`No location ${args[0]}`)
-        }else{
-          con('spawn: ' + Game.location.spawn)
-          Game.location.forEach((location, id) => {
-            if(id != 'spawn')con(location)
-          })
-        }
+        let l = false
+
+        if(args[0])[...Game.location].filter(loc => {
+          let y = true
+          for(par in parameters)if(loc[1][par] != parameters[par])y = false
+          if(y)l=true
+          return y
+        }).forEach(loc => con(loc[1]))
+
+        if(args[0] && !l)con(`No location that parameters\n{\n  ${Object.entries(parameters).join('\n  ').split(',').join(': ')}\n}`)
+        if(l || args[0])return
+
+        con('spawn: ' + Game.location.spawn)
+        Game.location.forEach((location, id) => {
+          if(id != 'spawn')con(location)
+        })
       }],
       ['enemy', (line, args) => {
-        if(args[0]){
-          if(Game.enemy.has(args[0]))
-            con(Game.enemy.get(args[0]))
-          else con(`No enemy ${args[0]}`)
-        }else{
-          Game.enemy.forEach((enemy, id) => {
-            con(enemy)
-          })
-        }
+        let e = false
+
+        if(args[0])[...Game.enemy].filter(enemy => {
+          let y = true
+          for(par in parameters)if(enemy[1][par] != parameters[par])y = false
+          if(y)e = true
+          return y
+        }).forEach(enemy => con(enemy[1]))
+
+        if(args[0] && !e)con(`No enemy that parameters\n{\n  ${Object.entries(parameters).join('\n  ').split(',').join(': ')}\n}`)
+        if(e || args[0])return
+
+        Game.enemy.forEach((enemy, id) => {
+          con(enemy)
+        })
       }]
     ])
-    command(line, args, cmds, 'find')
+    command(line, args, cmds, {}, 'find')
   }],
 
   ['exit', () => {

@@ -17,7 +17,7 @@ class LocationMap extends Map{
     if(this.has(id))this.set('spawn', id)
   }
   get spawn(){
-    return this.get('spawn')
+    return this.get('spawn')?.id ?? this.get('spawn')
   }
   hasRoad(id1, id2){
     return this.get(id1)?.roads.has(id2)
@@ -40,6 +40,18 @@ class LocationMap extends Map{
       }else return this.get(id1).roads.delete(id2)
     }else return false
   }
+  getByParameters(parameters){
+    return new Map([...this].filter(location => {
+      let y = true
+      for(let i in parameters)
+        if(i.split('_').pop() != 'not')
+          if(parameters[i+'_not'])
+            (location[1][i] == parameters[i] ? y = false : null)
+          else
+            (location[1][i] != parameters[i] ? y = false : null)
+      return y
+    }))
+  }
 }
 
 class EnemyMap extends Map{
@@ -52,6 +64,18 @@ class EnemyMap extends Map{
   add(par = {id, location}){
     let enemy = new Enemy(par)
     return super.set(enemy.id, enemy)
+  }
+  getByParameters(parameters){
+    return new Map([...this].filter(enemy => {
+      let y = true
+      for(let i in parameters)
+        if(i.split('_').pop() != 'not')
+          if(parameters[i+'_not'])
+            (enemy[1][i] == parameters[i] ? y = false : null)
+          else
+            (enemy[1][i] != parameters[i] ? y = false : null)
+      return y
+    }))
   }
 }
 

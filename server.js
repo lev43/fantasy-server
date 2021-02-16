@@ -81,7 +81,7 @@ wss.on('connection', function connection(ws, request, client) {
 
 
 server.listen(port, host, () => {
-  con(`Сервер запущен на http://${host}:${port}`);
+  con(`Start server on http://${host}:${port}`);
 
   setInterval(()=>{
     Game.update()
