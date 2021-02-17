@@ -14,10 +14,10 @@ class LocationMap extends Map{
     return super.set(loc.id, loc)
   }
   set spawn(id){
-    if(this.has(id))this.set('spawn', id)
+    if(this.has(id))Setting.set('location.spawn', id?.id ?? id)
   }
   get spawn(){
-    return this.get('spawn')?.id ?? this.get('spawn')
+    return String(Setting.get('location.spawn'))
   }
   hasRoad(id1, id2){
     return this.get(id1)?.roads.has(id2)

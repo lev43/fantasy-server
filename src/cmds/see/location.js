@@ -1,9 +1,13 @@
-module.exports.run = async(id, message) => {
+let bundle = {}
+for(let i in Bundle)bundle[i] = Bundle[i].commands.see.location
+
+module.exports.run = async(p) => {
+  const {id, language} = p
   const location = Game.location.get(Game.enemy.get(id).location)
-  console.log(location, Game.enemy.get(id).location, Game.location)
+  //console.log(location, Game.enemy.get(id).location, Game.location)
   if(!location)return
 
-  const location_description = `Вы осматриваетесь\nВы на локации ${location.name}<${location.id}>\n`
+  const location_description = f.s(bundle[language], location.name, location.id)
 
   Game.emit('private-server-message', id, location_description)
 }

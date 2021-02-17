@@ -36,10 +36,12 @@ class Location extends MyObject{
 
 class Enemy extends MyObject{
   location
-  constructor(par = {id, location}){
+  language = 'ru'
+  constructor(par = {id, location, language}){
     super(par)
     if(!par.location)this.location = Game.location.spawn
     else this.location = par.location
+    this.player = Game.users.has(this.id)
   }
   send(msg){
     Game.users.get(this.id)?.send(msg)

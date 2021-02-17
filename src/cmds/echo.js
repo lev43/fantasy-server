@@ -1,5 +1,5 @@
-module.exports.run = async(id, message) => {
-  if(Game.users.has(id))Game.emit('private-server-message', id, '<echo> ' + message)
+module.exports.run = async(p) => {
+  Game.emit('private-server-message', p.id, 'echo ' + p.message)
 }
 
 module.exports.help = {

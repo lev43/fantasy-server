@@ -1,5 +1,10 @@
-module.exports.run = async(id, message) => {
-  let location = Game.location.get(Game.enemy.get(id).location)
+let bundle = {}
+for(let i in Bundle)bundle[i] = Bundle[i].commands.see.road
+
+module.exports.run = async(p) => {
+  const {id, language} = p
+  let enemy = Game.enemy.get(id)
+  let location = Game.location.get(enemy.location)
   //console.log(location, Game.enemy.get(id))
   let roads = []
   if(location?.roads_save.length > 0){
@@ -7,8 +12,8 @@ module.exports.run = async(id, message) => {
       roads.push(`(${i+1})` + Game.location.get(road).name + `<${road}>`)
     });
     roads = roads.join('\n')
-  }else roads = 'Нету дорог'
-  Game.emit('private-server-message', id, `Вы осматриваете дороги\n` + roads)
+  }else roads = bundle[language].noRoads
+  Game.emit('private-server-message', id, bundle[language]._ + '\n' + roads)
 }
 
 module.exports.help = {

@@ -49,8 +49,9 @@ class Game extends events{
     for(let s in this.#saves){
       fs.writeFileSync(`${DATA}/saves/save-${s}.json`, jsonToStr(mapToArr(this[s])))
     }
+    Setting.save('./src/DATA/setting.properties')//.then((s, e) => console.log(s, e))
   }
-  player(hash, message){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
+  player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
     let id = this.id.get(hash)
     if(!id)return
 
@@ -58,10 +59,11 @@ class Game extends events{
     let command = args.shift()
     let cmd = this.#cmds.get(command)
     let enemy = this.enemy.get(id)
+    enemy.language = language
     if(cmd)message = message.slice(command.length)//Если есть комманда, ее стоит вырезать поскольку некоторые комманды работаю с текстом сообщения
 
     if(cmd){
-      cmd.run(id, message, args)
+      cmd.run({id, message, args, language})
     }else this.emit('local-message', enemy.location, id, message)
   }
   update(){

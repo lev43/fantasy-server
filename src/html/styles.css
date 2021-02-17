@@ -8,3 +8,19 @@
 #channel{
   white-space: pre-line;
 }
+
+#setting{
+  position: fixed;
+  top: 20px;
+  right: 1px;
+  width: max-content;
+  height: max-content;
+  background-color: #d4dbf3;
+  outline: 1px solid #555;
+  border: 1px solid #c0c2ca;
+}
+#setting-button{
+  position: fixed;
+  top: 0%;
+  right: 0%;
+}

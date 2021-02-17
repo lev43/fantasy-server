@@ -1,3 +1,7 @@
-var date_ = new Date()
+a = {
+  b: {
+    c: 'abc'
+  }
+}
 
-console.log(date_.toLocaleDateString())
+console.log(a['b'])

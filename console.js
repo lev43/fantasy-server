@@ -129,7 +129,7 @@ const cmds = new Map([
         }
       }],
       ['location-spawn', (line, args, parameters) => {
-        if(!parameters.id){
+        if(!parameters?.id){
           con(`edit location-spawn {!id}`)
           return
         }
@@ -213,6 +213,6 @@ rl.on('line', line => {
 	rl.prompt();
 }).on('close', ()=>{
   con('Close server');
-  Game.save()
+  //Game.save()
 	process.exit(0);
 });

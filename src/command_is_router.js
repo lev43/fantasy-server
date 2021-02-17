@@ -12,17 +12,15 @@ function command_is_router(help = {name}){
     })
   })
 
-  return async(id, message, args) => {
-    if(!args[0]){
-      Game.emit('private-server-message', id, help.no_cmd)
-      return
-    }
+  return async(p) => {
+    let {id, args, message, language} = p
     let cmd = cmds.get(args[0])
     if(cmd)message = message.slice(args[0].length + 1)//Если есть комманда, ее стоит вырезать поскольку некоторые комманды работаю с текстом сообщения
 
     if(cmd){
-      cmd.run(id, message, args.slice(1))
-    }else Game.emit('private-server-message', id, help.no_cmd)
+      p.args = p.args.slice(1)
+      cmd.run(p)
+    }else Game.emit('private-server-message', id, Bundle[language].commands[help.name].no_cmd)
   }
 }
 

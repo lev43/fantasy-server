@@ -29,7 +29,7 @@ function log(data, name, url, time=true){
   })
 }
 
-if(!global.f)global.f = {
+f = {
   jsonToStr(json){
     return JSON.stringify(json)
   },
@@ -46,8 +46,13 @@ if(!global.f)global.f = {
     let arr = []
     if(map)map.forEach((value, key) => arr.push([key, value]))
     return arr
+  },
+  s(text, ...args){
+    for(let i=0; i<args.length; i++)text = text.replace('%s', args[i])
+    text = text.replaceAll('\\n', '\n')
+    return text
   }
 }
 
 
-module.exports = global.f
+module.exports = f

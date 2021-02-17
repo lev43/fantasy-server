@@ -3,102 +3,34 @@
   <head>
     <meta charset="utf-8">
     <title>Fantasy game</title>
-    <link rel = "ICON" type = "image / png" href = "icon.png">
+    <link rel = "ICON" type = "image/png" href = "icon.png">
     <link rel="stylesheet" href="./styles.css">
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
-
-    
-    <script>
-      //const host = 'smokeofanarchy.duckdns.org:6852'
-      const host = 'localhost:6852'
-
-
-      function hash(data){
-        return CryptoJS.MD5(data).toString()
-      }
-
-      close = `
-      <body>
-        <form id='close-message' style="position: fixed; right: 60%; top: 32%; margin: auto; width: max-content; height: max-content;"> 
-          <h1 style="position: fixed;">Закрыто</h1> 
-          <br><br> 
-          <h3 style="position: fixed;"> <a href="http://${host}">Зайти заново</a> </h3> 
-        </form>
-      </body>
-      `
-
-
-      function jsonToStr(json){
-        return JSON.stringify(json)
-      }
-      function strToJson(str){
-        return JSON.parse(str)
-      }
-      var password
-    </script>
-    <script>
-      if ("WebSocket" in window) {
-      var ws = new WebSocket(`ws://${host}`);
-
-      function sendPassword(pas){
-        password=hash(pas);
-        ws.send(jsonToStr({type: 'player-key', content: hash(pas)}))
-        document.getElementById('password').hidden=true
-        document.getElementById('channel-p').hidden=false
-      }
-      function sendMessage(msg){
-        //console.log(password)
-        ws.send(jsonToStr({type: 'player-message', password: password, content: msg}))
-      }
-      ws.onopen = ()=>{
-        console.log("Start ws")
-        document.getElementById("password").hidden=false
-      }
-
-      ws.onclose = ()=>{
-        console.log("WebSocket close")
-        alert("Соединение закрыто")
-        document.body.innerHTML = close
-      }
-
-      ws.onerror = (err) => { 
-        console.log(err)
-      }
-
-      ws.onmessage = (message)=>{
-        //console.log(message.data)
-        data = strToJson(message.data)
-        switch(data.type){
-          case 'msg':
-            document.getElementById('channel').innerText = `${data.content}\n${document.getElementById("channel").innerText}`
-            break;
-          case 'err':
-            alert(data.content)
-            ws.close()
-            break;
-        }
-      }
-    }else alert("Ваш браузер не поддерживается!")
-    </script>
   </head>
   <body>
-    <form id='channel-p' hidden=true onsubmit="return false">
-      <h1 style>Channel</h1>
+    <button id='setting-button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Setting</button>
+    <form id='setting' onsubmit="updateSetting(this); return false" hidden="true">
+      <a id="text7"></a><br>
+      <input type="radio" id="ru" name="language" value="ru">
+      <label for="ru">Русский</label><br>
+      <input type="radio" id="en" name="language" value="en">
+      <label for="en">English</label><br>
+      <input id='text3' type="submit" value="Принять">
+    </form>
+
+    <form id='channel-p' onsubmit="return false">
+      <h1>Channel</h1>
       
       <input id="message" type=text size=40  onchange="sendMessage(this.value);this.value=null;">
 
       <br>
       <code id='channel'></code>
     </form>
-
-
-    <form id="password" onsubmit="return false" hidden=true>
-      <h1>Введите код персонажа</h1>
-      <input type=text onchange="sendPassword(this.value)">
-      <h5>Внимание! Если кто-то узнает этот код, он сможет играть за вашего персонажа</h5>
-    </form>
+    <script src='functions.js'></script>
+    <script src='bundle.js'></script>
+    <script src='main.js'></script>
   </body>
 </html>
