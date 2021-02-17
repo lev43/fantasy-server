@@ -651,3 +651,29 @@
 <21:39:34> Socket(127.0.0.1)[295421854] disconnect
 <21:39:34> New player on id <295421854>
 <21:39:34> Socket(127.0.0.1)[295421854] connect
+<22:01:36> Start server on http://0.0.0.0:6852
+<22:11:14> Start server on http://0.0.0.0:6852
+<22:21:21> Start server on http://0.0.0.0:6852
+<22:21:21> New player on id <295421854>
+<22:21:21> Socket(127.0.0.1)[295421854] connect
+<22:21:21> New player on id <729541297>
+<22:21:21> Socket(127.0.0.1)[729541297] connect
+<22:23:46> Start server on http://0.0.0.0:6852
+<22:23:55> Start server on http://0.0.0.0:6852
+<22:23:55> Socket(127.0.0.1)[295421854] connect
+<22:23:55> New player on id <295421854>
+<22:23:55> New player on id <729541297>
+<22:23:55> Socket(127.0.0.1)[729541297] connect
+<22:23:55> Socket(127.0.0.1)[729541297] disconnect
+<22:23:55> New player on id <729541297>
+<22:23:55> Socket(127.0.0.1)[729541297] connect
+<22:27:38> Start server on http://0.0.0.0:6852
+<22:27:38> New player on id <295421854>
+<22:27:38> Socket(127.0.0.1)[295421854] connect
+<22:27:38> New player on id <729541297>
+<22:27:38> Socket(127.0.0.1)[729541297] connect
+<22:27:38> Socket(127.0.0.1)[729541297] disconnect
+<22:27:38> New player on id <729541297>
+<22:27:38> Socket(127.0.0.1)[729541297] connect
+<22:27:38> Socket(127.0.0.1)[729541297] disconnect
+<22:27:38> Socket(127.0.0.1)[295421854] disconnect

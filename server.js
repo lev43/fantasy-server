@@ -28,11 +28,13 @@ const server = http.createServer(function(req, res){
   let file = req.url.split('?').shift().slice(1),
       type = file.split('.').pop()
   //console.log(file, type)
-  if(req.url == '/icon.png'){
+  if(req.url == '/'){
+    res.writeHead(200, {"Content-Type": "text/html"})
+    res.end(html['address.html'])
+  }else if(req.url == '/icon.png'){
     res.writeHead(200, {"Content-Type": "image/png"})
     res.end(html['icon.png'])
-  }
-  if(html[file]){
+  }else if(html[file]){
     res.writeHead(200, {"Content-Type": "text/"+type})
     res.end(html[file])
   }else{
@@ -96,6 +98,7 @@ wss.on('connection', function connection(ws, request, client) {
           log(`New player on id <${id}>`)
           log(`Socket(${request.connection.remoteAddress})[${id}] connect`)
 
+          if(Game.enemy.has(id))Game.enemy.get(id).language = data.language
 
           function close(){
             log(`Socket(${request.connection.remoteAddress})[${id}] disconnect`)

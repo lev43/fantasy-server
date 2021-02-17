@@ -11,7 +11,7 @@ if ("WebSocket" in window) {
     console.log("Start ws")
     if(params.password){
       password=hash(params.password);
-      ws.send(jsonToStr({type: 'player-key', content: password}))
+      ws.send(jsonToStr({type: 'player-key', content: password, language: params.language}))
     }else document.location.href = document.location.origin + '/password.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '')
   }
 

@@ -103,12 +103,12 @@ Game.on('local-message', (locationID, id, msg) => {
 Game.on('enemy-move', (id, locationID1, locationID2) => {
   [...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
     .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: 
-      `${id} перешел на локацию ${Game.location.get(locationID2).name}`
+      f.s(Bundle[enemy.language].events.move.gone, id, Game.location.get(locationID2).name)
     })))
   log(`${id} перешел на локацию ${Game.location.get(locationID2).name}`, 'messages');
   [...Game.enemy.values()].filter(enemy => enemy.location === locationID2 && enemy.id != id)
-    .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: 
-      `${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`
+    .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content:
+      f.s(Bundle[enemy.language].events.move.came, id, Game.location.get(locationID1).name)
     })))
   log(`${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`, 'messages')
 })

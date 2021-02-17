@@ -8,5 +8,6 @@ Bundle = {}
 for(let i in Bundle_){
   Bundle[i] = {}
   Bundle[i].commands = Bundle_[i].path().commands
+  Bundle[i].events = Bundle_[i].path().events
 }
-console.log(Bundle)
+//console.log(Bundle)
