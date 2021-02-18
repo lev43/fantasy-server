@@ -34,6 +34,7 @@ if ("WebSocket" in window) {
         break;
       case 'err':
         alert(data.content)
+        document.location.href = 'http://' + document.location.host + '/password.html'
         ws.close()
         break;
     }

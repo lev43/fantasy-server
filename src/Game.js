@@ -8,12 +8,13 @@ const DATA = global.DATA
 
 
 class Game extends events{
-  #saves = {id: Map, location: LocationMap, enemy: EnemyMap}//Для всех сохраняемых хранилищ
+  #saves = {id: Map, location: LocationMap, enemy: EnemyMap, nickname: Map}//Для всех сохраняемых хранилищ
   users = new Map()//Хранит WebSockets пользователей во время игры
   #cmds = new Map()//Хранит комманды которые используют пользователи
   location = new LocationMap()
   enemy = new EnemyMap()
   id = new Map()
+  nickname = new Map()
   generateID(hash){//Используется для генерации юникальных айди для всех обьектов в игре
     let id;
     while(this.id.has(id) || !id){
@@ -72,9 +73,11 @@ class Game extends events{
 
     this.users.forEach((user, id) => {
       if(!this.enemy.has(id))this.enemy.add({id})
+      if(this.enemy.has(id))this.enemy.get(id).player = true
     })
     this.enemy.forEach((enemy, id) => {
       if(!enemy.location || !this.location.has(enemy.location))enemy.location = this.location.spawn
+      if(enemy.player)this.nickname.get(enemy.id)[enemy.id] = Bundle[enemy.language].names.enemy.default
     })
   }
 }
@@ -82,34 +85,36 @@ class Game extends events{
 Game = new Game()
 
 Game.on('global-message', (id, msg)=>{//Комманда рассылки сообщения всем
-  Game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `${id}: ${msg}`})))
+  Game.users.forEach(user => user.send({type: 'msg', id, content: `%id{${id}}%id: ${msg}`}))
   log(`Message<${id}>: ${msg}`, 'messages')
 })
 Game.on('private-server-message', (id, msg) => {
-  Game.users.get(id)?.send(jsonToStr({type: 'msg', content: msg}))
+  Game.users.get(id)?.send({type: 'msg', id, content: msg})
 })
 Game.on('private-message', (id1, id2, msg) => {
-  Game.users.get(id1)?.send(jsonToStr({type: 'msg', content: `${id2}: ${msg}`}))
+  Game.users.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
 })
 Game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
-  Game.users.forEach(user => user.send(jsonToStr({type: 'msg', content: `SERVER: ${msg}`})))
+  Game.users.forEach(user => user.send({type: 'msg', content: `SERVER: ${msg}`}))
   log(`Message<SERVER>: ${msg}`, 'messages')
 })
 Game.on('local-message', (locationID, id, msg) => {
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID).forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: `${id ? id+': ' : ''}${msg}`})))
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID).forEach(enemy => enemy.send({type: 'msg', id, content: `${id ? `%id{${id}}%id: ` : ''}${msg}`}))
   log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
 })
 
 Game.on('enemy-move', (id, locationID1, locationID2) => {
   [...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
-    .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content: 
+    .forEach(enemy => enemy.send({type: 'msg', id, content: 
       f.s(Bundle[enemy.language].events.move.gone, id, Game.location.get(locationID2).name)
-    })))
+    }))
   log(`${id} перешел на локацию ${Game.location.get(locationID2).name}`, 'messages');
+
+
   [...Game.enemy.values()].filter(enemy => enemy.location === locationID2 && enemy.id != id)
-    .forEach(enemy => enemy.send(jsonToStr({type: 'msg', content:
+    .forEach(enemy => enemy.send({type: 'msg', id, content:
       f.s(Bundle[enemy.language].events.move.came, id, Game.location.get(locationID1).name)
-    })))
+    }))
   log(`${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`, 'messages')
 })
 

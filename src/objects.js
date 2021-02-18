@@ -42,6 +42,8 @@ class Enemy extends MyObject{
     if(!par.location)this.location = Game.location.spawn
     else this.location = par.location
     this.player = Game.users.has(this.id)
+    Game.nickname.set(this.id, {})
+    Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
   }
   send(msg){
     Game.users.get(this.id)?.send(msg)

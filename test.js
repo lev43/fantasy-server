@@ -1,7 +1,5 @@
-a = {
-  b: {
-    c: 'abc'
-  }
-}
+a = new Map()
 
-console.log(a['b'])
+a.set('a', 'b')
+
+console.log([...a.values()].find('c'))

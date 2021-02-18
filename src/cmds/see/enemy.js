@@ -7,7 +7,7 @@ module.exports.run = async(p) => {
   let enemys = [];
   let enemys_ = [...Game.enemy.getByParameters({location: enemy.location, id: id, id_not: true}).keys()]
   enemys_.forEach((enemy, i) => {
-    enemys.push(`(${i+1})${enemy}`)
+    enemys.push(`(${i+1})%id{${enemy}}%id`)
   })
   //console.log(enemys, enemys_)
 
