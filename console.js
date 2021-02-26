@@ -1,4 +1,5 @@
 const { con, log } = require('./src/functions.js')
+const fs = require('fs')
 
 const readline=require('readline');
 const rl=readline.createInterface({
@@ -35,6 +36,16 @@ function command(line, args, cmds, parameters, name = null){
 
 const cmds = new Map([
   ['!', () => {}],
+
+  ['get-html-files', () => {
+    console.log(Object.keys(html))
+  }],
+
+  ['reload-html-files', () => {
+    fs.readdirSync('./src/html').forEach(file => {
+      html[file] = fs.readFileSync('./src/html/' + file)
+    })
+  }],
 
   ['send-all', (line, args) => {
     Game.emit('server-message', args.join(' '))

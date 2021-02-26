@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Fantasy game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "ICON" type = "image/png" href = "icon.png">
     <link rel="stylesheet" href="./styles.css">
 
@@ -13,18 +14,18 @@
   <body>
     <button id='setting-button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Setting</button>
     <form id='setting' onsubmit="updateSetting(this); return false" hidden="true">
-      <a id="text7"></a><br>
+      <strong><a id="text7"></a></strong><br>
       <input type="radio" id="ru" name="language" value="ru">
-      <label for="ru">Русский</label><br>
+      <label for="ru"><strong>Русский</strong></label><br>
       <input type="radio" id="en" name="language" value="en">
-      <label for="en">English</label><br>
+      <label for="en"><strong>English</strong></label><br>
       <input id='text3' type="submit" value="Принять">
     </form>
 
     <form id='channel-p' onsubmit="return false">
       <h1>Channel</h1>
       
-      <input id="message" type=text size=40  onchange="sendMessage(this.value);this.value=null;">
+      <input id="message" type=text onchange="sendMessage(this.value);this.value=null;">
 
       <br>
       <code id='channel'></code>

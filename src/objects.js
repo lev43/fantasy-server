@@ -50,7 +50,44 @@ class Enemy extends MyObject{
   }
 }
 
+class Event{
+  #timer = 0
+  #time
+  #func
+  #endCode
+  get timer(){
+    return this.#timer
+  }
+  get time(){
+    return this.#time
+  }
+  constructor(func = (code) => console.log("HELLO WORLD"), time = 0, endCode = 0){
+    while(Game.events.has(this.i) || !this.i)this.i = Math.floor(Math.random() * 100)
+    Game.events.set(this.i, this)
+    this.#time = time
+    this.#func = func
+    this.#endCode = endCode
+    this.t = setInterval(() => {
+      this.#timer++
+    }, 100);
+
+    this.#start()
+  }
+  async #start(){
+    setTimeout(() => {
+      if(Game.events.has(this.i))this.end(this.#endCode)
+    }, this.#time)
+  }
+  async end(code){
+    clearInterval(this.t)
+    if(!Game.events.has(this.i))return new Error("This event does not exist")
+    Game.events.delete(this.i)
+    return this.#func(code)
+  }
+}
+
 module.exports = {
   Location,
-  Enemy
+  Enemy,
+  Event
 }

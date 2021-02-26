@@ -17,10 +17,11 @@ setInterval(()=>{
 
 const host = '0.0.0.0';
 const port = 6852;
-var html = {}
+html = {}
 
 fs.readdirSync('./src/html').forEach(file => {
   html[file] = fs.readFileSync('./src/html/' + file)
+  //console.log(file)
   //console.log(html[file])
 })
 
@@ -41,27 +42,6 @@ const server = http.createServer(function(req, res){
     res.writeHead(404, {"Content-Type": "text/html"})
     res.end(`<string>Not content</string>`)
   }
-  /*switch(req.url){
-    case '/main.js':
-      res.writeHead(200, {"Content-Type": "text/js"})
-      res.end(html.mainJS)
-      break
-    case '/functions.js':
-      res.writeHead(200, {"Content-Type": "text/js"})
-      res.end(html.functionsJS)
-      break
-    case '/styles.css':
-      res.writeHead(200, {"Content-Type": "text/css"})
-      res.end(html.styles)
-      break
-    case '/index.html':
-      res.writeHead(200, {"Content-Type": "text/html"})
-      res.end(html.index)
-      break;
-    default:
-      res.write(404)
-      res.end()
-  }*/
 })
 
 const wss = new WebSocket.Server({ server });
@@ -82,6 +62,7 @@ wss.on('connection', function connection(ws, request, client) {
 
     switch(type){
       case 'player-message':
+        content = content.replace('%lastMessage{', `%lastMessage{%id{${Game.id.get(data.password)}}%id: `)
         Game.player(data.password, content, data.language)
         break;
 

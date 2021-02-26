@@ -1,6 +1,6 @@
 //const host = 'smokeofanarchy.duckdns.org:6852'
-const host = 'localhost:6852'
-
+//const host = 'localhost:6852'
+const host = '192.168.1.205:6852'
 
 function hash(data){
   return CryptoJS.MD5(data).toString()

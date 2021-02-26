@@ -15,6 +15,7 @@ class Game extends events{
   enemy = new EnemyMap()
   id = new Map()
   nickname = new Map()
+  events = new Map()
   generateID(hash){//Используется для генерации юникальных айди для всех обьектов в игре
     let id;
     while(this.id.has(id) || !id){
@@ -104,10 +105,10 @@ Game.on('local-message', (locationID, id, msg) => {
 })
 
 Game.on('enemy-move', (id, locationID1, locationID2) => {
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
+  /*[...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
     .forEach(enemy => enemy.send({type: 'msg', id, content: 
       f.s(Bundle[enemy.language].events.move.gone, id, Game.location.get(locationID2).name)
-    }))
+    }))*/
   log(`${id} перешел на локацию ${Game.location.get(locationID2).name}`, 'messages');
 
 
