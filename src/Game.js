@@ -92,6 +92,9 @@ Game.on('global-message', (id, msg)=>{//Комманда рассылки соо
 Game.on('private-server-message', (id, msg) => {
   Game.users.get(id)?.send({type: 'msg', id, content: msg})
 })
+Game.on('private-server-message-edit', (id, mid, msg) => {
+  Game.users.get(id)?.send({type: 'msg-edit', id, mid, content: msg})
+})
 Game.on('private-message', (id1, id2, msg) => {
   Game.users.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
 })

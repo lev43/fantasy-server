@@ -1,6 +1,6 @@
 if ("WebSocket" in window) {
   var ws = new WebSocket(`ws://${host}`);
-  var timers = []
+  var i = 1
   document.getElementById('setting').action = document.location.href
 
   function sendMessage(msg){
@@ -28,31 +28,40 @@ if ("WebSocket" in window) {
 
   ws.onmessage = (message)=>{
     //console.log(message.data)
+    let newMessage = document.createElement('code')
     data = strToJson(message.data)
+    let mid = data.content.indexOf('%mid') != -1 ? data.content.slice(data.content.indexOf('%mid') + 4) : null
+    if(mid)data.content = data.content.slice(0, data.content.indexOf('%mid'))
+    newMessage.id = 'message-' + mid ?? i
     switch(data.type){
+      case 'msg-edit':
+        document.getElementById(`message-${data.mid}`).innerText = data.content + '\n'
+        break
       case 'msg':
         while(data.content.indexOf('%timer{') != -1){
-          let t = parseInt(data.content.slice(data.content.indexOf('%timer{')+7, data.content.indexOf('}%timer')))
-          let lastMessage
-          if(data.content.indexOf('}%timer%lastMessage{') != -1)
-            lastMessage = {
-              msg: data.content.slice(data.content.indexOf('}%timer%lastMessage{') + 20, data.content.indexOf('}%timer%lastMessage_')),
-              replaceMessage: data.content.slice(0, data.content.search('%timer{')) + `͏X` + data.content.slice(data.content.search('}%timer%lastMessage_') + 20)
-            }
-          let timer = setInterval(()=>{
-            if(t <= 1 || ''+t == 'NaN')clearInterval(timer)
+          let t = parseInt(//Получаем как долго должен работать таймер
+            data.content.slice(
+              data.content.indexOf('%timer{') + 7, 
+              data.content.indexOf('}%timer')
+            )
+          )
+
+          newMessage.id += '-timer'
+          let timerID = newMessage.id
+
+          let interval = setInterval(()=>{
+            if(t < 1 || String(t) == 'NaN')clearInterval(interval)
             t--
-            let text = document.getElementById("channel").innerText
-            document.getElementById("channel").innerText = document.getElementById("channel").innerText.replace(`«${t+1}»`, `${`«${t}»`}`)
-            if(t < 1 && lastMessage?.msg){
-              document.getElementById("channel").innerText = document.getElementById("channel").innerText.replace(`«${t}»`, 'X')
-              document.getElementById("channel").innerText = document.getElementById("channel").innerText.replace(lastMessage.replaceMessage, lastMessage.msg)
-            }
+            let timer = document.getElementById(timerID)
+            timer.innerText = timer.innerText.replace(`«${t + 1}»`, `${`«${t}»`}`)
+            if(t < 0 || String(t) == 'NaN')timer.innerText = timer.innerText.replace(`«${t}»`, '-')
           }, 1000)
 
-          data.content = data.content.slice(0, data.content.search('%timer{')) + `͏«${t}»` + ( data.content.indexOf('}%timer%lastMessage_') != -1 ? data.content.slice(data.content.search('}%timer%lastMessage_') + 20) : data.content.slice(data.content.search('}%timer') + 7) )
+          data.content = `${data.content.slice(0, data.content.search('%timer{'))}«${t}»${data.content.slice(data.content.search('}%timer') + 7 )}`
         }
-        document.getElementById('channel').innerText = `${data.content}\n${document.getElementById("channel").innerText}`
+        newMessage.innerText = data.content + '\n'
+        document.getElementById('channel').prepend(newMessage)
+        i++
         break;
       case 'err':
         alert(data.content)

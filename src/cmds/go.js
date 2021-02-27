@@ -16,17 +16,17 @@ module.exports.run = async(p) => {
       loc = Game.location.get(loc)
       let m = new Event((code) => {
         if(code == 0){
-          //Game.emit('private-server-message', id, global.f.s(bundle[language].successfully, loc.name))
           Game.emit('enemy-move', id, enemy.location, loc.id)
+          Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(bundle[language].successfully, loc.name))
           enemy.location = loc.id
           if(args.length > 0)go(args)
         }
       }, time * 1000);
       [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
         .forEach(e => e.send({type: 'msg', id, content: 
-          f.s(Bundle[e.language].events.move.request, id, loc.name, time, id, loc.name)
+          f.s(Bundle[e.language].events.move.request, id, loc.name, time, m.i)
         }))
-      Game.emit('private-server-message', id, f.s(bundle[language].request, loc.name, time, loc.name))
+      Game.emit('private-server-message', id, f.s(bundle[language].request, loc.name, time, m.i))
     }else{
       Game.emit('private-server-message', id, f.s(bundle[language].noSuccessfully))
     }
