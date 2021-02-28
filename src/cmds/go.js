@@ -6,7 +6,7 @@ for(let i in Bundle)bundle[i] = Bundle[i].commands.go
 module.exports.run = async(p) => {
   const {id, args, language} = p
   try{
-    if(args[0] == 'stop'){
+    if(args[0] == 'stop' || args[0] == '0'){
       [...Game.events.values()].find(event => event.type == 'move-enemy' && event.id == id)?.end(2)
     }else Game.emit('enemy-move', id, args)
   }catch(err){

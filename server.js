@@ -71,7 +71,6 @@ wss.on('connection', function connection(ws, request, client) {
         if(!id)id = Game.generateID(content)
 
         if(Game.users.has(id)){
-          console.log(Game.users)
           ws.send(jsonToStr({type: 'err', content: 'Этим персонажем уже играют'}))
           ws.close()
 

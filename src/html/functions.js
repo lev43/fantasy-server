@@ -31,12 +31,12 @@ urlParams.forEach((p, key) => {
 });
 
 function updateSetting(form){
-  if(document.location.href.search('&language=' + params.language) == -1)
-    document.location.href += '&language=' + form.language.value
+  if(document.location.href.search('language=' + params.language) == -1)
+    document.location.href += (document.location.href.split('?')[1] ? '&' : '?') + 'language=' + form.language.value
   else
-    document.location.href = document.location.href.replace('&language=' + params.language, '&language=' + form.language.value)
+    document.location.href = document.location.href.replace('language=' + params.language, 'language=' + form.language.value)
 }
 
 function sendPassword(form){
-  document.location.href = document.location.origin + '/index.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '') + '&password=' + form.password.value
+  document.location.href = document.location.origin + '/index.html?' + (document.location.href.split('?').slice(1).join('?') ?? '') + '&password=' + form.password.value
 }
