@@ -19,12 +19,9 @@ class Location extends MyObject{
     
     //Каждый раз надо обновлять сохранение дорог
     let loc = this
-    this.p = new Proxy(loc.roads, {
-      get: function(){
-        loc.roads_save = [...loc.roads]
-        return loc.roads
-      }
-    })
+    setInterval( () => {
+      this.roads_save = [...this.roads]
+    }, 1000)
     Object.defineProperty(this, 'roads', {
       enumerable: false
     })
@@ -61,16 +58,29 @@ class Event{
   get time(){
     return this.#time
   }
-  constructor(func = (code) => console.log("HELLO WORLD"), time = 0, endCode = 0){
-    while(Game.events.has(this.i) || !this.i)this.i = Math.floor(Math.random() * 100)
+  constructor(func = (code) => console.log("HELLO WORLD"), time = 0, parameters = {endCode}, startFunc){
+    for(let i in parameters)this[i] = parameters[i]
+    this.#endCode = parameters.endCode ?? 0
+    while(Game.events.has(this.i) || !this.i)this.i = String(Math.floor(Math.random() * 100))
+    if(this.one){
+      Game.events.forEach(event => {
+        let y = true
+        for(let i in this)
+          if(this[i] != event[i] && i != 'i'){
+            y = false
+            break
+          }
+        if(y)throw Error('Duplicate event')
+      });
+    }
     Game.events.set(this.i, this)
     this.#time = time
     this.#func = func
-    this.#endCode = endCode
     this.t = setInterval(() => {
       this.#timer++
     }, 100);
 
+    if(startFunc)startFunc()
     this.#start()
   }
   async #start(){
@@ -82,7 +92,7 @@ class Event{
     clearInterval(this.t)
     if(!Game.events.has(this.i))return new Error("This event does not exist")
     Game.events.delete(this.i)
-    return this.#func(code)
+    return this.#func(...arguments)
   }
 }
 

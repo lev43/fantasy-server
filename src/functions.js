@@ -1,5 +1,4 @@
 const fs = require('fs')
-const DATA = global.DATA
 
 var date_ = new Date()
 function date(){

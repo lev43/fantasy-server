@@ -5,6 +5,7 @@ const events = require('events');
 const {jsonToStr, strToJson, log, mapToArr} = require('./functions.js');
 const { LocationMap, EnemyMap } = require('./Maps.js');
 const DATA = global.DATA
+const {Event} = require('./objects')
 
 
 class Game extends events{
@@ -107,11 +108,14 @@ Game.on('local-message', (locationID, id, msg) => {
   log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
 })
 
-Game.on('enemy-move', (id, locationID1, locationID2) => {
+Game.on('enemy-move', (id, road) => {
+  const enemy = Game.enemy.get(id)
+  if(!enemy)throw new Error('No enemy ' + id)
+  const {language} = enemy
   /*[...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
     .forEach(enemy => enemy.send({type: 'msg', id, content: 
       f.s(Bundle[enemy.language].events.move.gone, id, Game.location.get(locationID2).name)
-    }))*/
+    }))
   log(`${id} перешел на локацию ${Game.location.get(locationID2).name}`, 'messages');
 
 
@@ -119,7 +123,57 @@ Game.on('enemy-move', (id, locationID1, locationID2) => {
     .forEach(enemy => enemy.send({type: 'msg', id, content:
       f.s(Bundle[enemy.language].events.move.came, id, Game.location.get(locationID1).name)
     }))
-  log(`${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`, 'messages')
+  log(`${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`, 'messages')*/
+
+  function go(roads){
+    const time = parseInt(Setting.path().commands.go.time)
+    let location = roads.shift()
+    if(parseInt(location) < 1000)location = Game.location.get(enemy.location).roads_save[parseInt(location) - 1] ?? location
+
+    if(Game.location.has(location), Game.location.hasRoad(enemy.location, location)){
+      location = Game.location.get(location)
+
+      let m = new Event((code, id_intercept) => {
+        switch(code){
+          case 0:
+            Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.successfully, location.name));
+            [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != id)
+              .forEach(e => 
+                Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.gone, id, location.name))
+              )
+
+            enemy.location = location.id
+            if(roads.length > 0)go(roads)
+            break;
+          case 1:
+            Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.intercept, id_intercept, location.name));
+            [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id && e.id != id_intercept)
+              .forEach(e => 
+                Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.intercept, id, id_intercept, location.name))
+              )
+            break;
+          case 2:
+            Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.stop, location.name));
+            [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
+              .forEach(e => 
+                Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.stop, id, location.name))
+              )
+            break;
+          default:
+            throw new Error('code ' + code + ' not defined')
+        }
+      }, time * 1000, {id, location, type: 'move-enemy', one: true});
+
+      [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
+        .forEach(e => e.send({type: 'msg', id, content: 
+          f.s(Bundle[e.language].events.move.request, id, location.name, time, m.i, m.i)
+        }))
+      Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.request, location.name, time, m.i))
+    } else {
+      Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.noSuccessfully, location))
+    }
+  }
+  go(road)
 })
 
 module.exports = Game

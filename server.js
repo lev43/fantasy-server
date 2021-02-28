@@ -71,6 +71,7 @@ wss.on('connection', function connection(ws, request, client) {
         if(!id)id = Game.generateID(content)
 
         if(Game.users.has(id)){
+          console.log(Game.users)
           ws.send(jsonToStr({type: 'err', content: 'Этим персонажем уже играют'}))
           ws.close()
 
@@ -85,7 +86,6 @@ wss.on('connection', function connection(ws, request, client) {
                 if(Game.users.get(id) === obj){
                   myID = id
                 }})
-
 
               while(msg.content.indexOf('%id{') != -1){
                 let id = msg.content.slice(msg.content.search('%id{')+4, msg.content.search('}%id'))
