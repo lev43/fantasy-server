@@ -48,28 +48,29 @@ class Game extends events{
         })
     })
   }
-  save(){//Сохраняем хранилища указанные в saves
+  async save(){//Сохраняем хранилища указанные в saves
     for(let s in this.#saves){
       fs.writeFileSync(`${DATA}/saves/save-${s}.json`, jsonToStr(mapToArr(this[s])))
     }
     Setting.save('./src/DATA/setting.properties')//.then((s, e) => console.log(s, e))
   }
-  player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
+  async player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
     let id = this.id.get(hash)
     if(!id)return
+    let enemy = this.enemy.get(id)
+    enemy.language = language
+    if(!enemy.status.send)return
 
     let args = message.split(' ')
     let command = args.shift()
     let cmd = this.#cmds.get(command)
-    let enemy = this.enemy.get(id)
-    enemy.language = language
     if(cmd)message = message.slice(command.length)//Если есть комманда, ее стоит вырезать поскольку некоторые комманды работаю с текстом сообщения
 
     if(cmd){
       cmd.run({id, message, args, language})
-    }else this.emit('local-message', enemy.location, id, message)
+    }else this.emit('local-message', enemy.location, `%id{${id}}%id: ${message}`)
   }
-  update(){
+  async update(){
     if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: 'spawn'})
     if(!this.location.spawn || !this.location.has(this.location.spawn))this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
 
@@ -80,6 +81,7 @@ class Game extends events{
     this.enemy.forEach((enemy, id) => {
       if(!enemy.location || !this.location.has(enemy.location))enemy.location = this.location.spawn
       if(enemy.player)this.nickname.get(enemy.id)[enemy.id] = Bundle[enemy.language].names.enemy.default
+      enemy.update()
     })
   }
 }
@@ -87,24 +89,24 @@ class Game extends events{
 Game = new Game()
 
 Game.on('global-message', (id, msg)=>{//Комманда рассылки сообщения всем
-  Game.users.forEach(user => user.send({type: 'msg', id, content: `%id{${id}}%id: ${msg}`}))
+  Game.enemy.forEach(enemy => enemy.send({type: 'msg', id, content: `%id{${id}}%id: ${msg}`}))
   log(`Message<${id}>: ${msg}`, 'messages')
 })
 Game.on('private-server-message', (id, msg) => {
-  Game.users.get(id)?.send({type: 'msg', id, content: msg})
+  Game.enemy.get(id)?.send({type: 'msg', id, content: msg})
 })
 Game.on('private-server-message-edit', (id, mid, msg) => {
-  Game.users.get(id)?.send({type: 'msg-edit', id, mid, content: msg})
+  Game.enemy.get(id)?.send({type: 'msg-edit', id, mid, content: msg})
 })
 Game.on('private-message', (id1, id2, msg) => {
-  Game.users.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
+  Game.enemy.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
 })
 Game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
-  Game.users.forEach(user => user.send({type: 'msg', content: `SERVER: ${msg}`}))
+  Game.enemy.forEach(user => user.send({type: 'msg', content: `SERVER: ${msg}`}))
   log(`Message<SERVER>: ${msg}`, 'messages')
 })
-Game.on('local-message', (locationID, id, msg) => {
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID).forEach(enemy => enemy.send({type: 'msg', id, content: `${id ? `%id{${id}}%id: ` : ''}${msg}`}))
+Game.on('local-message', (locationID, msg, id) => {
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID && enemy.id != id).forEach(enemy => enemy.send({type: 'msg', id, content: msg}))
   log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
 })
 
@@ -112,18 +114,6 @@ Game.on('enemy-move', (id, road) => {
   const enemy = Game.enemy.get(id)
   if(!enemy)throw new Error('No enemy ' + id)
   const {language} = enemy
-  /*[...Game.enemy.values()].filter(enemy => enemy.location === locationID1 && enemy.id != id)
-    .forEach(enemy => enemy.send({type: 'msg', id, content: 
-      f.s(Bundle[enemy.language].events.move.gone, id, Game.location.get(locationID2).name)
-    }))
-  log(`${id} перешел на локацию ${Game.location.get(locationID2).name}`, 'messages');
-
-
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID2 && enemy.id != id)
-    .forEach(enemy => enemy.send({type: 'msg', id, content:
-      f.s(Bundle[enemy.language].events.move.came, id, Game.location.get(locationID1).name)
-    }))
-  log(`${id} пришел на эту локацию с локации ${Game.location.get(locationID1).name}`, 'messages')*/
 
   function go(roads){
     const time = parseInt(Setting.path().commands.go.time)
@@ -146,6 +136,7 @@ Game.on('enemy-move', (id, road) => {
             if(roads.length > 0)go(roads)
             break;
           case 1:
+            Game.emit('private-server-message-edit', id_intercept, m.i + '-timer', f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name))
             Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.intercept, id_intercept, location.name));
             [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id && e.id != id_intercept)
               .forEach(e => 
@@ -174,6 +165,46 @@ Game.on('enemy-move', (id, road) => {
     }
   }
   go(road)
+})
+
+Game.on('attack', (attacking, defender) => {
+  const time = parseInt(Setting.path().commands.attack.time)
+  attacking = Game.enemy.get(attacking), defender = Game.enemy.get(defender)
+  if(!attacking || !defender)throw Error((attacking ? '' : 'Attacking is not defined\n') + (defender ? '' : 'Defender is not defined\n'))
+  if(attacking.location != defender.location)throw Error('location of attacking is not defender location')
+  let attack = new Event( (code, id) => {
+    switch(code){
+      case 0:
+        defender.damage(attacking.parameters.damage).then(damage => {
+          defender.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, damage)})
+          attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, defender.id, damage)});
+          [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
+            .forEach(e => 
+              Game.emit('private-server-message-edit', e.id, attack.i + '-timer', f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, defender.id, damage))
+            )
+        })
+        break;
+        case 1:
+          if(id == defender.id){
+            defender.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id)})
+            attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id)});
+            [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
+              .forEach(e => 
+                Game.emit('private-server-message-edit', e.id, attack.i + '-timer', f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id))
+              )
+          }
+        break;
+      default:
+        throw Error('Code ' + code + ' is not defined')
+    }
+  }, time * 1000, {id: attacking.id, type: 'attack'})
+
+  attacking.send({type: 'msg', content: f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i)})
+  defender.send({type: 'msg', content: f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i)});
+  [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
+    .forEach(e => 
+      Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.attack.see, attacking.id, defender.id, time, attack.i))
+    )
 })
 
 module.exports = Game

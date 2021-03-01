@@ -1,11 +1,11 @@
+var send = true, view = true
 if ("WebSocket" in window) {
   var ws = new WebSocket(`ws://${host}`);
   var i = 1
   document.getElementById('setting').action = document.location.href
 
   function sendMessage(msg){
-    //console.log(password)
-    ws.send(jsonToStr({type: 'player-message', password: password, content: msg, language: params.language}))
+    if(send)ws.send(jsonToStr({type: 'player-message', password: password, content: msg, language: params.language}))
   }
 
   ws.onopen = ()=>{
@@ -30,7 +30,7 @@ if ("WebSocket" in window) {
     //console.log(message.data)
     let newMessage = document.createElement('code')
     data = strToJson(message.data)
-    let mid = data.content.indexOf('%mid') != -1 ? data.content.slice(data.content.indexOf('%mid') + 4) : null
+    let mid = (data.content?.indexOf('%mid') ?? -1) != -1 ? data.content.slice(data.content.indexOf('%mid') + 4) : null
     if(mid)data.content = data.content.slice(0, data.content.indexOf('%mid'))
     newMessage.id = 'message-' + mid ?? i
     switch(data.type){
@@ -60,9 +60,16 @@ if ("WebSocket" in window) {
           data.content = `${data.content.slice(0, data.content.search('%timer{'))}«${t}»${data.content.slice(data.content.search('}%timer') + 7 )}`
         }
         newMessage.innerText = data.content + '\n'
-        document.getElementById('channel').prepend(newMessage)
-        i++
+        if(view){
+          document.getElementById('channel').prepend(newMessage)
+          i++
+        }
         break;
+      case 'status':
+        send = data.send ?? send
+        view = data.view ?? view
+        document.getElementById('message').hidden = !send
+        break
       case 'err':
         alert(data.content)
         document.location.href = 'http://' + document.location.host + '/password.html'

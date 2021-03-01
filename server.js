@@ -86,7 +86,7 @@ wss.on('connection', function connection(ws, request, client) {
                   myID = id
                 }})
 
-              while(msg.content.indexOf('%id{') != -1){
+              while((msg.content?.indexOf('%id{') ?? -1) != -1){
                 let id = msg.content.slice(msg.content.search('%id{')+4, msg.content.search('}%id'))
                 msg.content = msg.content.slice(0, msg.content.search('%id{')) + (Game.nickname.get(myID)[id] ?? id) + msg.content.slice(msg.content.search('}%id')+4)
               }

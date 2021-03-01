@@ -34,16 +34,75 @@ class Location extends MyObject{
 class Enemy extends MyObject{
   location
   language = 'ru'
-  constructor(par = {id, location, language}){
+  save_par = {}
+  _type = 'enemy'
+  status = {send: true, view: true}
+  get type(){
+    return this._type
+  }
+  set type(value){
+    if(value == 'corpse'){
+      this.status = {send: false, view: true}
+    }
+
+
+    this.save_par[this._type] = this.parameters
+    this._type = value
+
+
+    if(this.save_par[value])this.parameters = this.save_par
+    else this.parameters = Object.assign(this.parameters ?? {}, Patterns[value])
+  }
+
+  constructor(par = {id, location, language, parameters}){
     super(par)
     if(!par.location)this.location = Game.location.spawn
     else this.location = par.location
+
+
     this.player = Game.users.has(this.id)
+    if(this.player)this.type = 'player'
+
+
+    if(par.parameters)this.parameters = par.parameters
+    else this.parameters = Object.assign(this.parameters ?? {}, Patterns[this.type])
+
+
     Game.nickname.set(this.id, {})
     Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
   }
-  send(msg){
+
+  async send(msg){
     Game.users.get(this.id)?.send(msg)
+  }
+
+  async attack(id){
+    try{
+      Game.emit('attack', this.id, id)
+    }catch(err){
+      if(err.message == 'location of attacking is not defender location')return false
+      else throw err
+    }
+  }
+
+  async damage(damage){
+    this.parameters.health -= damage
+    return damage
+  }
+
+  async update(){
+    if(this.type == 'corpse'){
+      this.send({type: 'msg', content: Bundle[this.language].events.dead})
+      this.send({type: 'status', send: false, view: false})
+      return
+    }
+    const par = this.parameters
+    this.player = Game.users.has(this.id)
+    if(this.player)this.type == 'player'
+
+    if(par.health <= 0)this.type = 'corpse'
+    if(par.health < par.maxHealth)par.health += par.regeneration
+    if(par.health >= par.maxHealth)par.health = par.maxHealth
   }
 }
 
