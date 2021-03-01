@@ -4,7 +4,6 @@ function command_is_router(help = {name}){
   let cmds = new Map()
   fs.readdir(`./src/cmds/${help.name}/`, 'utf-8', (err, files)=>{
     if(err)throw err
-    console.log(files)
     files.filter(file=> file.split('.').pop() == 'js')
     .forEach(cmd_name => {
       let cmd = require(`./cmds/${help.name}/` + cmd_name)

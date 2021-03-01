@@ -1,0 +1,12 @@
+<17:10:44> Message<undefined>
+Location<340649012>
+%id{688914219}%id: Hello!
+<17:14:50> Message<undefined>
+Location<340649012>
+%id{498844617}%id: Hehehe
+<17:17:52> Message<undefined>
+Location<340649012>
+%id{474452695}%id: ^)
+<17:17:52> Message<undefined>
+Location<340649012>
+%id{511502485}%id: ?

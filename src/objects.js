@@ -37,20 +37,26 @@ class Enemy extends MyObject{
   save_par = {}
   _type = 'enemy'
   status = {send: true, view: true}
+  get healthStat(){
+    const {health, maxHealth} = this.parameters
+    let s
+    if(health > maxHealth)     s = 0
+    if(health == maxHealth)    s = 1
+    if(health < maxHealth)     s = 2
+    if(health <= maxHealth / 2)s = 3
+    if(health <= maxHealth / 4)s = 4
+    if(health <= maxHealth / 8)s = 5
+    return s
+  }
   get type(){
     return this._type
   }
   set type(value){
-    if(value == 'corpse'){
-      this.status = {send: false, view: true}
-    }
-
-
-    this.save_par[this._type] = this.parameters
+    this.save_par[this._type] = Object.assign({}, this.parameters)
     this._type = value
 
 
-    if(this.save_par[value])this.parameters = this.save_par
+    if(this.save_par[value])this.parameters = Object.assign({}, this.save_par[this._type])
     else this.parameters = Object.assign(this.parameters ?? {}, Patterns[value])
   }
 
@@ -76,6 +82,16 @@ class Enemy extends MyObject{
     Game.users.get(this.id)?.send(msg)
   }
 
+  async bury(){
+    if(this.type != 'corpse')return false
+    Game.enemy.delete(this.id)
+    Game.id.forEach((id, i) => {
+      if(id == this.id)Game.id.delete(i)
+    })
+    this.send({type: 'err', content: Bundle[this.language].events.youBury})
+    return true
+  }
+
   async attack(id){
     try{
       Game.emit('attack', this.id, id)
@@ -97,10 +113,15 @@ class Enemy extends MyObject{
       return
     }
     const par = this.parameters
-    this.player = Game.users.has(this.id)
-    if(this.player)this.type == 'player'
+    if(Game.users.has(this.id))this.player = true
+    if(this.player)this.type = 'player'
 
-    if(par.health <= 0)this.type = 'corpse'
+    if(par.health <= 0){
+      this.type = 'corpse'
+      this.status = {send: false, view: true};
+      [...Game.enemy.values()].filter(enemy => enemy.location === this.location ?? enemy.id != this.id)
+        .forEach(enemy => enemy.send({type: 'msg', content: f.s(Bundle[enemy.language].events.deadSee, this.id)}))
+    }
     if(par.health < par.maxHealth)par.health += par.regeneration
     if(par.health >= par.maxHealth)par.health = par.maxHealth
   }

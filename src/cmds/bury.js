@@ -1,5 +1,5 @@
 let bundle = {}
-for(let i in Bundle)bundle[i] = Bundle[i].commands.attack
+for(let i in Bundle)bundle[i] = Bundle[i].commands.bury
 
 module.exports.run = async(p) => {
   const {id, args, language} = p
@@ -13,9 +13,12 @@ module.exports.run = async(p) => {
     Game.emit('private-server-message', id, f.s(bundle[language].noTarget, target))
     return
   }
-  enemy.attack(target).then(t => {if(t == false)Game.emit('private-server-message', id, f.s(bundle[language].noTarget, target))})
+  if(Game.enemy.get(target).type == 'corpse'){
+    Game.enemy.get(target).bury()
+    Game.emit('private-server-message', id, f.s(bundle[language].successfully, target))
+  }else Game.emit('private-server-message', id, f.s(bundle[language].noSuccessfully, target))
 }
 
 module.exports.help = {
-  name: 'attack'
+  name: 'bury'
 }

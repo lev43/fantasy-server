@@ -15,8 +15,13 @@ module.exports.run = async(p) => {
     let y = false
     let searchEnemy = args[0]
     if(parseInt(searchEnemy) < 1000)searchEnemy = enemys_[parseInt(searchEnemy)-1]
-    y = enemys_.find(e=>e==searchEnemy)
-    Game.emit('private-server-message', id, global.f.s(bundle[language].search, searchEnemy ?? '???', searchEnemy, (y ? '' : bundle[language].no + ' ')))
+    searchEnemy = [...Game.enemy.getByParameters({id: searchEnemy, location: enemy.location})][0][1]
+    if(!searchEnemy){
+      Game.emit('private-server-message', id, f.s(bundle[language].noEnemy, searchEnemy))
+      return
+    }
+    let health = bundle[language]['health' + searchEnemy.healthStat]
+    Game.emit('private-server-message', id, f.s(bundle[language].search, searchEnemy.id, searchEnemy.id) + '\n' + (searchEnemy.type == 'corpse' ? bundle[language].search_dead : health))
     return
   }
 
