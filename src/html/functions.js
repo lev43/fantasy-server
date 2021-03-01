@@ -29,6 +29,7 @@ params = {};
 urlParams.forEach((p, key) => {
   params[key] = p;
 });
+if(!params.password)document.location.href = document.location.origin + '/password.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '')
 
 function updateSetting(form){
   if(document.location.href.search('language=' + params.language) == -1)

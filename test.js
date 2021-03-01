@@ -1,1 +1,1 @@
-console.log(''+NaN === 'NaN')
+console.log(['ru', 'en'].toString().search('ru'))

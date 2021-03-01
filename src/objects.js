@@ -88,6 +88,7 @@ class Enemy extends MyObject{
     Game.id.forEach((id, i) => {
       if(id == this.id)Game.id.delete(i)
     })
+    Game.nickname.delete(this.id)
     this.send({type: 'err', content: Bundle[this.language].events.youBury})
     return true
   }

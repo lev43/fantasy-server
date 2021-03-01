@@ -1,4 +1,6 @@
-if(!params.language)params.language = 'ru'
+if(!params.language || ['ru', 'en'].toString().search(params.language) == -1){
+  updateSetting({language: {value: 'ru'}})
+}
 console.log('Language:', params.language)
 let text1 = document.getElementById('text1')
 let text2 = document.getElementById('text2')
