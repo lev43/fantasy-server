@@ -1,6 +1,7 @@
 //const host = 'smokeofanarchy.duckdns.org:6852'
 //const host = 'localhost:6852'
 const host = '192.168.1.205:6852'
+if(document.location.search.split('?').length > 2)document.location.href = document.location.origin + document.location.pathname + '?' + document.location.href.split('?')[1]
 
 function hash(data){
   return CryptoJS.MD5(data).toString()
@@ -29,10 +30,11 @@ params = {};
 urlParams.forEach((p, key) => {
   params[key] = p;
 });
-if(!params.password)document.location.href = document.location.origin + '/password.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '')
+
+if(!params.password && document.location.pathname != '/password.html')document.location.href = document.location.origin + '/password.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '')
 
 function updateSetting(form){
-  if(document.location.href.search('language=' + params.language) == -1)
+  if(!params.language || document.location.href.search('language=' + params.language) == -1)
     document.location.href += (document.location.href.split('?')[1] ? '&' : '?') + 'language=' + form.language.value
   else
     document.location.href = document.location.href.replace('language=' + params.language, 'language=' + form.language.value)
