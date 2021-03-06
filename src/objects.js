@@ -39,24 +39,22 @@ class Enemy extends MyObject{
   status = {send: true, view: true}
   get healthStat(){
     const {health, maxHealth} = this.parameters
-    let s
-    if(health > maxHealth)     s = 0
-    if(health == maxHealth)    s = 1
-    if(health < maxHealth)     s = 2
-    if(health <= maxHealth / 2)s = 3
-    if(health <= maxHealth / 4)s = 4
-    if(health <= maxHealth / 8)s = 5
-    return s
+    if(health > maxHealth)return 'p5'
+    if(health == maxHealth)return 'p4'
+    if(health <= maxHealth / 8)return '_0'
+    if(health <= maxHealth / 4)return 'p1'
+    if(health <= maxHealth / 2)return 'p2'
+    if(health < maxHealth)return 'p3'
   }
   get type(){
     return this._type
   }
   set type(value){
+    if(value == this._type)return
     this.save_par[this._type] = Object.assign({}, this.parameters)
     this._type = value
 
-
-    if(this.save_par[value])this.parameters = Object.assign({}, this.save_par[this._type])
+    if(this.save_par[value])this.parameters = Object.assign({}, this.save_par[value])
     else this.parameters = Object.assign(this.parameters ?? {}, Patterns[value])
   }
 
@@ -66,12 +64,11 @@ class Enemy extends MyObject{
     else this.location = par.location
 
 
-    this.player = Game.users.has(this.id)
-    if(this.player)this.type = 'player'
+    this.player = Game.users.has(this.id) || par.player
+    if(this.player)this._type = 'player'
 
 
-    if(par.parameters)this.parameters = par.parameters
-    else this.parameters = Object.assign(this.parameters ?? {}, Patterns[this.type])
+    if(!this.parameters)this.parameters = Object.assign({}, Patterns[this.type])
 
 
     Game.nickname.set(this.id, {})
@@ -106,6 +103,38 @@ class Enemy extends MyObject{
     this.parameters.health -= damage
     return damage
   }
+  indicatorOfDamageMe(damage){
+    damage = this.meterageOfDamageMe(damage)
+    if(damage <= 10)return 'm3'
+    if(damage <= 40)return 'm2'
+    if(damage <= 70)return 'm1'
+
+    if(damage >= 200)return 'p3'
+    if(damage >= 150)return 'p2'
+    if(damage >= 130)return 'p1'
+
+    return '_0'
+  }
+  indicatorOfDamage(damage){
+    damage = this.meterageOfDamage(damage)
+    if(damage <= 10)return 'm3'
+    if(damage <= 40)return 'm2'
+    if(damage <= 70)return 'm1'
+
+    if(damage >= 200)return 'p3'
+    if(damage >= 150)return 'p2'
+    if(damage >= 130)return 'p1'
+
+    return '_0'
+  }
+
+  meterageOfDamage(damage){
+    return damage / this.parameters.damage * 100
+  }
+
+  meterageOfDamageMe(damage){
+    return Math.floor(damage / (this.parameters.maxHealth / 2) * 300)
+  }
 
   async update(){
     if(this.type == 'corpse'){
@@ -114,17 +143,16 @@ class Enemy extends MyObject{
       return
     }
     const par = this.parameters
-    if(Game.users.has(this.id))this.player = true
-    if(this.player)this.type = 'player'
+    if(Game.users.has(this.id) && !this.player){this.player = true; this.type = 'player'}
 
     if(par.health <= 0){
       this.type = 'corpse'
       this.status = {send: false, view: true};
-      [...Game.enemy.values()].filter(enemy => enemy.location === this.location ?? enemy.id != this.id)
+      [...Game.enemy.values()].filter(enemy => enemy.location === this.location && enemy.id != this.id)
         .forEach(enemy => enemy.send({type: 'msg', content: f.s(Bundle[enemy.language].events.deadSee, this.id)}))
     }
     if(par.health < par.maxHealth)par.health += par.regeneration
-    if(par.health >= par.maxHealth)par.health = par.maxHealth
+    if(par.health > par.maxHealth)par.health -= par.regeneration
   }
 }
 

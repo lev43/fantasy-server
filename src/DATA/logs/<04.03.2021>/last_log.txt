@@ -37,3 +37,7 @@
 <15:46:22> Start server on http://0.0.0.0:6852
 <15:46:49> Start server on http://0.0.0.0:6852
 <15:47:02> Start server on http://0.0.0.0:6852
+<18:02:19> Start server on http://0.0.0.0:6852
+<18:02:19> New player on id <295421854>
+<18:02:19> Socket(192.168.1.205)[295421854] connect
+<18:02:19> Socket(192.168.1.205)[295421854] disconnect

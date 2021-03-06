@@ -15,7 +15,10 @@ module.exports.run = async(p) => {
   }
   if(Game.enemy.get(target).type == 'corpse'){
     Game.enemy.get(target).bury()
-    Game.emit('private-server-message', id, f.s(bundle[language].successfully, target))
+    Game.emit('private-server-message', id, f.s(bundle[language].successfully, target));
+    [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != enemy.id).forEach(e => {
+      e.send({type: 'msg', content: f.s(Bundle[e.language].events.seeBury, enemy.id, target)})
+    })
   }else Game.emit('private-server-message', id, f.s(bundle[language].noSuccessfully, target))
 }
 

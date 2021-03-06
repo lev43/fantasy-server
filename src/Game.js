@@ -175,13 +175,16 @@ Game.on('attack', (attacking, defender) => {
   let attack = new Event( (code, id) => {
     switch(code){
       case 0:
-        defender.damage(attacking.parameters.damage).then(damage => {
-          defender.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, damage)})
-          attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, defender.id, damage)});
-          [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
-            .forEach(e => 
-              Game.emit('private-server-message-edit', e.id, attack.i + '-timer', f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, defender.id, damage))
-            )
+        let damage = Math.floor(attacking.parameters.damage) + Math.floor( Math.random() * (attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage) ) * 2 - Math.floor(attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage)
+        defender.damage(damage)
+          .then(damage => {
+            let attackingStrong = attacking.indicatorOfDamage(damage), defenderStrong = defender.indicatorOfDamageMe(damage)
+            defender.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong])})
+            attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong])});
+            [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
+              .forEach(e => 
+                Game.emit('private-server-message-edit', e.id, attack.i + '-timer', f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, Bundle[e.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[e.language].indicator.damage[defenderStrong]))
+              )
         })
         break;
         case 1:

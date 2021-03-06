@@ -11,6 +11,7 @@ for(let i in Bundle_){
   Bundle[i].commands = Bundle_[i].path().commands
   Bundle[i].events = Bundle_[i].path().events
   Bundle[i].names = Bundle_[i].path().names
+  Bundle[i].indicator = Bundle_[i].path().indicator
 }
 
 Patterns = {}

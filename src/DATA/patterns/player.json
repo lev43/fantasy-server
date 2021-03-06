@@ -2,5 +2,6 @@
   "health": 100,
   "maxHealth": 100,
   "regeneration": 1,
-  "damage": 20
+  "damage": 20,
+  "inaccuracyDamage": 40
 }
