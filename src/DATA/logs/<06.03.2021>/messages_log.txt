@@ -49,3 +49,15 @@ Location<340649012>
 <19:33:14> Message<undefined>
 Location<340649012>
 %id{537472449}%id:     attacking.parameters.attackTime = attacking.parameters.attackInterval
+<20:19:52> Message<undefined>
+Location<340649012>
+%id{537472449}%id: Math.trunc( attacking.parameters.attackTime / attacking.parameters.attackInterval * 10 )
+<20:34:07> Message<undefined>
+Location<340649012>
+%id{537472449}%id: Math.floor(attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage
+<20:38:38> Message<undefined>
+Location<340649012>
+%id{537472449}%id:             Math.floor(attacking.parameters.damage / 300 * attacking.parameters.inaccuracyDamage) 
+<20:51:57> Message<undefined>
+Location<340649012>
+%id{537472449}%id:     return damage / this.parameters.damage * 100

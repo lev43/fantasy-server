@@ -105,13 +105,13 @@ class Enemy extends MyObject{
   }
   indicatorOfDamageMe(damage){
     damage = this.meterageOfDamageMe(damage)
-    if(damage <= 10)return 'm3'
-    if(damage <= 40)return 'm2'
-    if(damage <= 70)return 'm1'
+    if(damage <= 1)return 'm3'
+    if(damage <= 5)return 'm2'
+    if(damage <= 10)return 'm1'
 
-    if(damage >= 200)return 'p3'
-    if(damage >= 150)return 'p2'
-    if(damage >= 130)return 'p1'
+    if(damage >= 100)return 'p3'
+    if(damage >= 50)return 'p2'
+    if(damage >= 20)return 'p1'
 
     return '_0'
   }
@@ -133,7 +133,7 @@ class Enemy extends MyObject{
   }
 
   meterageOfDamageMe(damage){
-    return Math.floor(damage / (this.parameters.maxHealth / 2) * 300)
+    return damage / this.parameters.maxHealth * 100
   }
 
   async update(){
@@ -154,6 +154,7 @@ class Enemy extends MyObject{
     if(par.health > par.maxHealth)par.health -= par.regeneration
     par.regenerationTime += s
     if(par.attackTime > 0)par.attackTime -= s
+    if(par.attackTime < 0)par.attackTime = 0
     if(par.regenerationTime >= par.regenerationInterval){
       if(par.health < par.maxHealth)par.health += par.regeneration
       par.regenerationTime = 0
