@@ -37,3 +37,15 @@ Location<340649012>
 <19:04:25> Message<undefined>
 Location<340649012>
 %id{537472449}%id: Хехехе
+<19:28:26> Message<undefined>
+Location<340649012>
+%id{537472449}%id: attacking.parameters.reloadAttack / attacking
+<19:32:43> Message<undefined>
+Location<340649012>
+%id{537472449}%id: attackTime
+<19:32:43> Message<undefined>
+Location<340649012>
+%id{537472449}%id: attackTime
+<19:33:14> Message<undefined>
+Location<340649012>
+%id{537472449}%id:     attacking.parameters.attackTime = attacking.parameters.attackInterval

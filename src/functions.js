@@ -1,6 +1,7 @@
 const fs = require('fs')
 
 var date_ = new Date()
+var d = new Date().getSeconds()
 function date(){
   let d = date_.toLocaleDateString()
   if(d.split('/'))d = d.split('/').join('.')

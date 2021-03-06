@@ -13,7 +13,7 @@ Game.load()
 //Game.location.add({name: 'hehehe'})
 setInterval(()=>{
   Game.save()
-}, 1000)
+}, parseInt(Setting.path().all.saveTime))
 
 const host = '0.0.0.0';
 const port = 6852;
@@ -124,10 +124,9 @@ wss.on('connection', function connection(ws, request, client) {
 
 server.listen(port, host, () => {
   con(`Start server on http://${host}:${port}`);
-
   setInterval(()=>{
     Game.update()
-  }, 1000)
+  }, parseInt(Setting.path().all.updateTime))
 
   require('./console.js')
 });

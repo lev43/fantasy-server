@@ -142,7 +142,7 @@ class Enemy extends MyObject{
       this.send({type: 'status', send: false, view: false})
       return
     }
-    const par = this.parameters
+    const par = this.parameters, s = parseInt(Setting.path().all.updateTime) / 1000
     if(Game.users.has(this.id) && !this.player){this.player = true; this.type = 'player'}
 
     if(par.health <= 0){
@@ -151,8 +151,13 @@ class Enemy extends MyObject{
       [...Game.enemy.values()].filter(enemy => enemy.location === this.location && enemy.id != this.id)
         .forEach(enemy => enemy.send({type: 'msg', content: f.s(Bundle[enemy.language].events.deadSee, this.id)}))
     }
-    if(par.health < par.maxHealth)par.health += par.regeneration
     if(par.health > par.maxHealth)par.health -= par.regeneration
+    par.regenerationTime += s
+    if(par.attackTime > 0)par.attackTime -= s
+    if(par.regenerationTime >= par.regenerationInterval){
+      if(par.health < par.maxHealth)par.health += par.regeneration
+      par.regenerationTime = 0
+    }
   }
 }
 
