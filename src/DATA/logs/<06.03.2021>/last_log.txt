@@ -281,3 +281,145 @@
 <11:27:48> New player on id <499146009>
 <11:27:48> Socket(192.168.1.205)[499146009] connect
 <11:27:48> Socket(192.168.1.205)[567889408] disconnect
+<18:07:43> Start server on http://0.0.0.0:6852
+<18:07:43> New player on id <295421854>
+<18:07:43> Socket(192.168.1.205)[295421854] connect
+<18:07:43> New player on id <499146009>
+<18:07:43> Socket(192.168.1.205)[499146009] connect
+<18:07:43> Socket(192.168.1.205)[499146009] disconnect
+<18:07:43> New player on id <475141819>
+<18:07:43> Socket(192.168.1.205)[475141819] connect
+<18:10:04> Start server on http://0.0.0.0:6852
+<18:10:04> New player on id <295421854>
+<18:10:04> Socket(192.168.1.205)[295421854] connect
+<18:10:04> New player on id <475141819>
+<18:10:04> Socket(192.168.1.205)[475141819] connect
+<18:12:01> Start server on http://0.0.0.0:6852
+<18:12:01> New player on id <475141819>
+<18:12:01> Socket(192.168.1.205)[475141819] connect
+<18:12:01> New player on id <295421854>
+<18:12:01> Socket(192.168.1.205)[295421854] connect
+<18:12:58> Start server on http://0.0.0.0:6852
+<18:12:58> New player on id <295421854>
+<18:12:58> Socket(192.168.1.205)[295421854] connect
+<18:12:58> New player on id <475141819>
+<18:12:58> Socket(192.168.1.205)[475141819] connect
+<18:12:58> Socket(192.168.1.205)[475141819] disconnect
+<18:12:58> reload-html-files
+<18:12:58> Socket(192.168.1.205)[295421854] disconnect
+<18:12:58> New player on id <295421854>
+<18:12:58> Socket(192.168.1.205)[295421854] connect
+<18:16:45> Start server on http://0.0.0.0:6852
+<18:16:45> New player on id <985451722>
+<18:16:45> Socket(192.168.1.205)[985451722] connect
+<18:16:45> New player on id <295421854>
+<18:16:45> Socket(192.168.1.205)[295421854] connect
+<18:16:45> Socket(192.168.1.205)[985451722] disconnect
+<18:17:51> Start server on http://0.0.0.0:6852
+<18:17:51> Socket(192.168.1.205)[295421854] connect
+<18:17:51> New player on id <295421854>
+<18:17:51> New player on id <835306398>
+<18:17:51> Socket(192.168.1.205)[835306398] connect
+<18:18:27> Start server on http://0.0.0.0:6852
+<18:18:27> New player on id <295421854>
+<18:18:27> Socket(192.168.1.205)[295421854] connect
+<18:19:58> Start server on http://0.0.0.0:6852
+<18:19:58> New player on id <295421854>
+<18:19:58> Socket(192.168.1.205)[295421854] connect
+<18:21:17> Start server on http://0.0.0.0:6852
+<18:21:17> New player on id <295421854>
+<18:21:17> Socket(192.168.1.205)[295421854] connect
+<18:28:36> Start server on http://0.0.0.0:6852
+<18:28:36> New player on id <295421854>
+<18:28:36> Socket(192.168.1.205)[295421854] connect
+<18:28:36> New player on id <505097853>
+<18:28:36> Socket(192.168.1.205)[505097853] connect
+<18:28:36> Socket(192.168.1.205)[505097853] disconnect
+<18:28:36> New player on id <54898149>
+<18:28:36> Socket(192.168.1.205)[54898149] connect
+<18:30:03> Start server on http://0.0.0.0:6852
+<18:30:11> Start server on http://0.0.0.0:6852
+<18:30:11> New player on id <295421854>
+<18:30:11> Socket(192.168.1.205)[295421854] connect
+<18:30:11> New player on id <54898149>
+<18:30:11> Socket(192.168.1.205)[54898149] connect
+<18:33:40> Start server on http://0.0.0.0:6852
+<18:33:40> New player on id <295421854>
+<18:33:40> Socket(192.168.1.205)[295421854] connect
+<18:33:40> New player on id <54898149>
+<18:33:40> Socket(192.168.1.205)[54898149] connect
+<18:33:40> Socket(192.168.1.205)[54898149] disconnect
+<18:33:40> New player on id <309683828>
+<18:33:40> Socket(192.168.1.205)[309683828] connect
+<18:36:00> Start server on http://0.0.0.0:6852
+<18:36:00> New player on id <309683828>
+<18:36:00> Socket(192.168.1.205)[309683828] connect
+<18:36:00> New player on id <295421854>
+<18:36:00> Socket(192.168.1.205)[295421854] connect
+<18:36:00> Socket(192.168.1.205)[309683828] disconnect
+<18:36:00> Socket(192.168.1.205)[654264101] connect
+<18:36:00> New player on id <654264101>
+<18:37:07> Start server on http://0.0.0.0:6852
+<18:37:07> New player on id <295421854>
+<18:37:07> Socket(192.168.1.205)[295421854] connect
+<18:37:07> Socket(192.168.1.205)[58272081] connect
+<18:37:07> New player on id <58272081>
+<18:38:19> Start server on http://0.0.0.0:6852
+<18:38:19> New player on id <58272081>
+<18:38:19> Socket(192.168.1.205)[58272081] connect
+<18:38:19> Socket(192.168.1.205)[58272081] disconnect
+<18:38:19> New player on id <717675172>
+<18:38:19> Socket(192.168.1.205)[717675172] connect
+<18:38:19> New player on id <295421854>
+<18:38:19> Socket(192.168.1.205)[295421854] connect
+<18:39:33> Start server on http://0.0.0.0:6852
+<18:39:46> Start server on http://0.0.0.0:6852
+<18:42:23> Start server on http://0.0.0.0:6852
+<18:42:39> Start server on http://0.0.0.0:6852
+<18:42:39> New player on id <717675172>
+<18:42:39> Socket(192.168.1.205)[717675172] connect
+<18:42:39> New player on id <295421854>
+<18:42:39> Socket(192.168.1.205)[295421854] connect
+<18:42:39> Socket(192.168.1.205)[717675172] disconnect
+<18:42:39> New player on id <442482356>
+<18:42:39> Socket(192.168.1.205)[442482356] connect
+<18:42:39> Socket(192.168.1.205)[442482356] disconnect
+<18:42:39> New player on id <28504747>
+<18:42:39> Socket(192.168.1.205)[28504747] connect
+<18:43:38> Start server on http://0.0.0.0:6852
+<18:43:38> New player on id <295421854>
+<18:43:38> Socket(192.168.1.205)[295421854] connect
+<18:43:38> New player on id <28504747>
+<18:43:38> Socket(192.168.1.205)[28504747] connect
+<18:45:00> Start server on http://0.0.0.0:6852
+<18:45:00> New player on id <295421854>
+<18:45:00> Socket(192.168.1.205)[295421854] connect
+<18:45:00> New player on id <28504747>
+<18:45:00> Socket(192.168.1.205)[28504747] connect
+<18:45:00> Socket(192.168.1.205)[28504747] disconnect
+<18:45:00> Socket(192.168.1.205)[769645228] connect
+<18:45:00> New player on id <769645228>
+<18:46:05> Start server on http://0.0.0.0:6852
+<18:46:05> New player on id <295421854>
+<18:46:05> Socket(192.168.1.205)[295421854] connect
+<18:46:05> New player on id <769645228>
+<18:46:05> Socket(192.168.1.205)[769645228] connect
+<18:46:05> Socket(192.168.1.205)[769645228] disconnect
+<18:46:05> New player on id <792410842>
+<18:46:05> Socket(192.168.1.205)[792410842] connect
+<18:47:08> Start server on http://0.0.0.0:6852
+<18:47:08> New player on id <792410842>
+<18:47:08> Socket(192.168.1.205)[792410842] connect
+<18:47:08> Socket(192.168.1.205)[792410842] disconnect
+<18:47:08> Socket(192.168.1.205)[768633157] connect
+<18:47:08> New player on id <768633157>
+<18:47:08> New player on id <295421854>
+<18:47:08> Socket(192.168.1.205)[295421854] connect
+<18:47:08> reload-html-files
+<18:47:08> Socket(192.168.1.205)[295421854] disconnect
+<18:47:08> New player on id <104748095>
+<18:47:08> Socket(192.168.1.205)[104748095] connect
+<18:47:08> Socket(192.168.1.205)[104748095] disconnect
+<19:04:25> Start server on http://0.0.0.0:6852
+<19:04:25> New player on id <537472449>
+<19:04:25> Socket(192.168.1.205)[537472449] connect

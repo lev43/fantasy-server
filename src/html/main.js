@@ -30,10 +30,14 @@ if ("WebSocket" in window) {
     data = strToJson(message.data)
     let mid = (data.content?.indexOf('%mid') ?? -1) != -1 ? data.content.slice(data.content.indexOf('%mid') + 4) : null
     if(mid)data.content = data.content.slice(0, data.content.indexOf('%mid'))
-    newMessage.id = 'message-' + mid ?? i
+    newMessage.id = 'message-' + (mid ?? i)
     switch(data.type){
       case 'msg-edit':
-        document.getElementById(`message-${data.mid}`).innerText = data.content + '\n'
+        if(document.getElementById(`message-${data.mid}`))document.getElementById(`message-${data.mid}`).innerText = data.content + '\n'
+        break
+      case 'msg-delete':
+        let m = document.getElementById(`message-${data.mid}`)
+        m.parentNode.removeChild(m)
         break
       case 'msg':
         while(data.content.indexOf('%timer{') != -1){
@@ -51,8 +55,11 @@ if ("WebSocket" in window) {
             if(t < 1 || String(t) == 'NaN')clearInterval(interval)
             t--
             let timer = document.getElementById(timerID)
-            timer.innerText = timer.innerText.replace(`«${t + 1}»`, `${`«${t}»`}`)
-            if(t < 0 || String(t) == 'NaN')timer.innerText = timer.innerText.replace(`«${t}»`, '-')
+            if(!timer)clearInterval(interval)
+            else {
+              timer.innerText = timer.innerText.replace(`«${t + 1}»`, `${`«${t}»`}`)
+              if(t < 0 || String(t) == 'NaN')timer.innerText = timer.innerText.replace(`«${t}»`, '-')
+            }
           }, 1000)
 
           data.content = `${data.content.slice(0, data.content.search('%timer{'))}«${t}»${data.content.slice(data.content.search('}%timer') + 7 )}`

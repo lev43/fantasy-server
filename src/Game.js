@@ -98,6 +98,9 @@ Game.on('private-server-message', (id, msg) => {
 Game.on('private-server-message-edit', (id, mid, msg) => {
   Game.enemy.get(id)?.send({type: 'msg-edit', id, mid, content: msg})
 })
+Game.on('private-server-message-delete', (id, mid) => {
+  Game.enemy.get(id)?.send({type: 'msg-delete', mid})
+})
 Game.on('private-message', (id1, id2, msg) => {
   Game.enemy.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
 })
@@ -130,8 +133,14 @@ Game.on('enemy-move', (id, road) => {
             [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != id)
               .forEach(e => 
                 Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.gone, id, location.name))
-              )
+              );
 
+              
+            [...Game.enemy.values()].filter(e => e.location == location.id && e.id != id)
+              .forEach(e => 
+                Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.move.came, id, Game.location.get(enemy.location).name))
+                )
+                
             enemy.location = location.id
             if(roads.length > 0)go(roads)
             break;
@@ -176,6 +185,21 @@ Game.on('attack', (attacking, defender) => {
     switch(code){
       case 0:
         let damage = Math.floor(attacking.parameters.damage) + Math.floor( Math.random() * (attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage) ) * 2 - Math.floor(attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage)
+        if(!Game.enemy.has(attacking.id)){
+          [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
+            .forEach(e => 
+              Game.emit('private-server-message-delete', e.id, attack.i + '-timer')
+            )
+          return
+        }
+        if(!Game.enemy.has(defender.id)){
+          attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id)});
+          [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
+            .forEach(e => 
+              Game.emit('private-server-message-delete', e.id, attack.i + '-timer')
+            )
+          return
+        }
         defender.damage(damage)
           .then(damage => {
             let attackingStrong = attacking.indicatorOfDamage(damage), defenderStrong = defender.indicatorOfDamageMe(damage)
