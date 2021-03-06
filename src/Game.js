@@ -184,7 +184,18 @@ Game.on('attack', (attacking, defender) => {
   let attack = new Event( (code, id) => {
     switch(code){
       case 0:
-        let damage = Math.floor(attacking.parameters.damage) + Math.floor( Math.random() * (attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage) ) * 2 - Math.floor(attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage)
+        let damage = Math.floor(
+          (
+            (attacking.parameters.damage)
+            +
+            Math.floor( Math.random() * (attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage) )
+            * 2 - 
+            Math.floor(attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage) 
+          ) / (
+            attacking.parameters.attackTime == 0 ? 1 : ( attacking.parameters.attackTime / attacking.parameters.attackInterval * 100 )
+          )
+        )
+        console.log(damage, attacking.parameters.attackTime / attacking.parameters.attackInterval * 100, attacking.parameters.attackTime, attacking.parameters.attackInterval)
         if(!Game.enemy.has(attacking.id)){
           [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
             .forEach(e => 
@@ -224,6 +235,7 @@ Game.on('attack', (attacking, defender) => {
       default:
         throw Error('Code ' + code + ' is not defined')
     }
+    attacking.parameters.attackTime = attacking.parameters.attackInterval
   }, time * 1000, {id: attacking.id, type: 'attack'})
 
   attacking.send({type: 'msg', content: f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i)})
