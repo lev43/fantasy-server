@@ -6,6 +6,6 @@
   "regenerationInterval": 10,
   "damage": 20,
   "attackTime": 0,
-  "attackInterval": 5,
+  "attackInterval": 3,
   "inaccuracyDamage": 40
 }

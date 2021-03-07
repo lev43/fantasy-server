@@ -11,6 +11,18 @@
   word-break: keep-all;
 }
 
+.timer{
+  color: black; /* Цвет текста */
+  font-family: sans-serif; /* Моношириный шрифт */
+  quotes: "«" "»"; /* Устанавливаем вид кавычек */
+} 
+.timer:before {
+  content: open-quote; /* Добавляем перед текстом открывающую кавычку */
+}
+.timer:after {
+  content: close-quote; /* Добавляем после текста закрывающую кавычку */
+}
+
 h1{
   width: max-content;
   margin: 5px;

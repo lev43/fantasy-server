@@ -68,7 +68,7 @@ class Game extends events{
 
     if(cmd){
       cmd.run({id, message, args, language})
-    }else this.emit('local-message', enemy.location, `%id{${id}}%id: ${message}`)
+    }else this.emit('local-message', enemy.location, `%id{${id}}%id: ${message}`, enemy.id)
   }
   async update(){
     if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: 'spawn'})
@@ -108,8 +108,8 @@ Game.on('server-message', (msg)=>{//Комманда рассылки сообщ
   Game.enemy.forEach(user => user.send({type: 'msg', content: `SERVER: ${msg}`}))
   log(`Message<SERVER>: ${msg}`, 'messages')
 })
-Game.on('local-message', (locationID, msg, id) => {
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID && enemy.id != id).forEach(enemy => enemy.send({type: 'msg', id, content: msg}))
+Game.on('local-message', (locationID, msg, id, notID = false) => {
+  [...Game.enemy.values()].filter(enemy => enemy.location === locationID && (enemy.id != id || !notID)).forEach(enemy => enemy.send({type: 'msg', id, content: msg}))
   log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
 })
 
@@ -129,10 +129,10 @@ Game.on('enemy-move', (id, road) => {
       let m = new Event((code, id_intercept) => {
         switch(code){
           case 0:
-            Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.successfully, location.name));
+            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.successfully, location.name));
             [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.gone, id, location.name))
+                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.gone, id, location.name))
               );
 
               
@@ -145,18 +145,18 @@ Game.on('enemy-move', (id, road) => {
             if(roads.length > 0)go(roads)
             break;
           case 1:
-            Game.emit('private-server-message-edit', id_intercept, m.i + '-timer', f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name))
-            Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.intercept, id_intercept, location.name));
+            Game.emit('private-server-message-edit', id_intercept, m.i, f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name))
+            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.intercept, id_intercept, location.name));
             [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id && e.id != id_intercept)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.intercept, id, id_intercept, location.name))
+                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.intercept, id, id_intercept, location.name))
               )
             break;
           case 2:
-            Game.emit('private-server-message-edit', id, m.i + '-timer', f.s(Bundle[language].commands.go.stop, location.name));
+            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.stop, location.name));
             [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i + '-timer', f.s(Bundle[e.language].events.move.stop, id, location.name))
+                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.stop, id, location.name))
               )
             break;
           default:
@@ -200,36 +200,36 @@ Game.on('attack', (attacking, defender) => {
         if(!Game.enemy.has(attacking.id)){
           [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
             .forEach(e => 
-              Game.emit('private-server-message-delete', e.id, attack.i + '-timer')
+              Game.emit('private-server-message-delete', e.id, attack.i)
             )
           return
         }
         if(!Game.enemy.has(defender.id)){
-          attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id)});
+          attacking.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id)});
           [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
             .forEach(e => 
-              Game.emit('private-server-message-delete', e.id, attack.i + '-timer')
+              Game.emit('private-server-message-delete', e.id, attack.i)
             )
           return
         }
         defender.damage(damage)
           .then(damage => {
             let attackingStrong = attacking.indicatorOfDamage(damage), defenderStrong = defender.indicatorOfDamageMe(damage)
-            defender.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong])})
-            attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong])});
+            defender.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong])})
+            attacking.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong])});
             [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, attack.i + '-timer', f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, Bundle[e.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[e.language].indicator.damage[defenderStrong]))
+                Game.emit('private-server-message-edit', e.id, attack.i, f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, Bundle[e.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[e.language].indicator.damage[defenderStrong]))
               )
         })
         break;
         case 1:
           if(id == defender.id){
-            defender.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id)})
-            attacking.send({type: 'msg-edit', mid: attack.i + '-timer', content: f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id)});
+            defender.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id)})
+            attacking.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id)});
             [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, attack.i + '-timer', f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id))
+                Game.emit('private-server-message-edit', e.id, attack.i, f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id))
               )
           }
         break;

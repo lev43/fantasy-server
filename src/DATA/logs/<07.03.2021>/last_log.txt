@@ -1,0 +1,206 @@
+<19:27:12> Start server on http://0.0.0.0:6852
+<19:27:12> reload-html-files
+<19:33:56> Start server on http://0.0.0.0:6852
+<19:33:56> New player on id <568257900>
+<19:33:56> Socket(192.168.1.205)[568257900] connect
+<19:34:23> Start server on http://0.0.0.0:6852
+<19:34:23> New player on id <568257900>
+<19:34:23> Socket(192.168.1.205)[568257900] connect
+<19:34:23> reload-html-files
+<19:34:23> Socket(192.168.1.205)[568257900] disconnect
+<19:34:23> New player on id <568257900>
+<19:34:23> Socket(192.168.1.205)[568257900] connect
+<19:34:23> New player on id <978320206>
+<19:34:23> Socket(192.168.1.205)[978320206] connect
+<19:41:09> Start server on http://0.0.0.0:6852
+<19:41:45> Start server on http://0.0.0.0:6852
+<19:41:45> New player on id <568257900>
+<19:41:45> Socket(192.168.1.205)[568257900] connect
+<19:44:15> Start server on http://0.0.0.0:6852
+<19:44:15> New player on id <568257900>
+<19:44:15> Socket(192.168.1.205)[568257900] connect
+<19:44:15> reload-html-files
+<19:44:15> Socket(192.168.1.205)[568257900] disconnect
+<19:44:15> New player on id <568257900>
+<19:44:15> Socket(192.168.1.205)[568257900] connect
+<19:44:15> reload-html-files
+<19:44:15> Socket(192.168.1.205)[568257900] disconnect
+<19:44:15> New player on id <568257900>
+<19:44:15> Socket(192.168.1.205)[568257900] connect
+<19:44:15> reload-html-files
+<19:44:15> Socket(192.168.1.205)[568257900] disconnect
+<19:44:15> New player on id <568257900>
+<19:44:15> Socket(192.168.1.205)[568257900] connect
+<19:44:15> reload-html-files
+<19:44:15> Socket(192.168.1.205)[568257900] disconnect
+<19:44:15> New player on id <568257900>
+<19:44:15> Socket(192.168.1.205)[568257900] connect
+<20:24:10> Start server on http://0.0.0.0:6852
+<20:24:10> New player on id <568257900>
+<20:24:10> Socket(192.168.1.205)[568257900] connect
+<20:24:10> Socket(192.168.1.205)[568257900] disconnect
+<20:24:10> New player on id <568257900>
+<20:24:10> Socket(192.168.1.205)[568257900] connect
+<20:25:26> Start server on http://0.0.0.0:6852
+<20:25:26> New player on id <568257900>
+<20:25:26> Socket(192.168.1.205)[568257900] connect
+<20:26:28> Start server on http://0.0.0.0:6852
+<20:26:28> New player on id <568257900>
+<20:26:28> Socket(192.168.1.205)[568257900] connect
+<20:28:21> Start server on http://0.0.0.0:6852
+<20:28:21> New player on id <568257900>
+<20:28:21> Socket(192.168.1.205)[568257900] connect
+<20:29:20> Start server on http://0.0.0.0:6852
+<20:29:20> New player on id <978320206>
+<20:29:20> Socket(192.168.1.205)[978320206] connect
+<20:30:08> Start server on http://0.0.0.0:6852
+<20:30:08> New player on id <568257900>
+<20:30:08> Socket(192.168.1.205)[568257900] connect
+<20:30:08> reload-html-files
+<20:30:08> Socket(192.168.1.205)[568257900] disconnect
+<20:30:08> New player on id <568257900>
+<20:30:08> Socket(192.168.1.205)[568257900] connect
+<20:30:08> Socket(192.168.1.205)[568257900] disconnect
+<20:30:08> New player on id <568257900>
+<20:30:08> Socket(192.168.1.205)[568257900] connect
+<20:32:09> Start server on http://0.0.0.0:6852
+<20:32:09> New player on id <568257900>
+<20:32:09> Socket(192.168.1.205)[568257900] connect
+<20:32:09> reload-html-files
+<20:32:09> Socket(192.168.1.205)[568257900] disconnect
+<20:32:09> New player on id <568257900>
+<20:32:09> Socket(192.168.1.205)[568257900] connect
+<20:32:09> reload-html-files
+<20:32:09> Socket(192.168.1.205)[568257900] disconnect
+<20:32:09> New player on id <568257900>
+<20:32:09> Socket(192.168.1.205)[568257900] connect
+<20:32:09> reload-html-files
+<20:32:09> Socket(192.168.1.205)[568257900] disconnect
+<20:32:09> New player on id <568257900>
+<20:32:09> Socket(192.168.1.205)[568257900] connect
+<20:34:07> Start server on http://0.0.0.0:6852
+<20:34:07> New player on id <568257900>
+<20:34:07> Socket(192.168.1.205)[568257900] connect
+<20:34:07> reload-html-files
+<20:34:07> Socket(192.168.1.205)[568257900] disconnect
+<20:34:07> New player on id <568257900>
+<20:34:07> Socket(192.168.1.205)[568257900] connect
+<20:34:07> reload-html-files
+<20:34:07> Socket(192.168.1.205)[568257900] disconnect
+<20:34:07> New player on id <568257900>
+<20:34:07> Socket(192.168.1.205)[568257900] connect
+<20:34:07> reload-html-files
+<20:34:07> Socket(192.168.1.205)[568257900] disconnect
+<20:34:07> New player on id <568257900>
+<20:34:07> Socket(192.168.1.205)[568257900] connect
+<20:34:07> reload-html-files
+<20:34:07> Socket(192.168.1.205)[568257900] disconnect
+<20:34:07> New player on id <568257900>
+<20:34:07> Socket(192.168.1.205)[568257900] connect
+<20:34:07> reload-html-files
+<20:34:07> Socket(192.168.1.205)[568257900] disconnect
+<20:34:07> New player on id <568257900>
+<20:34:07> Socket(192.168.1.205)[568257900] connect
+<20:41:40> Start server on http://0.0.0.0:6852
+<20:41:40> reload-html-files
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> reload-html-files
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> New player on id <568257900>
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> reload-html-files
+<20:41:40> Socket(192.168.1.205)[568257900] disconnect
+<20:41:40> Socket(192.168.1.205)[568257900] connect
+<20:41:40> New player on id <568257900>
+<21:05:25> Start server on http://0.0.0.0:6852
+<21:05:25> New player on id <568257900>
+<21:05:25> Socket(192.168.1.205)[568257900] connect
+<21:05:25> reload-html-files
+<21:05:25> reload-html-files
+<21:05:25> Socket(192.168.1.205)[568257900] disconnect
+<21:05:25> New player on id <568257900>
+<21:05:25> Socket(192.168.1.205)[568257900] connect

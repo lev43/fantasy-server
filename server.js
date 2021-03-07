@@ -95,6 +95,7 @@ wss.on('connection', function connection(ws, request, client) {
                 }
               }
 
+              if(!msg.id)throw new Error('Not id')
 
               fun.bind(obj)(JSON.stringify(msg))
             }
@@ -110,6 +111,13 @@ wss.on('connection', function connection(ws, request, client) {
             Game.users.delete(id)
           }
           ws.on('close', close)
+          ws.send({type: 'msg', id: 'SERVER', content:
+            f.s(
+              Bundle[data.language].events.connect,
+              id,
+              Game.location.get(Game.enemy.get(id)?.location)?.name ?? Game.location.get(Game.location.spawn).name
+            )
+          })
         }
         break;
 

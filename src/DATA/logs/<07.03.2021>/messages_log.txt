@@ -1,0 +1,381 @@
+<19:34:23> Message<undefined>
+Location<340649012>
+%id{568257900}%id: Руддщ!
+<19:34:23> Message<undefined>
+Location<340649012>
+%id{568257900}%id: Привет!
+<19:34:23> Message<undefined>
+Location<340649012>
+%id{978320206}%id: Hello!
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: Hello!
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: Hello!
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: abc
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: abcde
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: Hello!
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: abcde
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: Hehehe
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: Не то
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: abc
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: Hehehe
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: !!!!
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: !!!!\nABCDHF
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: HEHEHEHEHEHEHE
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: H H HH H H H H H H
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: !!!!!!!!!!!!!!!
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<19:44:15> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
+<20:24:10> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:24:10> Message<568257900>
+Location<340649012>
+%id{568257900}%id: `
+<20:24:10> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:24:10> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:24:10> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:24:10> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:25:26> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:25:26> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:25:26> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:25:26> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:25:26> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
+<20:25:26> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:26:28> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:28:21> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:29:20> Message<978320206>
+Location<340649012>
+%id{978320206}%id: %timer{5}%timer
+<20:30:08> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:30:08> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:30:08> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:30:08> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:30:08> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:30:08> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: d
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
+<20:32:09> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: abc\ncba
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: abc<br>cba
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: <br>abc<br>cba
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: <strong>abcde</strong>
+<20:34:07> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: data.content.slice(data.content.search('}%timer') + 7 )
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123%timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123 %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1]
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123%timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123 %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: sss
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: newMessage.innerHTML = newMessage.innerHTML.replace('%s', timer)
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: sss
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: sss
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123%timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 123
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1234%timer{5}%timer1234
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer%timer{4}%timer%timer{3}%timer%timer{2}%timer%timer{1}%timer%timer{0}%timer%timer{-1}%timer
+<20:41:40> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer%timer{5}%timer
+<21:05:25> Message<568257900>
+Location<340649012>
+%id{568257900}%id: %timer{5}%timer
+<21:05:25> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 1
+<21:05:25> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 2
+<21:05:25> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 3
+<21:05:25> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 4
+<21:05:25> Message<568257900>
+Location<340649012>
+%id{568257900}%id: 5
