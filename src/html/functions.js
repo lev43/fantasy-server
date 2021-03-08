@@ -34,12 +34,31 @@ urlParams.forEach((p, key) => {
 if(!params.password && document.location.pathname != '/password.html')document.location.href = document.location.origin + '/password.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '')
 
 function updateSetting(form){
-  if(!params.language || document.location.href.search('language=' + params.language) == -1)
-    document.location.href += (document.location.href.split('?')[1] ? '&' : (document.location.href.indexOf('?') != -1 ? '' : '?')) + 'language=' + form.language.value
-  else
-    document.location.href = document.location.href.replace('language=' + params.language, 'language=' + form.language.value)
+  var url = document.location.href
+  if(form.language)
+    if(!params.language || url.search('language=' + params.language) == -1)
+      url += (url.split('?')[1] ? '&' : (url.indexOf('?') != -1 ? '' : '?')) + 'language=' + form.language.value
+    else
+      url = url.replace('language=' + params.language, 'language=' + form.language.value)
+
+  if(form.line)
+    if(!params.line || url.search('line=' + params.line) == -1)
+      url += (url.split('?')[1] ? '&' : (url.indexOf('?') != -1 ? '' : '?')) + 'line=' + form.line.value
+    else
+      url = url.replace('line=' + params.line, 'line=' + form.line.value)
+
+  document.location.href = url
 }
 
 function sendPassword(form){
   document.location.href = document.location.origin + '/index.html?' + (document.location.href.split('?').slice(1).join('?') ?? '') + '&password=' + form.password.value
+}
+
+
+if(!params.language || ['ru', 'en'].toString().search(params.language) == -1){
+  updateSetting({language: {value: 'ru'}})
+}
+
+if(!params.line || ['1', '2', '3'].toString().search(params.line) == -1){
+  updateSetting({line: {value: '1'}})
 }

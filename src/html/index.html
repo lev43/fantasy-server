@@ -12,13 +12,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
   </head>
   <body>
-    <button id='setting-button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Setting</button>
+    <button id='setting_button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Setting</button>
     <form id='setting' onsubmit="updateSetting(this); return false" hidden="true">
-      <strong><a id="text7"></a></strong><br>
-      <input type="radio" id="ru" name="language" value="ru">
-      <label for="ru"><strong>Русский</strong></label><br>
-      <input type="radio" id="en" name="language" value="en">
-      <label for="en"><strong>English</strong></label><br>
+      <b id='setting_title'>Setting</b><br>
+
+      <label for="language-select"><b id="text7">Language</b></label><br>
+      <select name="language" id="language-select">
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+      </select><br>
+
+
+      <label for="line-select"><b id="text8">Line</b></label><br>
+      <select name="line" id="line-select">
+        <option value="1" id="text8_1">1)</option>
+        <option value="2" id="text8_2">2)</option>
+        <option value="3" id="text8_3">3)</option>
+      </select><br>
+
+
       <input id='text3' type="submit" value="Принять">
     </form>
 

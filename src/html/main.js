@@ -24,7 +24,7 @@ if ("WebSocket" in window) {
 
   ws.onclose = ()=>{
     console.log("WebSocket close")
-    alert(text6)
+    alert(bundle.text6)
     document.body.innerHTML = close
   }
 
@@ -33,14 +33,22 @@ if ("WebSocket" in window) {
   }
 
   ws.onmessage = (message)=>{
-    //console.log(message.data)
-    let newMessage = document.createElement('code')
-    //newMessage.style.marginBottom = '5%'
     data = strToJson(message.data)
-    console.log(data)
+
+    let newMessage = document.createElement('code')
+    const line = document.createElement('hr')
+    line.noShade = true
+    line.className = 'line'
+    newMessage.className = 'message'
+
+
     let mid = (data.content?.indexOf('%mid') ?? -1) != -1 ? data.content.slice(data.content.indexOf('%mid') + 4) : null
     if(mid)data.content = data.content.slice(0, data.content.indexOf('%mid'))
+
+
     newMessage.id = 'message-' + (mid ?? genI.next().value)
+
+
     switch(data.type){
       case 'msg-edit':
         if(document.getElementById(`message-${data.mid}`))document.getElementById(`message-${data.mid}`).innerText = data.content + '\n'
@@ -79,7 +87,18 @@ if ("WebSocket" in window) {
         newMessage.innerText = data.content + '\n'
         timers.forEach(timer => newMessage.innerHTML = newMessage.innerHTML.replace('%s_timer', timer))
         if(view){
-          document.getElementById('channel').prepend(newMessage)
+          if(params.line == '1')newMessage.prepend(line)
+          const lastMessages = document.getElementById('channel').childNodes[0]
+          if(lastMessages?.id == data.id){
+            lastMessages.prepend(newMessage)
+          } else {
+            const newMessages = document.createElement('code')
+            newMessages.className = 'messages'
+            newMessages.id = data.id
+            if(params.line == '2')newMessages.prepend(line)
+            newMessages.prepend(newMessage)
+            document.getElementById('channel').prepend(newMessages)
+          }
         }
         break;
       case 'status':
@@ -94,4 +113,4 @@ if ("WebSocket" in window) {
         break;
     }
   }
-}else alert(text5)
+}else alert(bundle.text5)

@@ -99,7 +99,7 @@ Game.on('private-server-message-edit', (id, mid, msg) => {
   Game.enemy.get(id)?.send({type: 'msg-edit', id, mid, content: msg})
 })
 Game.on('private-server-message-delete', (id, mid) => {
-  Game.enemy.get(id)?.send({type: 'msg-delete', mid})
+  Game.enemy.get(id)?.send({type: 'msg-delete', id: 'SYSTEM', mid})
 })
 Game.on('private-message', (id1, id2, msg) => {
   Game.enemy.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
@@ -205,7 +205,7 @@ Game.on('attack', (attacking, defender) => {
           return
         }
         if(!Game.enemy.has(defender.id)){
-          attacking.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id)});
+          attacking.send({type: 'msg-edit', id: attacking.id, mid: attack.i, content: f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id)});
           [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
             .forEach(e => 
               Game.emit('private-server-message-delete', e.id, attack.i)
@@ -215,8 +215,8 @@ Game.on('attack', (attacking, defender) => {
         defender.damage(damage)
           .then(damage => {
             let attackingStrong = attacking.indicatorOfDamage(damage), defenderStrong = defender.indicatorOfDamageMe(damage)
-            defender.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong])})
-            attacking.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong])});
+            defender.send({type: 'msg-edit', id: defender.id, mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong])})
+            attacking.send({type: 'msg-edit', id: attacking.id, mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong])});
             [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
               .forEach(e => 
                 Game.emit('private-server-message-edit', e.id, attack.i, f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, Bundle[e.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[e.language].indicator.damage[defenderStrong]))
@@ -239,8 +239,8 @@ Game.on('attack', (attacking, defender) => {
     attacking.parameters.attackTime = attacking.parameters.attackInterval
   }, time * 1000, {id: attacking.id, type: 'attack'})
 
-  attacking.send({type: 'msg', content: f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i)})
-  defender.send({type: 'msg', content: f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i)});
+  attacking.send({type: 'msg', id: attacking.id, content: f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i)})
+  defender.send({type: 'msg', id: defender.id, content: f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i)});
   [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
     .forEach(e => 
       Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.attack.see, attacking.id, defender.id, time, attack.i))
