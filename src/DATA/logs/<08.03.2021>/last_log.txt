@@ -1,0 +1,13 @@
+<10:33:22> Start server on http://0.0.0.0:6852
+<10:33:22> New player on id <475386681>
+<10:33:22> Socket(192.168.1.245)[475386681] connect
+<10:33:22> Socket(192.168.1.245)[475386681] disconnect
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
+<10:33:22> reload-html-files
