@@ -1,4 +1,5 @@
 const { con, log } = require('./src/functions.js')
+const languages = ['ru', 'en']
 const fs = require('fs')
 
 const readline=require('readline');
@@ -58,12 +59,13 @@ const cmds = new Map([
   ['add', (line, args, parameters) => {
     const cmds = new Map([
       ['location', (line, args, parameters) => {
-        if(!parameters.name){
-          con(`add location {!name}`)
-          return
-        }
+        let names = {}
+        languages.forEach(lan => {
+          names[lan] = parameters?.['name-' + lan]
+        })
+
         Game.location.add({
-          name: parameters.name
+          name: names
         })
         con(`Successfully`)
       }],
@@ -124,7 +126,7 @@ const cmds = new Map([
   ['edit', (line, args, parameters) => {
     const cmds = new Map([
       ['location', (line, args, parameters) => {
-        const {id, name} = parameters
+        const {id} = parameters
         if(!id){
           con(`edit location {!id, name}`)
           return

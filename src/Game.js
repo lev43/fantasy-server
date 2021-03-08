@@ -71,7 +71,7 @@ class Game extends events{
     }else this.emit('local-message', enemy.location, `%id{${id}}%id: ${message}`, enemy.id)
   }
   async update(){
-    if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: 'spawn'})
+    if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: {ru: 'Локация возрождения', en: 'Spawn'}})
     if(!this.location.spawn || !this.location.has(this.location.spawn))this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
 
     this.users.forEach((user, id) => {
@@ -129,34 +129,34 @@ Game.on('enemy-move', (id, road) => {
       let m = new Event((code, id_intercept) => {
         switch(code){
           case 0:
-            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.successfully, location.name));
+            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.successfully, location.name[language]));
             [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.gone, id, location.name))
+                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.gone, id, location.name[language]))
               );
 
               
             [...Game.enemy.values()].filter(e => e.location == location.id && e.id != id)
               .forEach(e => 
-                Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.move.came, id, Game.location.get(enemy.location).name))
+                Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.move.came, id, Game.location.get(enemy.location).name[language]))
                 )
                 
             enemy.location = location.id
             if(roads.length > 0)go(roads)
             break;
           case 1:
-            Game.emit('private-server-message-edit', id_intercept, m.i, f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name))
-            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.intercept, id_intercept, location.name));
+            Game.emit('private-server-message-edit', id_intercept, m.i, f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name[language]))
+            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.intercept, id_intercept, location.name[language]));
             [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id && e.id != id_intercept)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.intercept, id, id_intercept, location.name))
+                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.intercept, id, id_intercept, location.name[language]))
               )
             break;
           case 2:
-            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.stop, location.name));
+            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.stop, location.name[language]));
             [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.stop, id, location.name))
+                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.stop, id, location.name[language]))
               )
             break;
           default:
@@ -166,9 +166,9 @@ Game.on('enemy-move', (id, road) => {
 
       [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
         .forEach(e => e.send({type: 'msg', id, content: 
-          f.s(Bundle[e.language].events.move.request, id, location.name, time, m.i, m.i)
+          f.s(Bundle[e.language].events.move.request, id, location.name[language], time, m.i, m.i)
         }))
-      Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.request, location.name, time, m.i))
+      Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.request, location.name[language], time, m.i))
     } else {
       Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.noSuccessfully, location))
     }

@@ -9,7 +9,7 @@ module.exports.run = async(p) => {
   let roads = []
   if(location?.roads_save.length > 0){
     location.roads_save.forEach((road, i) => {
-      roads.push(`(${i+1})` + Game.location.get(road).name + `<${road}>`)
+      roads.push(`(${i+1})` + Game.location.get(road).name[language] + `<${road}>`)
     });
     roads = roads.join('\n')
   }else roads = bundle[language].noRoads

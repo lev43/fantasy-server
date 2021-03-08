@@ -1,6 +1,0 @@
-<21:10:33> Start server on http://0.0.0.0:6852
-<21:10:33> New player on id <537472449>
-<21:10:33> Socket(192.168.1.205)[537472449] connect
-<21:10:33> Socket(192.168.1.205)[537472449] disconnect
-<21:10:33> New player on id <537472449>
-<21:10:33> Socket(192.168.1.205)[537472449] connect

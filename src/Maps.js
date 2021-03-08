@@ -1,18 +1,43 @@
 const { Location, Enemy } = require("./objects");
 const events = require('events');
 
-class LocationMap extends Map{
-  #spawn
-  constructor(arr){
-    if(arr)arr.forEach(loc => {
-      loc[1] = new Location(loc[1])
+class ContentMap extends Map{
+  #type = ContentMap
+  constructor(arr, type){
+    if(arr)arr.forEach(p => {
+      p[1] = new type(p[1])
     })
     super(arr)
+    this.type = type
   }
-  add(par = {name, id}){
-    let loc = new Location(par)
-    return super.set(loc.id, loc)
+  add(par = {}){
+    let obj = new this.type(par)
+    return super.set(obj.id, obj)
   }
+  delete(id){
+    if(super.delete(id)){
+      Game.id.delete([...Game.id.entries()].find(i => i[1] == id)[0])
+      return true
+    }else return false
+  }
+  getByParameters(parameters){
+    return new this.constructor([...this.entries()].filter(obj => {
+      let y = true
+      for(let i in parameters)
+        if(i.split('_').pop() != 'not')
+          if(parameters[i + '_not'])
+            (obj[1][i] == parameters[i] ? y = false : null)
+          else
+            (obj[1][i] != parameters[i] ? y = false : null)
+      return y
+    }), this.type)
+  }
+}
+
+class LocationMap extends ContentMap{
+  #spawn
+  #type = LocationMap
+  constructor(arr){super(arr, Location)}
   set spawn(id){
     if(this.has(id))Setting.set('location.spawn', id?.id ?? id)
   }
@@ -40,46 +65,15 @@ class LocationMap extends Map{
       }else return this.get(id1).roads.delete(id2)
     }else return false
   }
-  getByParameters(parameters){
-    return new Map([...this].filter(location => {
-      let y = true
-      for(let i in parameters)
-        if(i.split('_').pop() != 'not')
-          if(parameters[i+'_not'])
-            (location[1][i] == parameters[i] ? y = false : null)
-          else
-            (location[1][i] != parameters[i] ? y = false : null)
-      return y
-    }))
-  }
 }
 
-class EnemyMap extends Map{
-  constructor(arr){
-    if(arr)arr.forEach(enm => {
-      enm[1] = new Enemy(enm[1])
-    })
-    super(arr)
-  }
-  add(par = {id, location}){
-    let enemy = new Enemy(par)
-    return super.set(enemy.id, enemy)
-  }
-  getByParameters(parameters){
-    return new Map([...this].filter(enemy => {
-      let y = true
-      for(let i in parameters)
-        if(i.split('_').pop() != 'not')
-          if(parameters[i+'_not'])
-            (enemy[1][i] == parameters[i] ? y = false : null)
-          else
-            (enemy[1][i] != parameters[i] ? y = false : null)
-      return y
-    }))
-  }
+class EnemyMap extends ContentMap{
+  #type = EnemyMap
+  constructor(arr){super(arr, Enemy)}
 }
 
 module.exports = {
+  ContentMap,
   LocationMap,
   EnemyMap
 }

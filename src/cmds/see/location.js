@@ -7,7 +7,7 @@ module.exports.run = async(p) => {
   //console.log(location, Game.enemy.get(id).location, Game.location)
   if(!location)return
 
-  const location_description = f.s(bundle[language], location.name, location.id)
+  const location_description = f.s(bundle[language], location.name[language], location.id)
 
   Game.emit('private-server-message', id, location_description)
 }

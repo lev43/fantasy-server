@@ -1,5 +1,11 @@
 class MyObject{
   id
+  get name(){
+    return this._name ?? {ru: 'Нету', en: 'None'}
+  }
+  set name(v){
+    this._name = v
+  }
   constructor(par = {id}){
     for(let i in par){
       if(par[i])this[i] = par[i]
@@ -9,13 +15,13 @@ class MyObject{
 }
 
 class Location extends MyObject{
-  name
   roads = new Set()
   roads_save = []
-  constructor(par = {name, id, roads_save}){
+  constructor(par = {name: {ru, en}, id, roads_save}){
     super(par)
-    this.name = par.name
     if(par.roads_save)this.roads = new Set(par.roads_save)
+    
+    for(let lan in par.name)if(!this.name[lan])this.name[lan] = 'NONE'
     
     //Каждый раз надо обновлять сохранение дорог
     let loc = this
@@ -51,6 +57,7 @@ class Enemy extends MyObject{
   }
   set type(value){
     if(value == this._type)return
+    console.log(this._type, value)
     this.save_par[this._type] = Object.assign({}, this.parameters)
     this._type = value
 
@@ -62,10 +69,6 @@ class Enemy extends MyObject{
     super(par)
     if(!par.location)this.location = Game.location.spawn
     else this.location = par.location
-
-
-    this.player = Game.users.has(this.id) || par.player
-    if(this.player)this._type = 'player'
 
 
     if(!this.parameters)this.parameters = Object.assign({}, Patterns[this.type])
@@ -138,8 +141,8 @@ class Enemy extends MyObject{
 
   async update(){
     if(this.type == 'corpse'){
-      this.send({type: 'msg', content: Bundle[this.language].events.dead})
-      this.send({type: 'status', send: false, view: false})
+      this.send({type: 'msg', id: this.id, content: Bundle[this.language].events.dead})
+      this.send({type: 'status', id: this.id, send: false, view: false})
       return
     }
     const par = this.parameters, s = parseInt(Setting.path().all.updateTime) / 1000
@@ -149,7 +152,7 @@ class Enemy extends MyObject{
       this.type = 'corpse'
       this.status = {send: false, view: true};
       [...Game.enemy.values()].filter(enemy => enemy.location === this.location && enemy.id != this.id)
-        .forEach(enemy => enemy.send({type: 'msg', content: f.s(Bundle[enemy.language].events.deadSee, this.id)}))
+        .forEach(enemy => enemy.send({type: 'msg', id: this.id, content: f.s(Bundle[enemy.language].events.deadSee, this.id)}))
     }
     if(par.health > par.maxHealth)par.health -= par.regeneration
     par.regenerationTime += s
