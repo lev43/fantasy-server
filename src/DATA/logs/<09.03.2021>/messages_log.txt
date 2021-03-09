@@ -1,0 +1,27 @@
+<09:46:31> Message<975833446>
+Location<307131241>
+%id{975833446}%id:     if(this.player && this._type != 'player')this._type = 'player'
+<09:48:45> Message<429075008>
+Location<307131241>
+%id{429075008}%id: typeof par.health
+<09:51:52> Message<429075008>
+Location<307131241>
+%id{429075008}%id:     if(this.player && this._type == 'enemy')this.type = 'player'
+<09:56:04> Message<429075008>
+Location<307131241>
+%id{429075008}%id: a
+<09:59:05> Message<429075008>
+Location<307131241>
+%id{429075008}%id:       console.log("Heal " + this.id, par.health)
+<10:01:35> Message<429075008>
+Location<307131241>
+%id{429075008}%id:       console.log(this.id, par.health)
+<10:04:00> Message<429075008>
+Location<307131241>
+%id{429075008}%id: if(this.id == '975833446')
+<10:16:26> Message<429075008>
+Location<307131241>
+%id{429075008}%id: f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id)
+<10:16:26> Message<429075008>
+Location<307131241>
+%id{429075008}%id: v

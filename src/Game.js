@@ -71,7 +71,7 @@ class Game extends events{
     }else this.emit('local-message', enemy.location, `%id{${id}}%id: ${message}`, enemy.id)
   }
   async update(){
-    if(this.location.size < 1 || this.location.size < 2 && this.location.has('spawn'))this.location.add({name: {ru: 'Локация возрождения', en: 'Spawn'}})
+    if(this.location.size < 1 || this.location.size < 2 && !this.location.get('spawn'))this.location.add({name: {ru: 'Локация возрождения', en: 'Spawn'}})
     if(!this.location.spawn || !this.location.has(this.location.spawn))this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
 
     this.users.forEach((user, id) => {
@@ -79,8 +79,6 @@ class Game extends events{
       if(this.enemy.has(id))this.enemy.get(id).player = true
     })
     this.enemy.forEach((enemy, id) => {
-      if(!enemy.location || !this.location.has(enemy.location))enemy.location = this.location.spawn
-      if(enemy.player)this.nickname.get(enemy.id)[enemy.id] = Bundle[enemy.language].names.enemy.default
       enemy.update()
     })
   }
@@ -225,11 +223,11 @@ Game.on('attack', (attacking, defender) => {
         break;
         case 1:
           if(id == defender.id){
-            defender.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id)})
-            attacking.send({type: 'msg-edit', mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id)});
+            defender.send({type: 'msg-edit', id: attack.id, mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id)})
+            attacking.send({type: 'msg-edit', id: attack.id, mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id)});
             [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
               .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, attack.i, f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id))
+                e.send({type: 'msg-edit', id: attack.id, mid: attack.i, content: f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id)})
               )
           }
         break;

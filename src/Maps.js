@@ -44,6 +44,12 @@ class LocationMap extends ContentMap{
   get spawn(){
     return String(Setting.get('location.spawn'))
   }
+  delete(id){
+    this.get(id)?.roads_save.forEach( loc => {
+      this.get(loc)?.roads.delete(id)
+    })
+    super.delete(id)
+  }
   hasRoad(id1, id2){
     return this.get(id1)?.roads.has(id2)
   }

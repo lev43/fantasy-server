@@ -57,7 +57,6 @@ class Enemy extends MyObject{
   }
   set type(value){
     if(value == this._type)return
-    console.log(this._type, value)
     this.save_par[this._type] = Object.assign({}, this.parameters)
     this._type = value
 
@@ -72,6 +71,7 @@ class Enemy extends MyObject{
 
 
     if(!this.parameters)this.parameters = Object.assign({}, Patterns[this.type])
+    if(this.player && this._type == 'enemy')this._type = 'player'
 
 
     Game.nickname.set(this.id, {})
@@ -89,7 +89,7 @@ class Enemy extends MyObject{
       if(id == this.id)Game.id.delete(i)
     })
     Game.nickname.delete(this.id)
-    this.send({type: 'err', content: Bundle[this.language].events.youBury})
+    this.send({type: 'err', id: 'SYSTEM', content: Bundle[this.language].events.youBury})
     return true
   }
 
@@ -140,6 +140,10 @@ class Enemy extends MyObject{
   }
 
   async update(){
+    if(!this.location || !Game.location.get(this.location))this.location = Game.location.spawn
+    if(Game.users.get(this.id))this.player = true
+    if(this.player)Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
+    
     if(this.type == 'corpse'){
       this.send({type: 'msg', id: this.id, content: Bundle[this.language].events.dead})
       this.send({type: 'status', id: this.id, send: false, view: false})
@@ -147,8 +151,10 @@ class Enemy extends MyObject{
     }
     const par = this.parameters, s = parseInt(Setting.path().all.updateTime) / 1000
     if(Game.users.has(this.id) && !this.player){this.player = true; this.type = 'player'}
+    if(this.player && this._type == 'enemy')this.type = 'player'
+    
 
-    if(par.health <= 0){
+    if(par.health <= 0 || typeof par.health != 'number'){
       this.type = 'corpse'
       this.status = {send: false, view: true};
       [...Game.enemy.values()].filter(enemy => enemy.location === this.location && enemy.id != this.id)

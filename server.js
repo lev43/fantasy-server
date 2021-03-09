@@ -115,7 +115,7 @@ wss.on('connection', function connection(ws, request, client) {
             f.s(
               Bundle[data.language].events.connect,
               id,
-              Game.location.get(Game.enemy.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn).name[data.language]
+              Game.location.get(Game.enemy.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
             )
           })
         }

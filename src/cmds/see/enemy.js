@@ -20,7 +20,6 @@ module.exports.run = async(p) => {
       Game.emit('private-server-message', id, f.s(bundle[language].noEnemy, args[0]))
       return
     }
-    console.log(searchEnemy._type, searchEnemy.id, Game.enemy.get(searchEnemy.id)._type)
     let health = f.s(bundle[language].health, Bundle[language].indicator.health[searchEnemy.healthStat])
     Game.emit('private-server-message', id, f.s(bundle[language].search, searchEnemy.id, searchEnemy.id) + '\n' + (searchEnemy.type == 'corpse' ? bundle[language].search_dead : health))
     return
