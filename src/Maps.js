@@ -16,7 +16,7 @@ class ContentMap extends Map{
   }
   delete(id){
     if(super.delete(id)){
-      Game.id.delete([...Game.id.entries()].find(i => i[1] == id)[0])
+      Game.id.delete([...Game.id.entries()].find(i => i[1] == id)?.[0])
       return true
     }else return false
   }
