@@ -35,17 +35,29 @@ function command(line, args, cmds, parameters, name = null){
 }
 
 
+function readFiles(path, obj){
+  fs.readdirSync(path).forEach(file => {
+    let pathFile = path + file
+    try{
+      obj[file] = fs.readFileSync(pathFile)
+    }catch(err){
+      if(err.code == 'EISDIR')readFiles(pathFile + '/', obj)
+      else if(err.code == 'ENOENT')console.log("Not file " + file, pathFile)
+      else throw err
+    }
+  })
+}
+
+
 const cmds = new Map([
   ['!', () => {}],
 
-  ['get-html-files', () => {
+  ['get-html', () => {
     console.log(Object.keys(html))
   }],
 
-  ['reload-html-files', () => {
-    fs.readdirSync('./src/html').forEach(file => {
-      html[file] = fs.readFileSync('./src/html/' + file)
-    })
+  ['reload-html', () => {
+    readFiles('src/html/', html)
   }],
 
   ['send-all', (line, args) => {

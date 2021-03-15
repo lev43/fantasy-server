@@ -1,11 +1,3 @@
-class A{
-  i = 0
-  new(){
-    this.i++
-    return new this.constructor
-  }
-}
+const a = {a: '1', b: '2'}
 
-var a = new A
-
-console.log(a.i, a.new().new().new(), a.new(), a.i)
+for(let i in a)console.log(i, a[i])

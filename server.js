@@ -19,11 +19,20 @@ const host = '0.0.0.0';
 const port = 6852;
 html = {}
 
-fs.readdirSync('./src/html').forEach(file => {
-  html[file] = fs.readFileSync('./src/html/' + file)
-  //console.log(file)
-  //console.log(html[file])
-})
+function readFiles(path, obj){
+  fs.readdirSync(path).forEach(file => {
+    let pathFile = path + file
+    try{
+      obj[file] = fs.readFileSync(pathFile)
+    }catch(err){
+      if(err.code == 'EISDIR')readFiles(pathFile + '/', obj)
+      else if(err.code == 'ENOENT')console.log("Not file " + file, pathFile)
+      else throw err
+    }
+  })
+}
+
+readFiles('src/html/', html)
 
 const server = http.createServer(function(req, res){
   let file = req.url.split('?').shift().slice(1),

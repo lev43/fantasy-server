@@ -94,3 +94,10 @@
 <10:16:26> New player on id <113622124>
 <10:16:26> Socket(192.168.1.205)[113622124] connect
 <10:16:26> Socket(192.168.1.205)[113622124] disconnect
+<10:29:06> Start server on http://0.0.0.0:6852
+<10:29:06> New player on id <429075008>
+<10:29:06> Socket(192.168.1.205)[429075008] connect
+<10:29:06> New player on id <888491373>
+<10:29:06> Socket(192.168.1.205)[888491373] connect
+<10:29:06> Socket(192.168.1.205)[429075008] disconnect
+<10:29:06> Socket(192.168.1.205)[888491373] disconnect

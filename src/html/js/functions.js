@@ -1,6 +1,9 @@
 //const host = 'smokeofanarchy.duckdns.org:6852'
 //const host = 'localhost:6852'
 const host = '192.168.1.205:6852'
+
+const lines = 3, backgrounds = 3, languages = {ru: 'Русский', en: 'English'}
+
 if(document.location.search.split('?').length > 2)document.location.href = document.location.origin + document.location.pathname + '?' + document.location.href.split('?')[1]
 
 function hash(data){
@@ -33,6 +36,31 @@ urlParams.forEach((p, key) => {
 
 if(!params.password && document.location.pathname != '/password.html')document.location.href = document.location.origin + '/password.html' + '?' + (document.location.href.split('?').slice(1).join('?') ?? '')
 
+
+for(let i in languages){
+  let lan = document.createElement('option')
+  lan.value = i
+  lan.id = 'language-' + i
+  lan.innerText = languages[i]
+  document.getElementById('language-select').prepend(lan)
+}
+
+for(let i = lines; i > 0; i--){
+  let line = document.createElement('option')
+  line.value = i
+  line.id = 'text-line_' + i
+  document.getElementById('line-select').prepend(line)
+}
+
+for(let i = backgrounds; i > 0; i--){
+  let bg = document.createElement('option')
+  bg.value = i
+  bg.id = 'text-background_' + i
+  bg.innerText = i + ')'
+  document.getElementById('background-select').prepend(bg)
+}
+
+
 function updateSetting(form){
   var url = document.location.href
   if(form.language)
@@ -46,6 +74,12 @@ function updateSetting(form){
       url += (url.split('?')[1] ? '&' : (url.indexOf('?') != -1 ? '' : '?')) + 'line=' + form.line.value
     else
       url = url.replace('line=' + params.line, 'line=' + form.line.value)
+    
+  if(form.background)
+    if(!params.background || url.search('background=' + params.background) == -1)
+      url += (url.split('?')[1] ? '&' : (url.indexOf('?') != -1 ? '' : '?')) + 'background=' + form.background.value
+    else
+      url = url.replace('background=' + params.background, 'background=' + form.background.value)
 
   document.location.href = url
 }
@@ -55,10 +89,23 @@ function sendPassword(form){
 }
 
 
-if(!params.language || ['ru', 'en'].toString().search(params.language) == -1){
+if(!params.language || Object.keys(languages).toString().search(params.language) == -1){
   updateSetting({language: {value: 'ru'}})
 }
+document.getElementById('language-' + params.language).selected = true
 
-if(!params.line || ['1', '2', '3'].toString().search(params.line) == -1){
+if(!params.line || parseInt(params.line) > 3 || parseInt(params.line) < 1){
   updateSetting({line: {value: '1'}})
 }
+document.getElementById('text-line_' + params.line).selected = true
+
+if(!params.background || parseInt(params.background) > 3 || parseInt(params.background) < 1){
+  updateSetting({background: {value: '1'}})
+}
+document.getElementById('text-background_' + params.background).selected = true
+
+
+
+//Background
+document.body.style.backgroundImage = `url(./Background-${params.background}.jpeg)`
+//document.getElementById('setting').style.backgroundImage = `url(./Background-${params.background}.jpeg)`
