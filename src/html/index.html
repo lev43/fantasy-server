@@ -41,7 +41,7 @@
     <form id='channel-p' onsubmit="return false">
       <h1>Channel</h1>
       
-      <input autofocus id="message" type=text onchange="sendMessage(this.value);this.value=null;" autocomplete="off">
+      <input autofocus id="message" type=text onchange="sendMessage(this.value);this.value=null;" autocomplete="off" maxlength=500>
 
       <br>
       <code id='channel'></code>

@@ -66,13 +66,12 @@ wss.on('connection', function connection(ws, request, client) {
     let data = strToJson(message)
 
     let type = data.type
-    let content = data.content
+    let content = data.content.trim()
 
 
     switch(type){
       case 'player-message':
-        content = content.replace('%lastMessage{', `%lastMessage{%id{${Game.id.get(data.password)}}%id: `)
-        Game.player(data.password, content, data.language)
+        if(content.length > 0)Game.player(data.password, content, data.language)
         break;
 
       case 'player-key':

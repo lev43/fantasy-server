@@ -1,3 +1,3 @@
-const a = {a: '1', b: '2'}
+const a = '    ', b = '    b    '
 
-for(let i in a)console.log(i, a[i])
+console.log(`'${a.trim()}' '${b.trim()}'`)
