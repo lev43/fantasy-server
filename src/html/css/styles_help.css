@@ -1,5 +1,5 @@
 body{
-  background-image: url(Background-2.jpeg);
+  background-image: url(/img/Background-2.jpeg);
   background-size: 100%;
   color: #222;
   font-size: 30px;
@@ -10,7 +10,7 @@ hr{
 }
 
 .command-list{
-  background-image: url(Background-3.jpeg);
+  background-image: url(/img/Background-3.jpeg);
   background-size: 100%;
   width: max-content;
   border-radius: 5px;
@@ -22,7 +22,7 @@ hr{
 }
 
 .command{
-  background-image: url(Background-3.jpeg);
+  background-image: url(/img/Background-3.jpeg);
   background-size: 100%;
   width: max-content;
   border-radius: 8px;

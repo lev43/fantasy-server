@@ -46,7 +46,7 @@ body{
   width: 100%;
   height: 100%;
   background-size: 100%;
-  background-image: url(./Background-1.jpeg);
+  background-image: url(/img/Background-1.jpeg);
   background-repeat: repeat-y;
 }
 
@@ -114,7 +114,7 @@ h1{
   right: 1px;
   width: max-content;
   height: max-content;
-  background-image: url(./Background-setting.jpeg);
+  background-image: url(/img/Background-setting.jpeg);
   outline-color: #ad9563;
   border-color: #caaf78;
   color: #111;

@@ -109,7 +109,7 @@ if ("WebSocket" in window) {
       case 'err':
         alert(data.content)
         ws.close()
-        document.location.href = './password.html'
+        document.location.href = `/html/%{params.language}/password.html`
         break;
     }
   }

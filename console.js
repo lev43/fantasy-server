@@ -35,13 +35,15 @@ function command(line, args, cmds, parameters, name = null){
 }
 
 
-function readFiles(path, obj){
-  fs.readdirSync(path).forEach(file => {
+function readFiles(path, obj, rootPath = './src/html'){
+  fs.readdirSync(rootPath + path).forEach(file => {
     let pathFile = path + file
+    //console.log(pathFile)
     try{
-      obj[file] = fs.readFileSync(pathFile)
+      obj[pathFile] = fs.readFileSync(rootPath + pathFile)
     }catch(err){
       if(err.code == 'EISDIR')readFiles(pathFile + '/', obj)
+      else if(err.code == 'EACCES'){}
       else if(err.code == 'ENOENT')console.log("Not file " + file, pathFile)
       else throw err
     }
@@ -57,7 +59,7 @@ const cmds = new Map([
   }],
 
   ['reload-html', () => {
-    readFiles('src/html/', html)
+    readFiles('/', html)
   }],
 
   ['send-all', (line, args) => {

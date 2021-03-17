@@ -17,35 +17,37 @@ setInterval(()=>{
 
 const host = '0.0.0.0';
 const port = 6852;
+
 html = {}
 
-function readFiles(path, obj){
-  fs.readdirSync(path).forEach(file => {
+function readFiles(path, obj, rootPath = './src/html'){
+  fs.readdirSync(rootPath + path).forEach(file => {
     let pathFile = path + file
+    //console.log(pathFile)
     try{
-      obj[file] = fs.readFileSync(pathFile)
+      obj[pathFile] = fs.readFileSync(rootPath + pathFile)
     }catch(err){
       if(err.code == 'EISDIR')readFiles(pathFile + '/', obj)
+      else if(err.code == 'EACCES'){}
       else if(err.code == 'ENOENT')console.log("Not file " + file, pathFile)
       else throw err
     }
   })
 }
 
-readFiles('src/html/', html)
+readFiles('/', html)
 
 const server = http.createServer(function(req, res){
-  let file = req.url.split('?').shift().slice(1),
-      type = file.split('.').pop()
-  //console.log(file, type)
+  let file = req.url, type = file.split('.').pop()
+  //console.log(file)
   if(req.url == '/'){
     res.writeHead(200, {"Content-Type": "text/html"})
-    res.end(html['address.html'])
+    res.end(html['/html/address.html'])
   }else if(req.url == '/icon.png'){
     res.writeHead(200, {"Content-Type": "image/png"})
-    res.end(html['icon.png'])
+    res.end(html['/img/icon.png'])
   }else if(html[file]){
-    res.writeHead(200, {"Content-Type": "text/"+type})
+    res.writeHead(200, {"Content-Type": "text/" + type})
     res.end(html[file])
   }else{
     res.writeHead(404, {"Content-Type": "text/html"})

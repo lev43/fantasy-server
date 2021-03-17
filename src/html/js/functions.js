@@ -6,14 +6,9 @@ const cookieTime = "; max-age=31622400"
 
 const lines = 3, backgrounds = 3, languages = {ru: 'Русский', en: 'English'}
 
-if(document.location.search.split('?').length > 2)document.location.href = document.location.origin + document.location.pathname + '?' + document.location.href.split('?')[1]
-
 function hash(data){
   return CryptoJS.MD5(data).toString()
 }
-
-
-let text5 = '404', text6 = '404'
 
 function jsonToStr(json){
   return JSON.stringify(json)
@@ -25,7 +20,7 @@ function strToJson(str){
 
 var password,
     urlParams = document.cookie.split('; '),
-    params = {};
+    params = {language: null, background: null, line: null};
 
 
 urlParams.forEach((p) => {
@@ -35,26 +30,23 @@ urlParams.forEach((p) => {
 });
 
 
-
-if(!params.password && document.location.pathname != '/password.html')document.location.href = './password.html'
-
-
 function updateSetting(form){
   if(form.line)
-    document.cookie = 'line=' + form.line.value + cookieTime
+    document.cookie = 'line=' + form.line.value + cookieTime + '; ' + 'path=/'
     
   if(form.background)
-    document.cookie = 'background=' + form.background.value + cookieTime
+    document.cookie = 'background=' + form.background.value + cookieTime + '; ' + 'path=/'
 
   if(form.language){
-    document.cookie = 'language=' + form.language.value + cookieTime
-    document.location.href = '/' + form.language.value + '-' + document.location.pathname.split('-').pop()
+    document.cookie = 'language=' + form.language.value + cookieTime + '; ' + 'path=/'
+    //console.log(document.location.href.replace(params.language, form.language.value), params.language, form.language.value)
+    document.location.href = document.location.href.replace(params.language, form.language.value)
   }else document.location.reload()
 }
 
 function sendPassword(form){
-  document.cookie = 'password=' + form.password.value + cookieTime
-  document.location.href = `./${params.language}-index.html`
+  document.cookie = 'password=' + form.password.value + cookieTime + '; ' + 'path=/'
+  document.location.href = `/html/${params.language}/index.html`
 }
 
 
@@ -62,13 +54,15 @@ if(!params.language || params.language == "undefined" || Object.keys(languages).
   updateSetting({language: {value: 'ru'}})
 }
 
+if(!params.password && document.location.pathname.split('/').pop() != 'password.html')document.location.href = `/html/${params.language}/password.html`
+
+
 if(!params.line || params.line == "undefined" || parseInt(params.line) > 3 || parseInt(params.line) < 1){
   updateSetting({line: {value: '1'}})
 }
 
 if(!params.background || params.background == "undefined" || parseInt(params.background) > 3 || parseInt(params.background) < 1){
   updateSetting({background: {value: '1'}})
-  console.log('!!!')
 }
 
 try{
@@ -101,5 +95,5 @@ try{
 
 
 //Background
-document.body.style.backgroundImage = `url(./Background-${params.background}.jpeg)`
+document.body.style.backgroundImage = `url(/img/Background-${params.background}.jpeg)`
 //document.getElementById('setting').style.backgroundImage = `url(./Background-${params.background}.jpeg)`

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>Fantasy game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel = "ICON" type = "image/png" href = "icon.png">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel = "ICON" type = "image/png" href = "/img/icon.png">
+    <link rel="stylesheet" href="/css/styles.css">
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
@@ -15,10 +15,10 @@
 
   <body>
     <span id="all">
-      <button id="help" onclick="document.location.href = './en-help.html'//window.open('./ru-help.html');">Help</button>
+      <button id="help" onclick="document.location.href = '/html/en/help.html'//window.open('./ru-help.html');">Help</button>
       <button id='setting_button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Setting</button>
       <form id='setting' onsubmit="updateSetting(this); return false" hidden="true">
-        <img id="background" src='./Background-setting.jpeg'>
+        <img id="background" src='/img/Background-setting.jpeg'>
 
         <b id='setting_title'>Setting</b><br>
 
@@ -53,14 +53,14 @@
       </form>
 
       
-      <script src='functions.js'></script>
-      <script src='main.js'></script>
+      <script src='/js/functions.js'></script>
+      <script src='/js/main.js'></script>
     </span>
     <span id="close" hidden>
       <form id='close-message' style="position: fixed; right: 60%; top: 32%; margin: auto; width: max-content; height: max-content;"> 
         <h1 style="position: fixed;">Close</h1> 
         <br><br> 
-        <h3 style="position: fixed;"> <a href="./ru-index.html">Login again</a> </h3> 
+        <h3 style="position: fixed;"> <a href="/html/ru/index.html">Login again</a> </h3> 
       </form>
     </span>
   </body>

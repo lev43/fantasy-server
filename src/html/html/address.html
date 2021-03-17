@@ -1,5 +1,5 @@
 <html>
   <heat>
-    <script>document.location.href = './index.html'</script>
+    <script>document.location.href = '/html/' + (document.cookie.split('; ').find(v => v.split('=').shift() == 'language').split('=').pop() ?? 'ru') + '/index.html'</script>
   </heat>
 </html>
