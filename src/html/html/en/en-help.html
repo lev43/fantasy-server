@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Fantasy help</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.1">
+    <link rel = "ICON" type = "image/png" href = "icon.png">
+    <link rel="stylesheet" href="styles_help.css">
+  </head>
+  <body>
+    <b>What's going on here?</b><br>
+    This is a game in which you can do anything, let's start from the beginning.<br>
+    You control the character using commands
+    <hr>
+
+    <b>I'll tell you a little about the markup</b><br>
+    <spawn style="line-height: 40px;">
+      <b class="command">{a, b, c}</b> => Arguments<br>
+      <b class="command">[a]</b> => Optional argument<br>
+      <b class="command">a || b</b> => One of the elements<br>
+      <b class="command"><i>(Hello!)</i></b> => Comment, no need to write<br>
+      <b class="command">a...</b> => The argument can be repeated
+    </spawn>
+    <hr>
+
+    <b>Let's take a look at the commands</b><br>
+    Many commands contain subcommands, they can be described as follows<br>
+    <b class="command">cmd {command {args}}</b><br>
+    <hr>
+
+    <b class="command">see</b><br>
+    Command to view something<br>
+    Example: <b class="command">see enemy 2</b>
+    <b><ul class="command-list">
+      <li>location          <i>(Information about the current location)</i></li>
+      <li>enemy [id || n]   <i>(Creatures in the location)</i></li>
+      <li>health            <i>(The level of your life)</i></li>
+      <li>nick {nick || id} <i>(id on the specified nick and vice versa)</i></li>
+      <li>road              <i>(Roads from the location)</i></li>
+    </ul></b>
+    <hr>
+
+    <b class="command">set</b><br>
+    Sets values<br>
+    Example: <b class="command">set nick 1234 abcde</b><br>
+    <b><ul class="command-list">
+      <li>nick {id, nick} (Set nick instead of id)</li>
+    </ul></b>
+    <hr>
+
+    <b>Other</b>
+    <b><ul class="command-list">
+      <li>attack {n || id} (Attack the creature)</li>
+      <li>bury {n || id} (Bury the corpse)</li>
+      <li>echo {text} (Prints you the text you entered, test command)</li>
+      <li>go {n || id}... (Move along the road to another location.)</li>
+    </ul></b>
+    <hr>
+    That's all, I propose to return to <a href="./en-index.html">the game</a><br><br>
+  </body>
+</html>

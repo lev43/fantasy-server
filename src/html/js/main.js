@@ -24,11 +24,12 @@ if ("WebSocket" in window) {
 
   ws.onclose = ()=>{
     console.log("WebSocket close")
-    document.location.href = `./close-${params.language}.html`
+    document.getElementById('all').hidden = true
+    document.getElementById('close').hidden = false
   }
 
   ws.onerror = (err) => { 
-    console.log(err)
+    throw err
   }
 
   ws.onmessage = (message)=>{
@@ -108,7 +109,7 @@ if ("WebSocket" in window) {
       case 'err':
         alert(data.content)
         ws.close()
-        document.location.href = 'http://' + document.location.host + '/password.html'
+        document.location.href = './password.html'
         break;
     }
   }

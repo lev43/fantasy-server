@@ -21,47 +21,52 @@ function jsonToStr(json){
 function strToJson(str){
   return JSON.parse(str)
 }
+
+
 var password,
     urlParams = document.cookie.split('; '),
     params = {};
+
 
 urlParams.forEach((p) => {
   let par, key
   [par, key] = [p.split('=').pop(), p.split('=').shift()]
   params[key] = par;
 });
-console.log(params)
+
+
 
 if(!params.password && document.location.pathname != '/password.html')document.location.href = './password.html'
 
 
 function updateSetting(form){
-  var url = document.location.href
-  if(form.language)
-    document.cookie = 'language=' + form.language.value + cookieTime
-
   if(form.line)
     document.cookie = 'line=' + form.line.value + cookieTime
     
   if(form.background)
     document.cookie = 'background=' + form.background.value + cookieTime
+
+  if(form.language){
+    document.cookie = 'language=' + form.language.value + cookieTime
+    document.location.href = '/' + form.language.value + '-' + document.location.pathname.split('-').pop()
+  }else document.location.reload()
 }
 
 function sendPassword(form){
   document.cookie = 'password=' + form.password.value + cookieTime
-  document.location.href = './index.html'
+  document.location.href = `./${params.language}-index.html`
 }
 
 
-if(!params.language || Object.keys(languages).toString().search(params.language) == -1){
+if(!params.language || params.language == "undefined" || Object.keys(languages).toString().search(params.language) == -1){
   updateSetting({language: {value: 'ru'}})
 }
 
-if(!params.line || parseInt(params.line) > 3 || parseInt(params.line) < 1){
+if(!params.line || params.line == "undefined" || parseInt(params.line) > 3 || parseInt(params.line) < 1){
   updateSetting({line: {value: '1'}})
 }
 
-if(!params.background || parseInt(params.background) > 3 || parseInt(params.background) < 1){
+if(!params.background || params.background == "undefined" || parseInt(params.background) > 3 || parseInt(params.background) < 1){
   updateSetting({background: {value: '1'}})
   console.log('!!!')
 }
@@ -74,14 +79,13 @@ try{
     lan.innerText = languages[i]
     document.getElementById('language-select').prepend(lan)
   }
-
-  for(let i = lines; i > 0; i--){
-    let line = document.createElement('option')
-    line.value = i
-    line.id = 'text-line_' + i
-    document.getElementById('line-select').prepend(line)
-  }
-
+  try{
+    for(let i = lines; i > 0; i--){
+      let line = document.getElementById('line-select').options[i - 1]
+      line.id = 'text-line_' + i
+      line.value = i
+    }
+  }catch(err){}
   for(let i = backgrounds; i > 0; i--){
     let bg = document.createElement('option')
     bg.value = i
@@ -92,7 +96,7 @@ try{
   document.getElementById('language-' + params.language).selected = true
   document.getElementById('text-line_' + params.line).selected = true
   document.getElementById('text-background_' + params.background).selected = true
-}catch(err){console.log(err)}
+}catch(err){if(err.message != "Cannot read property 'prepend' of null")throw err}
 
 
 

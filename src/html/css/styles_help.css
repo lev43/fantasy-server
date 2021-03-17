@@ -17,9 +17,18 @@ hr{
   border: 2px solid #222;
   width: 100%;
   padding: 0%;
+  overflow: auto;
+  white-space: nowrap;
 }
 
-li{
+.command{
+  background-image: url(Background-3.jpeg);
+  background-size: 100%;
+  width: max-content;
+  border-radius: 8px;
+  border: 2px solid #222;
+  padding-left: 5px;
+  padding-right: 5px;
   overflow: auto;
   white-space: nowrap;
 }
