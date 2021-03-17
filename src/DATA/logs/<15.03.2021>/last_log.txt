@@ -938,3 +938,6 @@
 <22:09:05> Socket(192.168.1.205)[429075008] disconnect
 <22:09:05> New player on id <429075008>
 <22:09:05> Socket(192.168.1.205)[429075008] connect
+<22:21:51> Start server on http://0.0.0.0:6852
+<22:21:51> New player on id <429075008>
+<22:21:51> Socket(192.168.1.205)[429075008] connect

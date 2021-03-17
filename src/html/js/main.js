@@ -18,14 +18,13 @@ if ("WebSocket" in window) {
 
   ws.onopen = ()=>{
     console.log("Start ws")
-    password=hash(params.password);
+    password = hash(params.password);
     ws.send(jsonToStr({type: 'player-key', content: password, language: params.language}))
   }
 
   ws.onclose = ()=>{
     console.log("WebSocket close")
-    alert(bundle.text6)
-    document.body.innerHTML = close
+    document.location.href = `./close-${params.language}.html`
   }
 
   ws.onerror = (err) => { 
@@ -108,9 +107,9 @@ if ("WebSocket" in window) {
         break
       case 'err':
         alert(data.content)
-        document.location.href = 'http://' + document.location.host + '/password.html'
         ws.close()
+        document.location.href = 'http://' + document.location.host + '/password.html'
         break;
     }
   }
-}else alert(bundle.text5)
+}else alert("ERROR\nYour browser is not supported!")

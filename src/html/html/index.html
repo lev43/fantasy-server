@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Fantasy game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "ICON" type = "image/png" href = "icon.png">
+    <link rel="stylesheet" href="./styles.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+  </head>
+
+
+  <body>
+    <button id='setting_button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Setting</button>
+    <form id='setting' onsubmit="updateSetting(this); return false" hidden="true">
+			<img id="background" src='./Background-setting.jpeg'>
+
+      <b id='setting_title'>Setting</b><br>
+
+      <label for="language-select"><b id="text-language">Language</b></label><br>
+      <select name="language" id="language-select">
+      </select><br>
+
+
+      <label for="line-select"><b id="text-line">Line</b></label><br>
+      <select name="line" id="line-select">
+      </select><br>
+
+      <label for="background-select"><b id="text-background">Background</b></label><br>
+      <select name="background" id="background-select">
+      </select><br>
+
+
+      <input id='text-submit' type="submit">
+    </form>
+
+
+    <form id='channel-p' onsubmit="return false">
+      <h1>Channel</h1>
+      
+      <input autofocus id="message" type=text onchange="sendMessage(this.value);this.value=null;" autocomplete="off" maxlength=500>
+
+      <br>
+      <code id='channel'></code>
+    </form>
+
+    
+    <script src='functions.js'></script>
+    <script src='bundle.js'></script>
+    <script src='main.js'></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Fantasy help</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.1">
+    <link rel = "ICON" type = "image/png" href = "icon.png">
+    <link rel="stylesheet" href="styles_help.css">
+  </head>
+  <body>
+    <b>Что тут происходит?</b><br>
+    Это игра в которой можно делать что угодно, давайте начнем с начала
+    <hr>
+
+    <b>Немного раскажу о разметке</b><br>
+    <b>{a, b, c}</b> => Аргументы<br>
+    <b>[a]</b> => Не обязательный аргумент<br>
+    <b>a || b</b> => Один из элементов<br>
+    <i>(Привет!)</i> => Комментарий, писать не надо<br>
+    <b>a...</b> => Аргумент можно повторять
+    <hr>
+
+    <b>Давайте расмотрим команды</b><br>
+    Ты управляешь персонажем при помощи команд<br>
+    Множество команд содержат подкоманды, их можно описать так<br>
+    <b>cmd {command {args}}</b><br>
+    <hr>
+
+    <b>see</b><br>
+    Команда для просмотра чего-либо<br>
+    Пример: <b>see enemy 2</b>
+    <b><ul class="command-list">
+      <li>location          <i>(Информация о текущей локации)</i></li>
+      <li>enemy [id || n] <i>(Существа на локации)</i></li>
+      <li>health            <i>(Уровень твоей жизни)</i></li>
+      <li>nick {nick || id} <i>(id на указанном nick и наоборот)</i></li>
+      <li>road              <i>(Дороги с локации)</i></li>
+    </ul></b>
+    <hr>
+
+    <b>set</b><br>
+    Устанавливает значения<br>
+    Пример: <b>set nick 1234 abcde</b><br>
+    <b><ul class="command-list">
+      <li>nick {id, nick} (Установить вместо id nick)</li>
+    </ul></b>
+    <hr>
+
+    <b>Остальные</b>
+    <b><ul class="command-list">
+      <li>attack {n || id} (Атаковать существо)</li>
+      <li>bury {n || id} (Похоронить труп)</li>
+      <li>echo {text} (Выводит вам введенный текст, тестовая программа)</li>
+      <li>go {n || id}... (Перейти по дороге на другую локацию)</li>
+    </ul></b>
+    <hr>
+    На этом все, предлагаю вернутся в <a href="./index.html">игру</a><br><br>
+  </body>
+</html>

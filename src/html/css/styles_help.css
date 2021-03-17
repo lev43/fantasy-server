@@ -1,0 +1,25 @@
+body{
+  background-image: url(Background-2.jpeg);
+  background-size: 100%;
+  color: #222;
+  font-size: 30px;
+}
+
+hr{
+  border-color: #3439;
+}
+
+.command-list{
+  background-image: url(Background-3.jpeg);
+  background-size: 100%;
+  width: max-content;
+  border-radius: 5px;
+  border: 2px solid #222;
+  width: 100%;
+  padding: 0%;
+}
+
+li{
+  overflow: auto;
+  white-space: nowrap;
+}
