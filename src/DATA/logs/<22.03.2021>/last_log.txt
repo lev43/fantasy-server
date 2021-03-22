@@ -1,0 +1,42 @@
+<06:14:28> Start server on http://0.0.0.0:6852
+<06:15:10> Start server on http://0.0.0.0:6852
+<06:15:12> add enemy
+<06:15:12> add enemy
+<06:15:12> Successfully
+<06:15:20> find enemy
+<06:15:20> [object Object]
+<06:15:20> find enemy
+<06:15:20> [object Object]
+<06:15:36> Start server on http://0.0.0.0:6852
+<06:16:42> Start server on http://0.0.0.0:6852
+<06:16:59> Start server on http://0.0.0.0:6852
+<06:17:38> Start server on http://0.0.0.0:6852
+<06:17:48> Start server on http://0.0.0.0:6852
+<06:17:51> find enemy
+<06:17:51> find enemy
+<06:17:51> [object Object]
+<06:17:51> [object Object]
+<06:18:57> Start server on http://0.0.0.0:6852
+<06:19:06> Start server on http://0.0.0.0:6852
+<06:34:59> Start server on http://0.0.0.0:6852
+<06:35:31> Start server on http://0.0.0.0:6852
+<14:36:18> Start server on http://0.0.0.0:6852
+<14:36:36> find location
+<14:36:36> find location
+<14:36:36> spawn: 307131241
+<14:36:36> [object Object]
+<14:36:36> [object Object]
+<14:36:55> add road id1:307131241 id2:949447583 mode:1
+<14:36:55> add road id1:307131241 id2:949447583 mode:1
+<14:36:55> Successfully
+<14:36:56> find location
+<14:36:56> find location
+<14:36:56> spawn: 307131241
+<14:36:56> [object Object]
+<14:36:56> [object Object]
+<15:11:24> Start server on http://0.0.0.0:6852
+<15:19:35> find location
+<15:19:35> spawn: 307131241
+<15:19:35> find location
+<15:19:35> [object Object]
+<15:19:35> [object Object]

@@ -33,11 +33,13 @@ class Location extends MyObject{
     })
   }
   send(id, msg){
-    Game.emit('local-message', this.id, id, msg)
+    Game.message('location:' + this.id, msg)
   }
 }
 
 class Enemy extends MyObject{
+  #timer = 0
+  online = false
   location
   language = 'ru'
   save_par = {}
@@ -76,10 +78,17 @@ class Enemy extends MyObject{
 
     Game.nickname.set(this.id, {})
     Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
+
+    this.online = this.player
   }
 
   async send(msg){
+    log(msg, 'messages-' + this.id, 'messages')
     Game.users.get(this.id)?.send(msg)
+  }
+
+  async message(msg, type = 'msg', mid){
+    Game.message('id:' + this.id, msg, type, mid)
   }
 
   async bury(){
@@ -95,7 +104,9 @@ class Enemy extends MyObject{
 
   async attack(id){
     try{
-      Game.emit('attack', this.id, id)
+    this.parameters.attackTime = this.parameters.attackInterval
+    Game.emit('attack', this.id, id)
+      this.parameters.attackInterval -= Math.abs(this.parameters.attackInterval / 2.9 - this.parameters.attackTime / this.parameters.attackInterval) / 10
     }catch(err){
       if(err.message == 'location of attacking is not defender location')return false
       else throw err
@@ -140,34 +151,64 @@ class Enemy extends MyObject{
   }
 
   async update(){
+    //Проверка существования локации
     if(!this.location || !Game.location.get(this.location))this.location = Game.location.spawn
-    if(Game.users.get(this.id))this.player = true
-    if(this.player)Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
     
+
+    //Если труп, то дальше не обновлять
     if(this.type == 'corpse'){
       this.send({type: 'msg', id: this.id, content: Bundle[this.language].events.dead})
       this.send({type: 'status', id: this.id, send: false, view: false})
       return
     }
-    const par = this.parameters, s = parseInt(Setting.path().all.updateTime) / 1000
+
+
+    //par => параметры, s => доля секунды (В зависимости от частоты обновлений меняем долю)
+    const par = this.parameters, s = parseInt(Setting.path().all.updateTime) / 1000; this.#timer += s
+
+
+    //Проверка на игрока
     if(Game.users.has(this.id) && !this.player){this.player = true; this.type = 'player'}
     if(this.player && this._type == 'enemy')this.type = 'player'
+    if(this.player)Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
+    this.online = (this.player && Game.users.has(this.id))
     
 
+    //Для действий раз в секунду
+    if(this.#timer >= 1){
+      this.#timer = 0
+
+
+      //Действия только если этот игрок онлайн или это не игрок
+      if(!this.player || this.online){
+        //Уменьшение параметров со временем
+        par.maxHealth /= 1.0000001
+        par.regeneration /= 1.00000000000001
+        par.regenerationInterval *= 1.00000000000001
+        par.damage /= 1.000001
+        par.attackInterval *= 1.00001
+      }
+    }
+
+
+    //Проверка на смерть
     if(par.health <= 0 || typeof par.health != 'number'){
       this.type = 'corpse'
-      this.status = {send: false, view: true};
-      [...Game.enemy.values()].filter(enemy => enemy.location === this.location && enemy.id != this.id)
-        .forEach(enemy => enemy.send({type: 'msg', id: this.id, content: f.s(Bundle[enemy.language].events.deadSee, this.id)}))
+      this.status = {send: false, view: true}
+      Game.message('autoLanguage;location:' + this.location + ';noId:' + this.id, (l)=>f.s(Bundle[l].events.deadSee, this.id))
     }
-    if(par.health > par.maxHealth)par.health -= par.regeneration
+
+    //Регенерация и откат времени атаки
+    if(par.health > par.maxHealth)par.health -= (par.regeneration > par.health - par.maxHealth ? par.health - par.maxHealth : par.regeneration)
+
     par.regenerationTime += s
-    if(par.attackTime > 0)par.attackTime -= s
-    if(par.attackTime < 0)par.attackTime = 0
     if(par.regenerationTime >= par.regenerationInterval){
-      if(par.health < par.maxHealth)par.health += par.regeneration
+      if(par.health < par.maxHealth)par.health += (par.regeneration > par.maxHealth - par.health ? par.maxHealth - par.health : par.regeneration)
       par.regenerationTime = 0
     }
+
+    if(par.attackTime > 0)par.attackTime -= s
+    if(par.attackTime < 0)par.attackTime = 0
   }
 }
 

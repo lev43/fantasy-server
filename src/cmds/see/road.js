@@ -13,7 +13,7 @@ module.exports.run = async(p) => {
     });
     roads = roads.join('\n')
   }else roads = bundle[language].noRoads
-  Game.emit('private-server-message', id, bundle[language]._ + '\n' + roads)
+  enemy.message(bundle[language]._ + '\n' + roads)
 }
 
 module.exports.help = {

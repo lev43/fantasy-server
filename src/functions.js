@@ -1,6 +1,7 @@
 const fs = require('fs')
 
 var date_ = new Date()
+setInterval(()=>date_ = new Date(), 1000)
 var d = new Date().getSeconds()
 function date(){
   let d = date_.toLocaleDateString()
@@ -8,25 +9,44 @@ function date(){
   return d
 }
 
-function log(data, name, url, time=true){
+readObjPath = function(obj, path){
+  for(let i of path.split('.'))
+    if(obj[i])obj = obj[i]
+    else throw Error('Not element ' + i)
+  return obj
+}
+
+log = function(data, name, url, time = true){
   fs.stat(`${DATA}/logs/<${date()}>/`, (err, stat)=>{
     if(err)if(err.code == 'ENOENT')
       fs.mkdirSync(`${DATA}/logs/<${date()}>/`)
     else console.log('Some other error: ', err.code);
 
 
-    const url_ = `${DATA}/logs/${`/<${date()}>/`}${(url?url+'/':'')}${name?name:'last'}_log.txt`,
-        data_ = `${time?`<${date_.toLocaleTimeString()}>`:''} ${data}\n`
+    const url_ = `${DATA}/logs/<${date()}>/${(url?url + '/':'')}`,
+          data_ = `${time?`<${date_.toLocaleTimeString()}>`:''} ${data}\n`,
+          file = `${name?name:'last'}_log.txt`
     fs.stat(url_, function(err, stat) {
-      if(!err) {
-        fs.appendFile(url_, data_, 'utf-8', (err)=>{if(err)throw err})
-      } else if(err.code == 'ENOENT') {
-        fs.writeFile(url_, data_, (err)=>{if(err)throw err})
+      //console.log(url_)
+      if(err)if(err.code == 'ENOENT') {
+        try{
+          fs.mkdirSync(url_)
+        }catch(err){if(err.code != 'EEXIST')throw err}
       } else {
-          console.log('Some other error: ', err.code);
+        console.log('Some other error: ', err.code);
       }
+      fs.appendFile(url_ + file, data_, 'utf-8', (err)=>{
+        if(err)if(err.code == 'ENOENT')fs.writeFile(url_ + file, data_, (err)=>{if(err)throw err})
+        else throw err
+      })
     })
   })
+}
+
+con = function(data, name, url){
+  console.log(data)
+
+  log(data, name, url)
 }
 
 f = {
@@ -35,12 +55,6 @@ f = {
   },
   strToJson(str){
     return JSON.parse(str)
-  },
-  log: log, //Требовалось использование log в других функциях, при попытке создать ее тут, возникали проблемы
-  con(data, name, url){
-    console.log(data)
-
-    log(data, name, url)
   },
   mapToArr(map){
     let arr = []

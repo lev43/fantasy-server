@@ -1,0 +1,55 @@
+<11:07:32> Start server on http://0.0.0.0:6852
+<11:08:46> Start server on http://0.0.0.0:6852
+<11:10:11> Start server on http://0.0.0.0:6852
+<11:10:35> Start server on http://0.0.0.0:6852
+<11:10:56> Start server on http://0.0.0.0:6852
+<11:13:03> Start server on http://0.0.0.0:6852
+<11:33:08> Start server on http://0.0.0.0:6852
+<11:35:21> Start server on http://0.0.0.0:6852
+<11:35:49> Start server on http://0.0.0.0:6852
+<11:36:49> Start server on http://0.0.0.0:6852
+<11:37:02> Start server on http://0.0.0.0:6852
+<11:39:22> Start server on http://0.0.0.0:6852
+<11:39:43> Start server on http://0.0.0.0:6852
+<11:41:17> Start server on http://0.0.0.0:6852
+<11:41:44> Start server on http://0.0.0.0:6852
+<11:42:01> Start server on http://0.0.0.0:6852
+<11:42:21> Start server on http://0.0.0.0:6852
+<11:42:26> Start server on http://0.0.0.0:6852
+<11:42:47> Start server on http://0.0.0.0:6852
+<11:43:29> Start server on http://0.0.0.0:6852
+<11:43:45> Start server on http://0.0.0.0:6852
+<11:44:36> Start server on http://0.0.0.0:6852
+<11:45:45> Start server on http://0.0.0.0:6852
+<11:46:09> Start server on http://0.0.0.0:6852
+<11:47:34> Start server on http://0.0.0.0:6852
+<11:49:10> Start server on http://0.0.0.0:6852
+<12:01:23> Start server on http://0.0.0.0:6852
+<12:01:42> Start server on http://0.0.0.0:6852
+<12:01:51> Start server on http://0.0.0.0:6852
+<12:02:12> Start server on http://0.0.0.0:6852
+<12:02:32> Start server on http://0.0.0.0:6852
+<12:02:40> Start server on http://0.0.0.0:6852
+<12:03:56> Start server on http://0.0.0.0:6852
+<12:04:26> Start server on http://0.0.0.0:6852
+<12:04:54> Start server on http://0.0.0.0:6852
+<12:06:02> Start server on http://0.0.0.0:6852
+<12:06:12> Start server on http://0.0.0.0:6852
+<12:06:19> Start server on http://0.0.0.0:6852
+<12:06:48> Start server on http://0.0.0.0:6852
+<12:06:55> Commands:
+<12:06:55> !
+<12:06:55> get-html
+<12:06:55> reload-html
+<12:06:55> send-all
+<12:06:55> send-local
+<12:06:55> add
+<12:06:55> delete
+<12:06:55> edit
+<12:06:55> find
+<12:06:55> exit
+<12:07:08> Start server on http://0.0.0.0:6852
+<12:08:28> Start server on http://0.0.0.0:6852
+<12:08:36> Start server on http://0.0.0.0:6852
+<12:09:18> Start server on http://0.0.0.0:6852
+<12:33:24> Start server on http://0.0.0.0:6852

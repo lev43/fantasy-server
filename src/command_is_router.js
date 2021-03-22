@@ -19,7 +19,7 @@ function command_is_router(help = {name}){
     if(cmd){
       p.args = p.args.slice(1)
       cmd.run(p)
-    }else Game.emit('private-server-message', id, Bundle[language].commands[help.name].no_cmd)
+    }else Game.message('id:' + id, Bundle[language].commands[help.name].no_cmd)
   }
 }
 

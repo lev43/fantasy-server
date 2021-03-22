@@ -10,7 +10,7 @@ module.exports.run = async(p) => {
       [...Game.events.values()].find(event => event.type == 'move-enemy' && event.id == id)?.end(2)
     }else Game.emit('enemy-move', id, args)
   }catch(err){
-    if(err.message == 'Duplicate event')Game.emit('private-server-message', id, bundle[language].isGo)
+    if(err.message == 'Duplicate event')Game.message('id:' + id, bundle[language].isGo)
     else throw err
   }
 }

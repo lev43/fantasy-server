@@ -2,8 +2,8 @@ let bundle = {}
 for(let i in Bundle)bundle[i] = Bundle[i].commands.see.nick
 
 module.exports.run = async(p) => {
-  const {id, language, args} = p
-  let nicks = Game.nickname.get(id)
+  const {language, args} = p, enemy = Game.enemy.get(p.id)
+  let nicks = Game.nickname.get(p.id)
   let value = args[0], nick = nicks[value]
   if(!nick)
     for(let i in nicks)
@@ -12,10 +12,10 @@ module.exports.run = async(p) => {
         value = i
       }
   if(!nick){
-    Game.emit('private-server-message', id, bundle[language])
+    enemy.message(bundle[language])
     return
   }
-  Game.emit('private-server-message', id, `${value}=>${nick}`)
+  enemy.message(`${value}=>${nick}`)
 }
 
 module.exports.help = {

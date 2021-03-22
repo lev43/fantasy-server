@@ -10,16 +10,14 @@ module.exports.run = async(p) => {
   if(parseInt(target) < 1000)target = enemys_[parseInt(target)-1] ?? target
 
   if(!Game.enemy.has(target)){
-    Game.emit('private-server-message', id, f.s(bundle[language].noTarget, target))
+    enemy.message(f.s(bundle[language].noTarget, target))
     return
   }
   if(Game.enemy.get(target).type == 'corpse'){
     Game.enemy.get(target).bury()
-    Game.emit('private-server-message', id, f.s(bundle[language].successfully, target));
-    [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != enemy.id).forEach(e => {
-      e.send({type: 'msg', content: f.s(Bundle[e.language].events.seeBury, enemy.id, target)})
-    })
-  }else Game.emit('private-server-message', id, f.s(bundle[language].noSuccessfully, target))
+    enemy.message(f.s(bundle[language].successfully, target))
+    enemy.message('autoLanguage;location:' + enemy.location + ';noId:' + id, (l)=>f.s(Bundle[l].events.seeBury, enemy.id, target))
+  }else enemy.message(f.s(bundle[language].noSuccessfully, target))
 }
 
 module.exports.help = {

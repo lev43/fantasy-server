@@ -10,10 +10,10 @@ module.exports.run = async(p) => {
   if(parseInt(target) < 1000)target = enemys_[parseInt(target)-1] ?? target
 
   if(!Game.enemy.has(target)){
-    Game.emit('private-server-message', id, f.s(bundle[language].noTarget, target))
+    enemy.message(f.s(bundle[language].noTarget, target))
     return
   }
-  enemy.attack(target).then(t => {if(t == false)Game.emit('private-server-message', id, f.s(bundle[language].noTarget, target))})
+  enemy.attack(target).then(t => {if(t == false)enemy.message(f.s(bundle[language].noTarget, target))})
 }
 
 module.exports.help = {

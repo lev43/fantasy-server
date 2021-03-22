@@ -1,9 +1,0 @@
-<12:46:08> Message<1648659>
-Location<307131241>
-%id{1648659}%id: Hehehe
-<12:46:08> Message<1648659>
-Location<307131241>
-%id{1648659}%id: Bebebe
-<21:29:21> Message<1648659>
-Location<307131241>
-%id{1648659}%id: d

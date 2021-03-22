@@ -1,0 +1,20 @@
+<06:35:35> echo  abc  (msg)
+<06:36:01> echo  hehehe  (msg)
+<14:36:25> echo  abc  (msg)
+<14:36:28> Вы не можете пойти туда (1)  (msg)
+<14:36:31> Вы осматриваете дороги
+Нету дорог  (msg)
+<14:37:00> Вы осматриваете дороги
+(1)Локация возрождения<949447583>  (msg)
+<15:11:31> [object Object]
+<15:11:35> [object Object]
+<15:18:21> [object Object]
+<15:18:26> [object Object]
+<15:18:26> [object Object]
+<15:18:31> [object Object]
+<15:19:06> [object Object]
+<15:19:11> [object Object]
+<15:19:11> [object Object]
+<15:19:16> [object Object]
+<15:19:16> [object Object]
+<15:19:21> [object Object]

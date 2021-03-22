@@ -2,13 +2,13 @@
 
 const fs = require('fs')
 const events = require('events');
-const {jsonToStr, strToJson, log, mapToArr} = require('./functions.js');
+const {jsonToStr, strToJson, mapToArr} = require('./functions.js');
 const { LocationMap, EnemyMap } = require('./Maps.js');
 const DATA = global.DATA
 const {Event} = require('./objects')
 
 
-class Game extends events{
+class GameClass extends events{
   #saves = {id: Map, location: LocationMap, enemy: EnemyMap, nickname: Map}//Для всех сохраняемых хранилищ
   users = new Map()//Хранит WebSockets пользователей во время игры
   #cmds = new Map()//Хранит комманды которые используют пользователи
@@ -82,35 +82,38 @@ class Game extends events{
       enemy.update()
     })
   }
+
+  async message(addresses, message, type = 'msg', mid){//id; noId; location; all
+    let targets = []; for(let i of addresses.split(';'))targets.push(i.split(':'))
+    const noID = targets.filter(n => n[0] == 'noId'), autoLanguage = targets.find(a => a[0] == 'autoLanguage')
+    targets.forEach(target => {
+      let content = target[2] ?? message,
+          [messageType, id] = target
+      switch(messageType){
+        case 'id':
+          const enemy = this.enemy.get(target[1])
+          if(autoLanguage)enemy.send({type, id, content: content(enemy.language), mid})
+          else enemy.send({type, id, content, mid})
+          break;
+        case 'all':
+          this.enemy.forEach(enemy => {
+            if(!noID.find(n => n[1] == enemy.id))
+              if(autoLanguage)enemy.send({type, id, content: content(enemy.language), mid})
+              else enemy.send({type, id, content, mid})
+          })
+          break;
+        case 'location':
+          [...this.enemy.values()].filter(enemy => enemy.location == target[1]).forEach(enemy => {
+            if(!noID.find(n => n[1] == enemy.id))
+              if(autoLanguage)enemy.send({type, id, content: content(enemy.language), mid})
+              else enemy.send({type, id, content, mid})
+          })
+      }
+    })
+  }
 }
 
-Game = new Game()
-
-Game.on('global-message', (id, msg)=>{//Комманда рассылки сообщения всем
-  Game.enemy.forEach(enemy => enemy.send({type: 'msg', id, content: `%id{${id}}%id: ${msg}`}))
-  log(`Message<${id}>: ${msg}`, 'messages')
-})
-Game.on('private-server-message', (id, msg) => {
-  Game.enemy.get(id)?.send({type: 'msg', id, content: msg})
-})
-Game.on('private-server-message-edit', (id, mid, msg) => {
-  Game.enemy.get(id)?.send({type: 'msg-edit', id, mid, content: msg})
-})
-Game.on('private-server-message-delete', (id, mid) => {
-  Game.enemy.get(id)?.send({type: 'msg-delete', id: 'SYSTEM', mid})
-})
-Game.on('private-message', (id1, id2, msg) => {
-  Game.enemy.get(id1)?.send({type: 'msg', id: id1, content: `%id{${id1}}%id->%id{${id2}}%id: ${msg}`})
-})
-Game.on('server-message', (msg)=>{//Комманда рассылки сообщения всем
-  Game.enemy.forEach(user => user.send({type: 'msg', content: `SERVER: ${msg}`}))
-  log(`Message<SERVER>: ${msg}`, 'messages')
-})
-Game.on('local-message', (locationID, msg, id, notID = false) => {
-  [...Game.enemy.values()].filter(enemy => enemy.location === locationID && (enemy.id != id || !notID)).forEach(enemy => enemy.send({type: 'msg', id, content: msg}))
-  log(`Message<${id}>\nLocation<${locationID}>\n${msg}`, 'messages')
-})
-
+Game = new GameClass()
 Game.on('enemy-move', (id, road) => {
   const enemy = Game.enemy.get(id)
   if(!enemy)throw new Error('No enemy ' + id)
@@ -127,48 +130,35 @@ Game.on('enemy-move', (id, road) => {
       let m = new Event((code, id_intercept) => {
         switch(code){
           case 0:
-            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.successfully, location.name[language]));
-            [...Game.enemy.values()].filter(e => e.location == enemy.location && e.id != id)
-              .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.gone, id, location.name[language]))
-              );
+            Game.message('id:' + id, f.s(Bundle[language].commands.go.successfully, location.name[language]), 'msg-edit', m.i);
+            Game.message('autoLanguage;location:' + enemy.location + ';noId:' + enemy.id, (l)=>f.s(Bundle[l].events.move.gone, id, location.name[l]), 'msg-edit', m.i)
 
               
-            [...Game.enemy.values()].filter(e => e.location == location.id && e.id != id)
-              .forEach(e => 
-                Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.move.came, id, Game.location.get(enemy.location).name[language]))
-                )
+            Game.message('autoLanguage;location:' + enemy.location + ';noId:' + enemy.id, (l)=>f.s(Bundle[l].events.move.came, id, Game.location.get(enemy.location).name[l]), 'msg-edit', m.i)
                 
             enemy.location = location.id
             if(roads.length > 0)go(roads)
             break;
           case 1:
-            Game.emit('private-server-message-edit', id_intercept, m.i, f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name[language]))
-            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.intercept, id_intercept, location.name[language]));
-            [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id && e.id != id_intercept)
-              .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.intercept, id, id_intercept, location.name[language]))
-              )
+            Game.message('id:' + id_intercept, f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name[l]), 'msg-edit', m.i)
+            Game.message('id:' + id, f.s(Bundle[language].commands.go.intercept, id_intercept, location.name[language]), 'msg-edit', m.i)
+            Game.message(`autoLanguage;location:${enemy.location};noId:${id};noId:${id_intercept}`, (l)=>f.s(Bundle[l].events.move.intercept, id, id_intercept, location.name[l]), 'msg-edit', m.i)
             break;
           case 2:
-            Game.emit('private-server-message-edit', id, m.i, f.s(Bundle[language].commands.go.stop, location.name[language]));
-            [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
-              .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, m.i, f.s(Bundle[e.language].events.move.stop, id, location.name[language]))
-              )
+            Game.message('id:' + id, f.s(Bundle[language].commands.go.stop, location.name[language]), 'msg-edit', m.i)
+            Game.message(`autoLanguage;location:${enemy.location};noId:${id}`, (l)=>f.s(Bundle[l].events.move.stop, id, location.name[l]), 'msg-edit', m.i)
             break;
           default:
             throw new Error('code ' + code + ' not defined')
         }
       }, time * 1000, {id, location, type: 'move-enemy', one: true});
 
-      [...Game.enemy.values()].filter(e => e.location === enemy.location && e.id != id)
-        .forEach(e => e.send({type: 'msg', id, content: 
-          f.s(Bundle[e.language].events.move.request, id, location.name[language], time, m.i, m.i)
-        }))
-      Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.request, location.name[language], time, m.i))
+      Game.message(`autoLanguage;location:${enemy.location};noId:${id}`,
+        (l)=>f.s(Bundle[l].events.move.request, id, location.name[l], time, m.i, m.i)
+      )
+      Game.message('id:' + id, f.s(Bundle[language].commands.go.request, location.name[language], time, m.i))
     } else {
-      Game.emit('private-server-message', id, f.s(Bundle[language].commands.go.noSuccessfully, location))
+      Game.message('id:' + id, f.s(Bundle[language].commands.go.noSuccessfully, location))
     }
   }
   go(road)
@@ -196,53 +186,54 @@ Game.on('attack', (attacking, defender) => {
         )
         //console.log(damage, fine, attacking.parameters.attackTime, attacking.parameters.attackInterval)
         if(!Game.enemy.has(attacking.id)){
-          [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
-            .forEach(e => 
-              Game.emit('private-server-message-delete', e.id, attack.i)
-            )
+          Game.message(`location:${attacking.location};noId:${attacking.id}`, '', 'msg-delete', attack.i)
           return
         }
         if(!Game.enemy.has(defender.id)){
-          attacking.send({type: 'msg-edit', id: attacking.id, mid: attack.i, content: f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id)});
-          [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id)
-            .forEach(e => 
-              Game.emit('private-server-message-delete', e.id, attack.i)
-            )
+          attacking.message(f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id), 'msg-edit', attack.i)
+          Game.message(`location:${attacking.location};noId:${attacking.id}`, '', 'msg-delete', attack.i)
           return
         }
         defender.damage(damage)
           .then(damage => {
             let attackingStrong = attacking.indicatorOfDamage(damage), defenderStrong = defender.indicatorOfDamageMe(damage)
-            defender.send({type: 'msg-edit', id: defender.id, mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong])})
-            attacking.send({type: 'msg-edit', id: attacking.id, mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong])});
-            [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
-              .forEach(e => 
-                Game.emit('private-server-message-edit', e.id, attack.i, f.s(Bundle[e.language].events.attack.seeSuccessfully, attacking.id, Bundle[e.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[e.language].indicator.damage[defenderStrong]))
-              )
+            defender.message(
+              f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong]),
+              'msg-edit',
+              attack.i
+            )
+            attacking.message(
+              f.s(Bundle[attacking.language].events.attack.attackingSuccessfully, Bundle[attacking.language].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[attacking.language].indicator.damage[defenderStrong]),
+              'msg-edit',
+              attack.i
+            )
+            Game.message(
+              `autoLanguage;location:${attacking.location};noId:${attacking.id};noId:${defender.id}`,
+              (l)=>f.s(Bundle[l].events.attack.seeSuccessfully, attacking.id, Bundle[l].indicator.damage[attackingStrong], defender.id, defender.id, Bundle[l].indicator.damage[defenderStrong]),
+              'msg-edit',
+              attack.i
+            )
+
+            //Увеличение параметров
+            attacking.parameters.damage *= 1 + damage / (10000)
+            defender.parameters.maxHealth *= 1 + damage / (10000)
         })
         break;
         case 1:
           if(id == defender.id){
-            defender.send({type: 'msg-edit', id: attack.id, mid: attack.i, content: f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id)})
-            attacking.send({type: 'msg-edit', id: attack.id, mid: attack.i, content: f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id)});
-            [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
-              .forEach(e => 
-                e.send({type: 'msg-edit', id: attack.id, mid: attack.i, content: f.s(Bundle[e.language].events.attack.seeDodge, defender.id, attacking.id)})
-              )
+            defender.message(f.s(Bundle[defender.language].events.attack.receivingDodge, attacking.id), 'msg-edit', attack.i)
+            attacking.message(f.s(Bundle[attacking.language].events.attack.attackingDodge, defender.id), 'msg-edit', attack.i)
+            Game.message(`autoLanguage;location:${attacking.location};noId:${attacking.id};noId:${defender.id}`, (l)=>f.s(Bundle[l].events.attack.seeDodge, defender.id, attacking.id), 'msg-edit', attack.i)
           }
         break;
       default:
         throw Error('Code ' + code + ' is not defined')
     }
-    attacking.parameters.attackTime = attacking.parameters.attackInterval
   }, time * 1000, {id: attacking.id, type: 'attack'})
 
-  attacking.send({type: 'msg', id: attacking.id, content: f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i)})
-  defender.send({type: 'msg', id: defender.id, content: f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i)});
-  [...Game.enemy.values()].filter(e => e.location == attacking.location && e.id != attacking.id && e.id != defender.id)
-    .forEach(e => 
-      Game.emit('private-server-message', e.id, f.s(Bundle[e.language].events.attack.see, attacking.id, defender.id, time, attack.i))
-    )
+  attacking.message(f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i))
+  defender.message(f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i))
+  Game.message(`autoLanguage;location:${attacking.location};noId:${attacking.id};noId:${defender.id}`, (l)=>f.s(Bundle[l].events.attack.see, attacking.id, defender.id, time, attack.i))
 })
 
 module.exports = Game

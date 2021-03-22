@@ -1,4 +1,3 @@
-const { con, log } = require('./src/functions.js')
 const languages = ['ru', 'en']
 const fs = require('fs')
 
@@ -63,11 +62,11 @@ const cmds = new Map([
   }],
 
   ['send-all', (line, args) => {
-    Game.emit('server-message', args.join(' '))
+    Game.message('all', args.join)
   }],
 
   ['send-local', (line, args) => {
-    Game.emit('local-message', args[0], args.slice(1).join(' '))
+    Game.message(`location:${args[0]}`, args.slice(1).join(' '))
   }],
 
   ['add', (line, args, parameters) => {
