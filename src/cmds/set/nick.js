@@ -10,7 +10,7 @@ module.exports.run = async(p) => {
       enemy.message(bundle[language].successfully)
     } else enemy.message(f.s(bundle[language].noID, args[0]))
   } else {
-    enemy.message('set nick {id, [nick || \'del\']}')
+    enemy.message('set nick {id, nick || \'del\'}')
   }
 }
 

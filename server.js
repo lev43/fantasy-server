@@ -20,22 +20,7 @@ const port = 6852;
 
 html = {}
 
-function readFiles(path, obj, rootPath = './src/html'){
-  fs.readdirSync(rootPath + path).forEach(file => {
-    let pathFile = path + file
-    //console.log(pathFile)
-    try{
-      obj[pathFile] = fs.readFileSync(rootPath + pathFile)
-    }catch(err){
-      if(err.code == 'EISDIR')readFiles(pathFile + '/', obj)
-      else if(err.code == 'EACCES'){}
-      else if(err.code == 'ENOENT')console.log("Not file " + file, pathFile)
-      else throw err
-    }
-  })
-}
-
-readFiles('/', html)
+readFiles('/', html, './src/html')
 
 const server = http.createServer(function(req, res){
   let file = req.url, type = file.split('.').pop()
@@ -140,6 +125,10 @@ wss.on('connection', function connection(ws, request, client) {
 
   ws.on('pong', msg => {})
 });
+
+
+//process.on('IGBREAK', ()=>{}).on('SIGHUP', ()=>{}).on('SIGINT', ()=>{})
+// process.on('exit', ()=>{})
 
 
 server.listen(port, host, () => {

@@ -83,7 +83,7 @@ class Enemy extends MyObject{
   }
 
   async send(msg){
-    log(msg, 'messages-' + this.id, 'messages')
+    log(JSON.stringify(msg), 'messages-' + this.id, 'messages')
     Game.users.get(this.id)?.send(msg)
   }
 

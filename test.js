@@ -1,4 +1,3 @@
-const a = ()=>2+2
-const b = function(){}
+const t = '10:10:10'.split(':')
 
-console.log()
+console.log(--t[2])

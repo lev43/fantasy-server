@@ -68,7 +68,7 @@ class GameClass extends events{
 
     if(cmd){
       cmd.run({id, message, args, language})
-    }else this.emit('local-message', enemy.location, `%id{${id}}%id: ${message}`, enemy.id)
+    }else this.message('location:' + enemy.location, `%id{${id}}%id: ${message}`)
   }
   async update(){
     if(this.location.size < 1 || this.location.size < 2 && !this.location.get('spawn'))this.location.add({name: {ru: 'Локация возрождения', en: 'Spawn'}})

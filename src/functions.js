@@ -3,17 +3,47 @@ const fs = require('fs')
 var date_ = new Date()
 setInterval(()=>date_ = new Date(), 1000)
 var d = new Date().getSeconds()
-function date(){
+date = function(){
   let d = date_.toLocaleDateString()
   if(d.split('/'))d = d.split('/').join('.')
   return d
 }
 
-readObjPath = function(obj, path){
+readObj = function(obj, path){
+  if(Object.keys(obj).join(';').search(path) != -1)return obj[path]
   for(let i of path.split('.'))
     if(obj[i])obj = obj[i]
     else throw Error('Not element ' + i)
   return obj
+}
+
+setObj = function(obj, path, value){
+  path = path.split('.')
+  if(!obj[path])for(let i of path.slice(0, path.length - 1)){
+    i = (parseInt(i) + '' == 'NaN' ? i : parseInt(i))
+    if(obj[i])obj = obj[i]
+    else throw Error('Not element ' + i)
+  }
+  try{
+    value = JSON.parse(value)
+  }catch(err){}
+  obj[path.pop()] = value
+  return obj
+}
+
+readFiles = function(path, obj, rootPath = './src'){
+  fs.readdirSync(rootPath + path).forEach(file => {
+    let pathFile = path + file
+    //console.log(pathFile)
+    try{
+      obj[pathFile] = fs.readFileSync(rootPath + pathFile)
+    }catch(err){
+      if(err.code == 'EISDIR')readFiles(pathFile + '/', obj, rootPath)
+      else if(err.code == 'EACCES'){}
+      else if(err.code == 'ENOENT')console.log("Not file " + file, pathFile)
+      else throw err
+    }
+  })
 }
 
 log = function(data, name, url, time = true){
