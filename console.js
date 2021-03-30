@@ -44,9 +44,12 @@ function setPar(obj, parameters){
     try{
       parameters[par] = JSON.parse(parameters[par])
     }catch(err){}
+    if(parseFloat(parameters[par]) + '' != 'NaN')parameters[par] = parseFloat(parameters[par])
     if(par != 'id'){
-      console.log(`${readObj(obj, par)}->${parameters[par]}`)
-      setObj(obj, par, parameters[par])
+      try{
+        console.log(`${readObj(obj, par)}->${parameters[par]}`)
+        setObj(obj, par, parameters[par])
+      }catch(err){console.log(err.message)}
     }
   }
 }
@@ -98,8 +101,8 @@ const cmds = new Map([
           console.log(`Successfully`)
         else console.log(`Not successfully, one or two location is not defined`)
       }],
-      ['enemy', (line, args, parameters) => {
-        Game.enemy.add({
+      ['entity', (line, args, parameters) => {
+        Game.entity.add({
           id: parameters?.id
         })
         console.log(`Successfully`)
@@ -129,12 +132,12 @@ const cmds = new Map([
              console.log(`Successfully`)
         else console.log(`No successfully`)
       }],
-      ['enemy', (line, args, parameters) => {
+      ['entity', (line, args, parameters) => {
         if(!parameters.id){
-          console.log(`delete enemy {!d}`)
+          console.log(`delete entity {!d}`)
           return
         }
-        if(Game.enemy.delete(parameters.id))
+        if(Game.entity.delete(parameters.id))
              console.log(`Successfully`)
         else console.log(`No successfully`)
       }]
@@ -166,16 +169,16 @@ const cmds = new Map([
           console.log(`successfully`)
         }else console.log(`No location ${parameters.id}`)
       }],
-      ['enemy', (line, args, parameters) => {
+      ['entity', (line, args, parameters) => {
         const {id, loc} = parameters
         if(!id){
-          console.log(`edit enemy {id, ...}`)
+          console.log(`edit entity {id, ...}`)
           return
         }
-        if(Game.enemy.has(id)){
-          let enemy = Game.enemy.get(id)
-          setPar(enemy, parameters)
-        }else console.log(`No enemy ${id}`)
+        if(Game.entity.has(id)){
+          let entity = Game.entity.get(id)
+          setPar(entity, parameters)
+        }else console.log(`No entity ${id}`)
       }]
     ])
     command(line, args, parameters, cmds, 'edit')
@@ -213,13 +216,13 @@ const cmds = new Map([
           if(id != 'spawn')console.log(Object.entries(location))
         })
       }],
-      ['enemy', (line, args) => {
+      ['entity', (line, args) => {
         let e = false
 
-        if(Object.keys(parameters ?? {}).length > 0)[...Game.enemy.values()].filter(enemy => {
+        if(Object.keys(parameters ?? {}).length > 0)[...Game.entity.values()].filter(entity => {
           for(let par in parameters){
             try{
-              if(readObj(enemy, par) + '' != parameters[par])return false
+              if(readObj(entity, par) + '' != parameters[par])return false
             }catch(err){
               if(err.message.split(' ').slice(0, 2).join(' ') != 'Not element')throw err
               return false
@@ -227,13 +230,13 @@ const cmds = new Map([
           }
           e = true
           return true
-        }).forEach(enemy => console.log(Object.entries(enemy)))
+        }).forEach(entity => console.log(Object.entries(entity)))
 
-        if(Object.keys(parameters ?? {}).length > 0 && !e)console.log(`No enemy that parameters\n{\n  ${Object.entries(parameters).join('\n  ').split(',').join(': ')}\n}`)
+        if(Object.keys(parameters ?? {}).length > 0 && !e)console.log(`No entity that parameters\n{\n  ${Object.entries(parameters).join('\n  ').split(',').join(': ')}\n}`)
         if(e || Object.keys(parameters ?? {}).length > 0)return
 
-        Game.enemy.forEach((enemy, id) => {
-          console.log(Object.entries(enemy))
+        Game.entity.forEach((entity, id) => {
+          console.log(Object.entries(entity))
         })
       }],
       ['log', (line, args, parameters) => {

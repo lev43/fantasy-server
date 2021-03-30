@@ -6,7 +6,7 @@ class MyObject{
   set name(v){
     this._name = v
   }
-  constructor(par = {id}){
+  constructor(par){
     for(let i in par){
       if(par[i])this[i] = par[i]
     }
@@ -37,14 +37,29 @@ class Location extends MyObject{
   }
 }
 
-class Enemy extends MyObject{
+class Entity extends MyObject{
   #timer = 0
   online = false
   location
   language = 'ru'
   save_par = {}
-  _type = 'enemy'
+  _type = 'entity'
+  genus = 'human'
   status = {send: true, view: true}
+  get appearance(){
+    switch(this.type){
+      case 'player': return this.genus; break;
+      case 'corpse': return 'corpse_' + this.genus; break;
+      default: return this.type
+    }
+  }
+  get brieflyAppearance(){
+    switch(this.type){
+      case 'player': return this.genus; break;
+      case 'corpse': return 'corpse'; break;
+      default: return this.type
+    }
+  }
   get healthStat(){
     const {health, maxHealth} = this.parameters
     if(health > maxHealth)return 'p5'
@@ -66,18 +81,18 @@ class Enemy extends MyObject{
     else this.parameters = Object.assign(this.parameters ?? {}, Patterns[value])
   }
 
-  constructor(par = {id, location, language, parameters}){
+  constructor(par){
     super(par)
-    if(!par.location)this.location = Game.location.spawn
+    if(!par?.location)this.location = Game.location.spawn
     else this.location = par.location
 
 
     if(!this.parameters)this.parameters = Object.assign({}, Patterns[this.type])
-    if(this.player && this._type == 'enemy')this._type = 'player'
+    if(this.player && this._type == 'entity')this._type = 'player'
 
 
-    Game.nickname.set(this.id, {})
-    Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
+    if(!Game.nickname.get(this.id))Game.nickname.set(this.id, {})
+    Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.entity.default
 
     this.online = this.player
   }
@@ -93,7 +108,7 @@ class Enemy extends MyObject{
 
   async bury(){
     if(this.type != 'corpse')return false
-    Game.enemy.delete(this.id)
+    Game.entity.delete(this.id)
     Game.id.forEach((id, i) => {
       if(id == this.id)Game.id.delete(i)
     })
@@ -104,9 +119,10 @@ class Enemy extends MyObject{
 
   async attack(id){
     try{
-    this.parameters.attackTime = this.parameters.attackInterval
-    Game.emit('attack', this.id, id)
-      this.parameters.attackInterval -= Math.abs(this.parameters.attackInterval / 2.9 - this.parameters.attackTime / this.parameters.attackInterval) / 10
+      Game.emit('attack', this.id, id)
+      this.parameters.attackTime += this.parameters.attackInterval
+      let _ = Math.abs(this.parameters.attackInterval / 2.9 - (this.parameters.attackTime > this.parameters.attackInterval ? this.parameters.attackInterval : this.parameters.attackTime) / this.parameters.attackInterval) / 10 - Math.abs(this.parameters.attackTime / this.parameters.attackInterval)
+      this.parameters.attackInterval -= _ < 0 ? 0 : _
     }catch(err){
       if(err.message == 'location of attacking is not defender location')return false
       else throw err
@@ -169,8 +185,8 @@ class Enemy extends MyObject{
 
     //Проверка на игрока
     if(Game.users.has(this.id) && !this.player){this.player = true; this.type = 'player'}
-    if(this.player && this._type == 'enemy')this.type = 'player'
-    if(this.player)Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.enemy.default
+    if(this.player && this._type == 'entity')this.type = 'player'
+    if(this.player)Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.entity.default
     this.online = (this.player && Game.users.has(this.id))
     
 
@@ -178,6 +194,17 @@ class Enemy extends MyObject{
     if(this.#timer >= 1){
       this.#timer = 0
 
+      //Регенерация и откат времени атаки
+      if(par.health > par.maxHealth)par.health -= (par.regeneration > par.health - par.maxHealth ? par.health - par.maxHealth : par.regeneration == 0 ? 10 : Math.abs(par.regeneration))
+
+      par.regenerationTime++;
+      if(par.regenerationTime >= par.regenerationInterval){
+        if(par.health < par.maxHealth)par.health += (par.regeneration > par.maxHealth - par.health ? par.maxHealth - par.health : par.regeneration)
+        par.regenerationTime = 0
+      }
+
+      if(par.attackTime > 0)par.attackTime -= 1 * (par.attackTime > par.attackInterval ? par.attackTime / par.attackInterval : 1)
+      if(par.attackTime < 0)par.attackTime = 0
 
       //Действия только если этот игрок онлайн или это не игрок
       if(!this.player || this.online){
@@ -197,18 +224,6 @@ class Enemy extends MyObject{
       this.status = {send: false, view: true}
       Game.message('autoLanguage;location:' + this.location + ';noId:' + this.id, (l)=>f.s(Bundle[l].events.deadSee, this.id))
     }
-
-    //Регенерация и откат времени атаки
-    if(par.health > par.maxHealth)par.health -= (par.regeneration > par.health - par.maxHealth ? par.health - par.maxHealth : par.regeneration)
-
-    par.regenerationTime += s
-    if(par.regenerationTime >= par.regenerationInterval){
-      if(par.health < par.maxHealth)par.health += (par.regeneration > par.maxHealth - par.health ? par.maxHealth - par.health : par.regeneration)
-      par.regenerationTime = 0
-    }
-
-    if(par.attackTime > 0)par.attackTime -= s
-    if(par.attackTime < 0)par.attackTime = 0
   }
 }
 
@@ -223,7 +238,7 @@ class Event{
   get time(){
     return this.#time
   }
-  constructor(func = (code) => console.log("HELLO WORLD"), time = 0, parameters = {endCode}, startFunc){
+  constructor(func = function(code){console.log("HELLO WORLD")}, time = 0, parameters = {endCode}, startFunc){
     for(let i in parameters)this[i] = parameters[i]
     this.#endCode = parameters.endCode ?? 0
     while(Game.events.has(this.i) || !this.i)this.i = String(Math.floor(Math.random() * 100))
@@ -257,12 +272,12 @@ class Event{
     clearInterval(this.t)
     if(!Game.events.has(this.i))return new Error("This event does not exist")
     Game.events.delete(this.i)
-    return this.#func(...arguments)
+    return this.#func.bind(this)(...arguments)
   }
 }
 
 module.exports = {
   Location,
-  Enemy,
+  Entity,
   Event
 }

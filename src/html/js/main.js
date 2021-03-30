@@ -60,7 +60,7 @@ if ("WebSocket" in window) {
       case 'msg':
         var timers = []
         while(data.content.indexOf('%timer{') != -1){
-          let t = parseInt(//Получаем как долго должен работать таймер
+          let t = parseInt(
             data.content.slice(
               data.content.indexOf('%timer{') + 7, 
               data.content.indexOf('}%timer')
@@ -87,16 +87,17 @@ if ("WebSocket" in window) {
         newMessage.innerText = data.content + '\n'
         timers.forEach(timer => newMessage.innerHTML = newMessage.innerHTML.replace('%s_timer', timer))
         if(view){
-          if(params.line == '1')newMessage.prepend(line)
           const lastMessages = document.getElementById('channel').childNodes[0]
           if(lastMessages?.id == data.id){
             lastMessages.prepend(newMessage)
+            if(params.line == '1')lastMessages.prepend(line)
           } else {
             const newMessages = document.createElement('code')
             newMessages.className = 'messages'
             newMessages.id = data.id
             if(params.line == '2')newMessages.prepend(line)
             newMessages.prepend(newMessage)
+            if(params.line == '1')newMessages.prepend(line)
             document.getElementById('channel').prepend(newMessages)
           }
         }
@@ -109,7 +110,7 @@ if ("WebSocket" in window) {
       case 'err':
         alert(data.content)
         ws.close()
-        document.location.href = `/html/%{params.language}/password.html`
+        document.location.href = `/html/${params.language}/password.html`
         break;
     }
   }

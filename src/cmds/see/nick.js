@@ -2,7 +2,7 @@ let bundle = {}
 for(let i in Bundle)bundle[i] = Bundle[i].commands.see.nick
 
 module.exports.run = async(p) => {
-  const {language, args} = p, enemy = Game.enemy.get(p.id)
+  const {language, args} = p, entity = Game.entity.get(p.id)
   let nicks = Game.nickname.get(p.id)
   let value = args[0], nick = nicks[value]
   if(!nick)
@@ -12,10 +12,10 @@ module.exports.run = async(p) => {
         value = i
       }
   if(!nick){
-    enemy.message(bundle[language])
+    entity.message(bundle[language])
     return
   }
-  enemy.message(`${value}=>${nick}`)
+  entity.message(`${value}=>${nick}`)
 }
 
 module.exports.help = {

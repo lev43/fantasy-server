@@ -26,14 +26,15 @@
     <b>Давайте расмотрим команды</b><br>
     Множество команд содержат подкоманды, их можно описать так<br>
     <b class="command">cmd {command {args}}</b><br>
+    Пример: <b class="command">see entity 1</b>
     <hr>
 
     <b class="command">see</b><br>
     Команда для просмотра чего-либо<br>
-    Пример: <b class="command">see enemy 2</b>
+    Пример: <b class="command">see entity 2</b>
     <b><ul class="command-list">
       <li>location          <i>(Информация о текущей локации)</i></li>
-      <li>enemy [id || n] <i>(Существа на локации)</i></li>
+      <li>entity [id || n] <i>(Существа на локации)</i></li>
       <li>health            <i>(Уровень твоей жизни)</i></li>
       <li>nick {nick || id} <i>(id на указанном nick и наоборот)</i></li>
       <li>road              <i>(Дороги с локации)</i></li>
@@ -42,7 +43,7 @@
 
     <b class="command">set</b><br>
     Устанавливает значения<br>
-    Пример: <b class="command">set nick 1234 abcde</b><br>
+    Пример: <b class="command">set nick 1234 Лучший-друг</b><br>
     <b><ul class="command-list">
       <li>nick {id, nick} (Установить вместо id nick)</li>
     </ul></b>

@@ -2,9 +2,9 @@ let bundle = {}
 for(let i in Bundle)bundle[i] = Bundle[i].commands.see.health
 
 module.exports.run = async(p) => {
-  const {language} = p, enemy = Game.enemy.get(p.id)
+  const {language} = p, entity = Game.entity.get(p.id)
   
-  enemy.message(f.s(bundle[language], Bundle[language].indicator.health[enemy.healthStat]))
+  entity.message(f.s(bundle[language], Bundle[language].indicator.health[entity.healthStat]))
 }
 
 module.exports.help = {

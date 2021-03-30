@@ -1,4 +1,4 @@
-const { Location, Enemy } = require("./objects");
+const { Location, Entity } = require("./objects");
 const events = require('events');
 
 class ContentMap extends Map{
@@ -21,14 +21,16 @@ class ContentMap extends Map{
     }else return false
   }
   getByParameters(parameters){
-    return new this.constructor([...this.entries()].filter(obj => {
+    return new this.constructor([...this].filter(obj => {
       let y = true
-      for(let i in parameters)
-        if(i.split('_').pop() != 'not')
+      for(let i in parameters){
+        if(i.split('_').pop() != 'not'){
           if(parameters[i + '_not'])
-            (obj[1][i] == parameters[i] ? y = false : null)
+            (readObj(obj[1], i) + '' == parameters[i] + '' ? y = false : null)
           else
-            (obj[1][i] != parameters[i] ? y = false : null)
+            (readObj(obj[1], i) + '' != parameters[i] + '' ? y = false : null)
+        }
+      }
       return y
     }), this.type)
   }
@@ -73,13 +75,17 @@ class LocationMap extends ContentMap{
   }
 }
 
-class EnemyMap extends ContentMap{
-  #type = EnemyMap
-  constructor(arr){super(arr, Enemy)}
+class EntityMap extends ContentMap{
+  #type = EntityMap
+  constructor(arr){super(arr, Entity)}
+  delete(id){
+    super.delete(id)
+    Game.nickname.delete(id)
+  }
 }
 
 module.exports = {
   ContentMap,
   LocationMap,
-  EnemyMap
+  EntityMap
 }

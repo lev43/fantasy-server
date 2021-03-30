@@ -3,17 +3,17 @@
 const fs = require('fs')
 const events = require('events');
 const {jsonToStr, strToJson, mapToArr} = require('./functions.js');
-const { LocationMap, EnemyMap } = require('./Maps.js');
+const { LocationMap, EntityMap } = require('./Maps.js');
 const DATA = global.DATA
 const {Event} = require('./objects')
 
 
 class GameClass extends events{
-  #saves = {id: Map, location: LocationMap, enemy: EnemyMap, nickname: Map}//Для всех сохраняемых хранилищ
+  #saves = {id: Map, location: LocationMap, entity: EntityMap, nickname: Map}//Для всех сохраняемых хранилищ
   users = new Map()//Хранит WebSockets пользователей во время игры
   #cmds = new Map()//Хранит комманды которые используют пользователи
   location = new LocationMap()
-  enemy = new EnemyMap()
+  entity = new EntityMap()
   id = new Map()
   nickname = new Map()
   events = new Map()
@@ -57,9 +57,9 @@ class GameClass extends events{
   async player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
     let id = this.id.get(hash)
     if(!id)return
-    let enemy = this.enemy.get(id)
-    enemy.language = language
-    if(!enemy.status.send)return
+    let entity = this.entity.get(id)
+    entity.language = language
+    if(!entity.status.send)return
 
     let args = message.split(' ')
     let command = args.shift()
@@ -68,18 +68,18 @@ class GameClass extends events{
 
     if(cmd){
       cmd.run({id, message, args, language})
-    }else this.message('location:' + enemy.location, `%id{${id}}%id: ${message}`)
+    }else this.message('location:' + entity.location, `%id{${id}}%id: ${message}`)
   }
   async update(){
     if(this.location.size < 1 || this.location.size < 2 && !this.location.get('spawn'))this.location.add({name: {ru: 'Локация возрождения', en: 'Spawn'}})
     if(!this.location.spawn || !this.location.has(this.location.spawn))this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
 
     this.users.forEach((user, id) => {
-      if(!this.enemy.has(id))this.enemy.add({id})
-      if(this.enemy.has(id))this.enemy.get(id).player = true
+      if(!this.entity.has(id))this.entity.add({id})
+      if(this.entity.has(id))this.entity.get(id).player = true
     })
-    this.enemy.forEach((enemy, id) => {
-      enemy.update()
+    this.entity.forEach((entity, id) => {
+      entity.update()
     })
   }
 
@@ -91,22 +91,22 @@ class GameClass extends events{
           [messageType, id] = target
       switch(messageType){
         case 'id':
-          const enemy = this.enemy.get(target[1])
-          if(autoLanguage)enemy.send({type, id, content: content(enemy.language), mid})
-          else enemy.send({type, id, content, mid})
+          const entity = this.entity.get(target[1])
+          if(autoLanguage)entity.send({type, id, content: content(entity.language), mid})
+          else entity.send({type, id, content, mid})
           break;
         case 'all':
-          this.enemy.forEach(enemy => {
-            if(!noID.find(n => n[1] == enemy.id))
-              if(autoLanguage)enemy.send({type, id, content: content(enemy.language), mid})
-              else enemy.send({type, id, content, mid})
+          this.entity.forEach(entity => {
+            if(!noID.find(n => n[1] == entity.id))
+              if(autoLanguage)entity.send({type, id, content: content(entity.language), mid})
+              else entity.send({type, id, content, mid})
           })
           break;
         case 'location':
-          [...this.enemy.values()].filter(enemy => enemy.location == target[1]).forEach(enemy => {
-            if(!noID.find(n => n[1] == enemy.id))
-              if(autoLanguage)enemy.send({type, id, content: content(enemy.language), mid})
-              else enemy.send({type, id, content, mid})
+          [...this.entity.values()].filter(entity => entity.location == target[1]).forEach(entity => {
+            if(!noID.find(n => n[1] == entity.id))
+              if(autoLanguage)entity.send({type, id, content: content(entity.language), mid})
+              else entity.send({type, id, content, mid})
           })
       }
     })
@@ -114,46 +114,46 @@ class GameClass extends events{
 }
 
 Game = new GameClass()
-Game.on('enemy-move', (id, road) => {
-  const enemy = Game.enemy.get(id)
-  if(!enemy)throw new Error('No enemy ' + id)
-  const {language} = enemy
+Game.on('entity-move', (id, road) => {
+  const entity = Game.entity.get(id)
+  if(!entity)throw new Error('No entity ' + id)
+  const {language} = entity
 
   function go(roads){
     const time = parseInt(Setting.path().commands.go.time)
     let location = roads.shift()
-    if(parseInt(location) < 1000)location = Game.location.get(enemy.location).roads_save[parseInt(location) - 1] ?? location
+    if(parseInt(location) < 1000)location = Game.location.get(entity.location).roads_save[parseInt(location) - 1] ?? location
 
-    if(Game.location.has(location), Game.location.hasRoad(enemy.location, location)){
+    if(Game.location.has(location), Game.location.hasRoad(entity.location, location)){
       location = Game.location.get(location)
 
       let m = new Event((code, id_intercept) => {
         switch(code){
           case 0:
             Game.message('id:' + id, f.s(Bundle[language].commands.go.successfully, location.name[language]), 'msg-edit', m.i);
-            Game.message('autoLanguage;location:' + enemy.location + ';noId:' + enemy.id, (l)=>f.s(Bundle[l].events.move.gone, id, location.name[l]), 'msg-edit', m.i)
+            Game.message('autoLanguage;location:' + entity.location + ';noId:' + entity.id, (l)=>f.s(Bundle[l].events.move.gone, id, location.name[l]), 'msg-edit', m.i)
 
               
-            Game.message('autoLanguage;location:' + enemy.location + ';noId:' + enemy.id, (l)=>f.s(Bundle[l].events.move.came, id, Game.location.get(enemy.location).name[l]), 'msg-edit', m.i)
+            Game.message('autoLanguage;location:' + entity.location + ';noId:' + entity.id, (l)=>f.s(Bundle[l].events.move.came, id, Game.location.get(entity.location).name[l]), 'msg-edit', m.i)
                 
-            enemy.location = location.id
+            entity.location = location.id
             if(roads.length > 0)go(roads)
             break;
           case 1:
-            Game.message('id:' + id_intercept, f.s(Bundle[Game.enemy.get(id_intercept).language].commands.intercept, id, location.name[l]), 'msg-edit', m.i)
+            Game.message('id:' + id_intercept, f.s(Bundle[Game.entity.get(id_intercept).language].commands.intercept, id, location.name[l]), 'msg-edit', m.i)
             Game.message('id:' + id, f.s(Bundle[language].commands.go.intercept, id_intercept, location.name[language]), 'msg-edit', m.i)
-            Game.message(`autoLanguage;location:${enemy.location};noId:${id};noId:${id_intercept}`, (l)=>f.s(Bundle[l].events.move.intercept, id, id_intercept, location.name[l]), 'msg-edit', m.i)
+            Game.message(`autoLanguage;location:${entity.location};noId:${id};noId:${id_intercept}`, (l)=>f.s(Bundle[l].events.move.intercept, id, id_intercept, location.name[l]), 'msg-edit', m.i)
             break;
           case 2:
             Game.message('id:' + id, f.s(Bundle[language].commands.go.stop, location.name[language]), 'msg-edit', m.i)
-            Game.message(`autoLanguage;location:${enemy.location};noId:${id}`, (l)=>f.s(Bundle[l].events.move.stop, id, location.name[l]), 'msg-edit', m.i)
+            Game.message(`autoLanguage;location:${entity.location};noId:${id}`, (l)=>f.s(Bundle[l].events.move.stop, id, location.name[l]), 'msg-edit', m.i)
             break;
           default:
             throw new Error('code ' + code + ' not defined')
         }
-      }, time * 1000, {id, location, type: 'move-enemy', one: true});
+      }, time * 1000, {id, location, type: 'move-entity', one: true});
 
-      Game.message(`autoLanguage;location:${enemy.location};noId:${id}`,
+      Game.message(`autoLanguage;location:${entity.location};noId:${id}`,
         (l)=>f.s(Bundle[l].events.move.request, id, location.name[l], time, m.i, m.i)
       )
       Game.message('id:' + id, f.s(Bundle[language].commands.go.request, location.name[language], time, m.i))
@@ -166,13 +166,14 @@ Game.on('enemy-move', (id, road) => {
 
 Game.on('attack', (attacking, defender) => {
   const time = parseInt(Setting.path().commands.attack.time)
-  attacking = Game.enemy.get(attacking), defender = Game.enemy.get(defender)
+  attacking = Game.entity.get(attacking), defender = Game.entity.get(defender)
   if(!attacking || !defender)throw Error((attacking ? '' : 'Attacking is not defined\n') + (defender ? '' : 'Defender is not defined\n'))
   if(attacking.location != defender.location)throw Error('location of attacking is not defender location')
-  let attack = new Event( (code, id) => {
+  let attack = new Event( function(code, id){
     switch(code){
       case 0:
-        let fine = Math.trunc( attacking.parameters.attackTime / attacking.parameters.attackInterval * 100 )
+        let fine = Math.trunc(this._t / attacking.parameters.attackInterval * 100) / 100
+        if(Math.abs(fine) == Infinity)fine = 0
         let damage = Math.floor(
           (
             (attacking.parameters.damage)
@@ -181,15 +182,16 @@ Game.on('attack', (attacking, defender) => {
             * 2 - 
             Math.floor(attacking.parameters.damage / 100 * attacking.parameters.inaccuracyDamage) 
           ) - (
-            Math.floor(attacking.parameters.damage / 200 * fine)
+            Math.floor(fine * attacking.parameters.damage/1.01)
           )
         )
-        //console.log(damage, fine, attacking.parameters.attackTime, attacking.parameters.attackInterval)
-        if(!Game.enemy.has(attacking.id)){
+        if(damage < 0)damage = 0
+        //console.log(damage, fine, fine*attacking.parameters.damage/1.01, this._t, attacking.parameters.attackInterval)
+        if(!Game.entity.has(attacking.id)){
           Game.message(`location:${attacking.location};noId:${attacking.id}`, '', 'msg-delete', attack.i)
           return
         }
-        if(!Game.enemy.has(defender.id)){
+        if(!Game.entity.has(defender.id)){
           attacking.message(f.s(Bundle[attacking.language].commands.attack.noTarget, defender.id), 'msg-edit', attack.i)
           Game.message(`location:${attacking.location};noId:${attacking.id}`, '', 'msg-delete', attack.i)
           return
@@ -229,7 +231,7 @@ Game.on('attack', (attacking, defender) => {
       default:
         throw Error('Code ' + code + ' is not defined')
     }
-  }, time * 1000, {id: attacking.id, type: 'attack'})
+  }, time * 1000, {id: attacking.id, type: 'attack', _t: attacking.parameters.attackTime})
 
   attacking.message(f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i))
   defender.message(f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i))

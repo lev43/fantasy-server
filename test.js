@@ -1,3 +1,6 @@
-const t = '10:10:10'.split(':')
+a = {
+  b: function(){console.log(this.c)},
+  c: "HEHEHE"
+}
 
-console.log(--t[2])
+a.b.bind(a)()

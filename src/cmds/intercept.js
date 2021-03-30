@@ -1,8 +1,8 @@
 module.exports.run = async(p) => {
   const {id, language, args} = p
-  const enemy = Game.enemy.get(id)
+  const entity = Game.entity.get(id)
   let event = Game.events.get(args[0])
-  if(!enemy || !event)return
+  if(!entity || !event)return
   event.end(1, id)
 }
 

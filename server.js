@@ -76,20 +76,23 @@ wss.on('connection', function connection(ws, request, client) {
           ws.send = new Proxy(ws.send, {
             apply(fun, obj, args){
               let msg = args[0]
-              let myID
+              let myID, entity
 
 
-              Game.enemy.forEach((enemy, id) => {
+              Game.entity.forEach((_, id) => {
                 if(Game.users.get(id) === obj){
                   myID = id
+                  entity = _
                 }})
 
               while((msg.content?.indexOf('%id{') ?? -1) != -1){
                 let id = msg.content.slice(msg.content.search('%id{')+4, msg.content.search('}%id'))
                 try{
-                  msg.content = msg.content.slice(0, msg.content.search('%id{')) + (Game.nickname.get(myID)?.[id] ?? id) + msg.content.slice(msg.content.search('}%id') + 4)
+                  let index = [...Game.entity.getByParameters({location: entity.location, id: myID, id_not: true}).keys()].findIndex(v => v == id) + 1
+                  let nick = (Game.nickname.get(myID)?.[id] ?? Bundle[entity.language].names[Game.entity.get(id)?.brieflyAppearance] ?? id)
+                  msg.content = msg.content.slice(0, msg.content.search('%id{')) + nick + (index ? `(${index})` : '') + msg.content.slice(msg.content.search('}%id') + 4)
                 }catch(err){
-                  if(!err.message == 'Invalid string length')throw err
+                  if(err.message != 'Invalid string length')throw err
                 }
               }
 
@@ -101,7 +104,7 @@ wss.on('connection', function connection(ws, request, client) {
           Game.users.set(id, ws)
           log(`Socket(${request.connection.remoteAddress})[${id}] connect`, 'sockets', 'connections')
 
-          if(Game.enemy.has(id))Game.enemy.get(id).language = data.language
+          if(Game.entity.has(id))Game.entity.get(id).language = data.language
 
           function close(){
             log(`Socket(${request.connection.remoteAddress})[${id}] disconnect`, 'sockets', 'connections')
@@ -112,7 +115,7 @@ wss.on('connection', function connection(ws, request, client) {
             f.s(
               Bundle[data.language].events.connect,
               id,
-              Game.location.get(Game.enemy.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
+              Game.location.get(Game.entity.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
             )
           })
         }
