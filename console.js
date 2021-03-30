@@ -114,7 +114,7 @@ const cmds = new Map([
   ['delete', (line, args, parameters) => {
     const cmds = new Map([
       ['location', (line, args, parameters) => {
-        if(!parameters.id){
+        if(!parameters?.id){
           console.log(`delete location {id}`)
           return
         }
@@ -133,7 +133,7 @@ const cmds = new Map([
         else console.log(`No successfully`)
       }],
       ['entity', (line, args, parameters) => {
-        if(!parameters.id){
+        if(!parameters?.id){
           console.log(`delete entity {!d}`)
           return
         }
