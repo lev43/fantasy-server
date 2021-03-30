@@ -50,7 +50,7 @@ class LocationMap extends ContentMap{
     this.get(id)?.roads_save.forEach( loc => {
       this.get(loc)?.roads.delete(id)
     })
-    super.delete(id)
+    return super.delete(id)
   }
   hasRoad(id1, id2){
     return this.get(id1)?.roads.has(id2)
@@ -79,8 +79,8 @@ class EntityMap extends ContentMap{
   #type = EntityMap
   constructor(arr){super(arr, Entity)}
   delete(id){
-    super.delete(id)
     Game.nickname.delete(id)
+    return super.delete(id)
   }
 }
 
