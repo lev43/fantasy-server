@@ -15,8 +15,8 @@
 
   <body>
     <span id="all">
-      <button id="help" onclick="document.location.href = '/html/ru/help.html'//window.open('./ru-help.html');">Помощь</button>
-      <button id='setting_button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Настройки</button>
+      <button class="button" id="help" onclick="document.location.href = '/html/ru/help.html'//window.open('./ru-help.html');">Помощь</button>
+      <button class="button" id='setting_button' onclick="document.getElementById('setting').hidden = !document.getElementById('setting').hidden">Настройки</button>
       <form id='setting' onsubmit="updateSetting(this); return false" hidden="true">
         <img id="background" src='/img/Background-setting.jpeg'>
 
@@ -39,14 +39,16 @@
         </select><br>
 
 
-        <input id='text-submit' type="submit" value="Принять">
+        <input id='text-submit' class="button" type="submit" value="Принять">
       </form>
 
 
       <form id='channel-p' onsubmit="return false">
         <h1>Channel</h1>
         
-        <input autofocus id="message" type=text onchange="sendMessage(this.value);this.value=null;" autocomplete="off" maxlength=500>
+        <input autofocus id="message" type="text" onchange="" autocomplete="off" maxlength=500>
+        <!-- <input type="button" class="button" onclick="getHistory()" value="▼"> -->
+        <select id="history" class="button" onmouseout="" onfocus="getHistory(this)" onchange="document.getElementById('message').value = this.value"  value="▼"></select>
 
         <br>
         <code id='channel'></code>

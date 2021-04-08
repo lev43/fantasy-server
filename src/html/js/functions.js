@@ -1,6 +1,6 @@
 //const host = 'smokeofanarchy.duckdns.org:6852'
-//const host = 'localhost:6852'
-const host = '192.168.1.205:6852'
+const host = 'localhost:6852'
+//const host = '192.168.1.205:6852'
 
 const cookieTime = "; max-age=31622400"
 
@@ -97,3 +97,15 @@ try{
 //Background
 document.body.style.backgroundImage = `url(/img/Background-${params.background}.jpeg)`
 //document.getElementById('setting').style.backgroundImage = `url(./Background-${params.background}.jpeg)`
+
+
+function getHistory(history){
+  for(let i = history.childNodes.length - 1; i >= 0; i--)
+    history.removeChild(history.childNodes[i])
+  for(let i in messageHistory){
+    let l = document.createElement('option')
+    l.innerText = messageHistory[i]
+    l.value = messageHistory[i]
+    history.prepend(l)
+  }
+}

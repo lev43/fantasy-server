@@ -1,4 +1,5 @@
 var send = true, view = true
+var messageHistory = [], messageHistoryI = 0
 if ("WebSocket" in window) {
   var ws = new WebSocket(`ws://${host}`);
   var i = 1
@@ -13,8 +14,41 @@ if ("WebSocket" in window) {
   document.getElementById('setting').action = document.location.href
 
   function sendMessage(msg){
+    if(messageHistory[messageHistoryI - 1] != msg){
+      messageHistoryI = messageHistory.length
+      messageHistory[messageHistoryI] = msg
+      messageHistoryI++
+    }
     if(send)ws.send(jsonToStr({type: 'player-message', password: password, content: msg, language: params.language}))
   }
+
+  document.getElementById('message').onkeyup = function(k){
+    //console.log("DOWN", k.key, k.code)
+    //console.log(messageHistoryI)
+    let update = true
+    switch(k.code){
+      case 'ArrowUp':
+        if(messageHistoryI > 0)messageHistoryI--
+        break
+      case 'ArrowDown':
+        messageHistoryI++
+        break
+      case 'Enter':
+        if(this.value){
+          sendMessage(this.value)
+          this.value = ''
+        }
+        messageHistoryI = messageHistory.length
+        break;
+      default: update = false
+    }
+    if(update){
+      this.value = (messageHistory[messageHistoryI] ?? '')
+      this.selectionStart = this.value.length
+    }
+    if(messageHistoryI < 0)messageHistoryI = 0
+    if(messageHistoryI > messageHistory.length)messageHistoryI = messageHistory.length
+  }.bind(document.getElementById('message'))
 
   ws.onopen = ()=>{
     console.log("Start ws")
