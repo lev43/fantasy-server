@@ -46,7 +46,7 @@
       <form id='channel-p' onsubmit="return false">
         <h1>Channel</h1>
         
-        <input autofocus id="message" type="text" onchange="this.emit('keyup', {code: 'Enter'})" autocomplete="off" maxlength=500>
+        <input autofocus id="message" type="text" onchange="historyF({code: 'Enter'})" autocomplete="off" maxlength=500>
         <!-- <input type="button" class="button" onclick="getHistory()" value="▼"> -->
         <select id="history" class="button" onmouseout="" onfocus="getHistory(this)" onchange="document.getElementById('message').value = this.value"  value="▼"></select>
 

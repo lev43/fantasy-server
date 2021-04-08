@@ -22,7 +22,7 @@ if ("WebSocket" in window) {
     if(send)ws.send(jsonToStr({type: 'player-message', password: password, content: msg, language: params.language}))
   }
 
-  document.getElementById('message').onkeyup = function(k){
+  var historyF = function(k){
     //console.log("DOWN", k.key, k.code)
     //console.log(messageHistoryI)
     let update = true
@@ -49,6 +49,8 @@ if ("WebSocket" in window) {
     if(messageHistoryI < 0)messageHistoryI = 0
     if(messageHistoryI > messageHistory.length)messageHistoryI = messageHistory.length
   }.bind(document.getElementById('message'))
+
+  document.getElementById('message').onkeyup = historyF
 
   ws.onopen = ()=>{
     console.log("Start ws")
