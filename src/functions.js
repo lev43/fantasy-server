@@ -11,9 +11,11 @@ date = function(){
 
 readObj = function(obj, path){
   if(Object.keys(obj).join(';').search(path) != -1)return obj[path]
-  for(let i of path.split('.'))
+  for(let i of path.split('.')){
+    // console.log(i, obj[i], obj)
     if(obj[i])obj = obj[i]
     else throw Error('Not element ' + i)
+  }
   return obj
 }
 

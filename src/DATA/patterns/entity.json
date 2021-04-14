@@ -1,0 +1,11 @@
+{
+  "health": 10,
+  "maxHealth": 10,
+  "regeneration": 1,
+  "regenerationTime": 0,
+  "regenerationInterval": 1999999999990,
+  "damage": 0,
+  "attackTime": 0,
+  "attackInterval": 99999999999999,
+  "inaccuracyDamage": 0
+}

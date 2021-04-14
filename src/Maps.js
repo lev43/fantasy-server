@@ -40,11 +40,9 @@ class LocationMap extends ContentMap{
   #spawn
   #type = LocationMap
   constructor(arr){super(arr, Location)}
-  set spawn(id){
-    if(this.has(id))Setting.set('location.spawn', id?.id ?? id)
-  }
-  get spawn(){
-    return String(Setting.get('location.spawn'))
+  spawn(type = 'null'){
+    var spawns = this.getByParameters({"spawn.type": type})
+    return [...spawns.values()][Math.floor(Math.random() * spawns.size)]?.id
   }
   delete(id){
     this.get(id)?.roads_save.forEach( loc => {
@@ -78,6 +76,12 @@ class LocationMap extends ContentMap{
 class EntityMap extends ContentMap{
   #type = EntityMap
   constructor(arr){super(arr, Entity)}
+  add(parameters){
+    if(parameters.training){
+      setTimeout(()=>Game.training(parameters.id), 1)
+    }
+    super.add(parameters)
+  }
   delete(id){
     Game.nickname.delete(id)
     return super.delete(id)

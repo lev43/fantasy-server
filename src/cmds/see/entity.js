@@ -21,7 +21,7 @@ module.exports.run = async(p) => {
       return
     }
     let health = f.s(bundle[language].health, Bundle[language].indicator.health[searchEntity.healthStat])
-    entity.message(f.s(bundle[language].search, Bundle[language].names[searchEntity.appearance], entitys_.findIndex(e => e == searchEntity.id), searchEntity.id, Bundle[language].names[searchEntity.genus], (searchEntity.type == 'corpse' ? bundle[language].search_dead : health)))
+    entity.message(f.s(bundle[language].search, Bundle[language].names[searchEntity.appearance], entitys_.findIndex(e => e == searchEntity.id) + 1, searchEntity.id, Bundle[language].names[searchEntity.genus], (searchEntity.type == 'corpse' ? bundle[language].search_dead : health)))
     return
   }
 

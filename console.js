@@ -40,10 +40,7 @@ function command(line, args, parameters, cmds, name = null){
 }
 
 function setPar(obj, parameters){
-  for(let par in parameters){     
-    try{
-      parameters[par] = JSON.parse(parameters[par])
-    }catch(err){}
+  for(let par in parameters){
     if(parseFloat(parameters[par]) + '' != 'NaN')parameters[par] = parseFloat(parameters[par])
     if(par != 'id'){
       try{
@@ -79,6 +76,7 @@ const cmds = new Map([
   }],
 
   ['add', (line, args, parameters) => {
+    console.log(parameters)
     const cmds = new Map([
       ['location', (line, args, parameters) => {
         let names = {}
@@ -159,16 +157,6 @@ const cmds = new Map([
           setPar(location, parameters)
         }
       }],
-      ['location-spawn', (line, args, parameters) => {
-        if(!parameters?.id){
-          console.log(`edit location-spawn {id}`)
-          return
-        }
-        if(Game.location.has(parameters.id)){
-          Game.location.spawn = parameters.id
-          console.log(`successfully`)
-        }else console.log(`No location ${parameters.id}`)
-      }],
       ['entity', (line, args, parameters) => {
         const {id, loc} = parameters
         if(!id){
@@ -210,10 +198,8 @@ const cmds = new Map([
 
         if(Object.keys(parameters ?? {}).length > 0 && !l)console.log(`No location that parameters\n{\n  ${Object.entries(parameters).join('\n  ').split(',').join(': ')}\n}`)
         if(l || Object.keys(parameters ?? {}).length > 0)return
-
-        console.log('spawn: ' + Game.location.spawn)
         Game.location.forEach((location, id) => {
-          if(id != 'spawn')console.log(Object.entries(location))
+          console.log(Object.entries(location))
         })
       }],
       ['entity', (line, args) => {

@@ -83,8 +83,9 @@ wss.on('connection', function connection(ws, request, client) {
                 if(Game.users.get(id) === obj){
                   myID = id
                   entity = _
-                }})
-
+              }})
+              while((msg.content?.indexOf('\\n') ?? -1) != -1)
+                msg.content = msg.content.replace('\\n', '\n')
               while((msg.content?.indexOf('%id{') ?? -1) != -1){
                 let id = msg.content.slice(msg.content.search('%id{')+4, msg.content.search('}%id'))
                 try{
@@ -104,20 +105,22 @@ wss.on('connection', function connection(ws, request, client) {
           Game.users.set(id, ws)
           log(`Socket(${request.connection.remoteAddress})[${id}] connect`, 'sockets', 'connections')
 
-          if(Game.entity.has(id))Game.entity.get(id).language = data.language
-
           function close(){
             log(`Socket(${request.connection.remoteAddress})[${id}] disconnect`, 'sockets', 'connections')
             Game.users.delete(id)
           }
           ws.on('close', close)
-          ws.send({type: 'msg', id: 'SERVER', content:
-            f.s(
-              Bundle[data.language].events.connect,
-              id,
-              Game.location.get(Game.entity.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
-            )
-          })
+
+          if(Game.entity.get(id)){ 
+            Game.entity.get(id).language = data.language
+            ws.send({type: 'msg', id: 'SERVER', content:
+              f.s(
+                Bundle[data.language].events.connect,
+                id,
+                Game.location.get(Game.entity.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
+              )
+            })
+          } else Game.entity.add({id, training: true})
         }
         break;
 

@@ -1,6 +1,5 @@
-a = {
-  b: function(){console.log(this.c)},
-  c: "HEHEHE"
-}
+a = new Map([
+  [1, 'a']
+])
 
-a.b.bind(a)()
+console.log(a.set(2, 'b'))

@@ -55,7 +55,7 @@ class GameClass extends events{
     Setting.save('./src/DATA/setting.properties')//.then((s, e) => console.log(s, e))
   }
   async player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
-    let id = this.id.get(hash)
+    let id = this.id.get(hash), messageCopy = message
     if(!id)return
     let entity = this.entity.get(id)
     entity.language = language
@@ -69,14 +69,50 @@ class GameClass extends events{
     if(cmd){
       cmd.run({id, message, args, language})
     }else this.message('location:' + entity.location, `%id{${id}}%id: ${message}`)
+
+    if(entity.training){
+      let eventSpawn = [...this.events.values()].find(e => e.type == 'player-training-spawn' && e.id == id)
+      // console.log(command + message)
+      if(eventSpawn){
+        switch(eventSpawn.code){
+          case 1:
+            if(command + message == 'see location')eventSpawn.end(1)
+            break
+          case 2:
+            eventSpawn.end(1)
+            break
+          case 3:
+            eventSpawn.end(1)
+            break
+          case 4:
+            if(command + message == 'go 1')
+              setTimeout(() => eventSpawn.end(1), [...this.events.values()].find(e => e.id == id && e.type == 'move-entity').time + 1000)
+            break
+          case 5:
+            if(this.entity.getByParameters({type: 'corpse', location: entity.location}).size > 0)eventSpawn.end(1)
+            break
+          case 6:
+            eventSpawn.end(1)
+            break
+          case 7:
+            eventSpawn.end(1)
+            break
+          case 8:
+            if(command + message == 'go 1'){
+              setTimeout(() => eventSpawn.end(1), [...this.events.values()].find(e => e.id == id && e.type == 'move-entity').time + 1000)
+              delete entity.training
+            }
+            break
+        }
+      }
+    }
   }
   async update(){
-    if(this.location.size < 1 || this.location.size < 2 && !this.location.get('spawn'))this.location.add({name: {ru: 'Локация возрождения', en: 'Spawn'}})
-    if(!this.location.spawn || !this.location.has(this.location.spawn))this.location.spawn = ([...this.location?.values()].find(loc => loc?.id))?.id
+    if(!this.location.spawn('player'))this.location.add({name: {ru: 'Граница тумана', en: 'Fog border'}, spawn: {type: 'player'}})
+    // console.log(this.location.spawn('player'))
 
     this.users.forEach((user, id) => {
-      if(!this.entity.has(id))this.entity.add({id})
-      if(this.entity.has(id))this.entity.get(id).player = true
+      if(!this.entity.get(id))user.close()
     })
     this.entity.forEach((entity, id) => {
       entity.update()
@@ -110,6 +146,45 @@ class GameClass extends events{
           })
       }
     })
+  }
+
+  async training(id){
+    var player = this.entity.get(id)
+    var location = [Game.generateID(), Game.generateID()]
+    this.location.add({id: location[0], name: {ru: 'Туман', en: 'Fog'}})
+    player.location = location[0]
+    this.location.add({id: location[1], name: {ru: 'Туман', en: 'Fog'}})
+    this.location.addRoad(location[0], location[1])
+    this.location.addRoad(location[1], this.location.spawn('player'))
+    player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._1})
+    new Event(code => {
+      player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._2})
+      new Event(code => {
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._3})
+        new Event(code => {
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._4})
+          this.entity.add({location: location[1]})
+          new Event(code => {
+            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._5})
+            // console.log(this.entity.getByParameters({location: location[1], id_not: true, id}).values().next().value.id)
+            this.emit('attack', this.entity.getByParameters({location: location[1], id_not: true, id}).values().next().value.id, id)
+            this.location.delete(location[0])
+            new Event(code => {
+              player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._6})
+              new Event(code => {
+                player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._7})
+                new Event(code => {
+                  player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._8})
+                  new Event(code => {
+                    this.location.delete(location[1])
+                  }, 60000, {type: 'player-training-spawn', id, code: 8})
+                }, 60000, {type: 'player-training-spawn', id, code: 7})
+              }, 60000, {type: 'player-training-spawn', id, code: 6})
+            }, 0, {type: 'player-training-spawn', id, code: 5})
+          }, 0, {type: 'player-training-spawn', id, code: 4})
+        }, 60000, {type: 'player-training-spawn', id, code: 3})
+      }, 60000, {type: 'player-training-spawn', id, code: 2})
+    }, 60000, {type: 'player-training-spawn', id, code: 1})
   }
 }
 
@@ -186,7 +261,7 @@ Game.on('attack', (attacking, defender) => {
           )
         )
         if(damage < 0)damage = 0
-        //console.log(damage, fine, fine*attacking.parameters.damage/1.01, this._t, attacking.parameters.attackInterval)
+        // console.log(damage, fine, fine*attacking.parameters.damage/1.01, this._t, attacking.parameters.attackInterval)
         if(!Game.entity.has(attacking.id)){
           Game.message(`location:${attacking.location};noId:${attacking.id}`, '', 'msg-delete', attack.i)
           return
@@ -199,6 +274,7 @@ Game.on('attack', (attacking, defender) => {
         defender.damage(damage)
           .then(damage => {
             let attackingStrong = attacking.indicatorOfDamage(damage), defenderStrong = defender.indicatorOfDamageMe(damage)
+            // console.log(damage, fine, fine*attacking.parameters.damage/1.01, this._t, attacking.parameters.attackInterval)
             defender.message(
               f.s(Bundle[defender.language].events.attack.receivingDamage, attacking.id, Bundle[defender.language].indicator.damage[attackingStrong], Bundle[defender.language].indicator.damage[defenderStrong]),
               'msg-edit',

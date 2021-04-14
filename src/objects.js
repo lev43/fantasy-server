@@ -17,14 +17,15 @@ class MyObject{
 class Location extends MyObject{
   roads = new Set()
   roads_save = []
-  constructor(par = {name: {ru, en}, id, roads_save}){
+  spawn = {type: 'null'}
+  constructor(par = {name: {ru, en}, id, roads_save, spawn: {type}}){
     super(par)
-    if(par.roads_save)this.roads = new Set(par.roads_save)
+    if(par?.roads_save)this.roads = new Set(par.roads_save)
+    if(par?.spawn?.type)this.spawn = par.spawn
     
     for(let lan in par.name)if(!this.name[lan])this.name[lan] = 'NONE'
     
     //Каждый раз надо обновлять сохранение дорог
-    let loc = this
     setInterval( () => {
       this.roads_save = [...this.roads]
     }, 1000)
@@ -43,7 +44,7 @@ class Entity extends MyObject{
   location
   language = 'ru'
   save_par = {}
-  _type = 'entity'
+  _type = 'null'
   genus = 'human'
   status = {send: true, view: true}
   get appearance(){
@@ -83,18 +84,21 @@ class Entity extends MyObject{
 
   constructor(par){
     super(par)
-    if(!par?.location)this.location = Game.location.spawn
-    else this.location = par.location
-
-
+    
     if(!this.parameters)this.parameters = Object.assign({}, Patterns[this.type])
-    if(this.player && this._type == 'entity')this._type = 'player'
+    if(Game.users.has(this.id) && !this.player){this.player = true}
+    if(this.player && this._type == 'null')this.type = 'player'
+    
+    if(!par?.location)this.location = Game.location.spawn(this._type)
+    else this.location = par.location
 
 
     if(!Game.nickname.get(this.id))Game.nickname.set(this.id, {})
     Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.entity.default
 
     this.online = this.player
+
+    if(this._type == 'null'){this.type = 'entity'}
   }
 
   async send(msg){
@@ -130,7 +134,9 @@ class Entity extends MyObject{
   }
 
   async damage(damage){
+    console.log(this.id, this.parameters.health, damage)
     this.parameters.health -= damage
+    console.log(this.parameters.health)
     return damage
   }
   indicatorOfDamageMe(damage){
@@ -167,8 +173,9 @@ class Entity extends MyObject{
   }
 
   async update(){
+    if(!Game.entity.get(this.id))return
     //Проверка существования локации
-    if(!this.location || !Game.location.get(this.location))this.location = Game.location.spawn
+    if(!this.location || !Game.location.get(this.location))Game.entity.delete(this.id)
     
 
     //Если труп, то дальше не обновлять
@@ -185,8 +192,7 @@ class Entity extends MyObject{
 
     //Проверка на игрока
     if(Game.users.has(this.id) && !this.player){this.player = true; this.type = 'player'}
-    if(this.player && this._type == 'entity')this.type = 'player'
-    if(this.player)Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.entity.default
+    if(this.player && Game.nickname.get(this.id))Game.nickname.get(this.id)[this.id] = Bundle[this.language].names.you
     this.online = (this.player && Game.users.has(this.id))
     
 
@@ -220,6 +226,7 @@ class Entity extends MyObject{
 
     //Проверка на смерть
     if(par.health <= 0 || typeof par.health != 'number'){
+      console.log(this)
       this.type = 'corpse'
       this.status = {send: false, view: true}
       Game.message('autoLanguage;location:' + this.location + ';noId:' + this.id, (l)=>f.s(Bundle[l].events.deadSee, this.id))
@@ -238,10 +245,10 @@ class Event{
   get time(){
     return this.#time
   }
-  constructor(func = function(code){console.log("HELLO WORLD")}, time = 0, parameters = {endCode}, startFunc){
+  constructor(func = function(code){console.log("HELLO WORLD")}, time = 0, parameters = {endCode, codeLength}, startFunc){
     for(let i in parameters)this[i] = parameters[i]
     this.#endCode = parameters.endCode ?? 0
-    while(Game.events.has(this.i) || !this.i)this.i = String(Math.floor(Math.random() * 100))
+    while(Game.events.has(this.i) || !this.i)this.i = String(Math.floor(Math.random() * (parameters.codeLength ?? 100)))
     if(this.one){
       Game.events.forEach(event => {
         let y = true
@@ -264,7 +271,7 @@ class Event{
     this.#start()
   }
   async #start(){
-    setTimeout(() => {
+    if(this.#time > 0)setTimeout(() => {
       if(Game.events.has(this.i))this.end(this.#endCode)
     }, this.#time)
   }
