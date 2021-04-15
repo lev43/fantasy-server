@@ -5,7 +5,9 @@ class ContentMap extends Map{
   #type = ContentMap
   constructor(arr, type){
     if(arr)arr.forEach(p => {
-      p[1] = new type(p[1])
+      if(p[1].constructor.name == 'Object'){
+        p[1] = new type(p[1])
+      }
     })
     super(arr)
     this.type = type

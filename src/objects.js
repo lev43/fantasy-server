@@ -134,9 +134,9 @@ class Entity extends MyObject{
   }
 
   async damage(damage){
-    console.log(this.id, this.parameters.health, damage)
+    // console.log(this.id, this.parameters.health, damage)
     this.parameters.health -= damage
-    console.log(this.parameters.health)
+    // console.log(this.parameters.health)
     return damage
   }
   indicatorOfDamageMe(damage){
@@ -226,10 +226,10 @@ class Entity extends MyObject{
 
     //Проверка на смерть
     if(par.health <= 0 || typeof par.health != 'number'){
-      console.log(this)
+      // console.log(this.id, 'dead')
+      Game.message('autoLanguage;location:' + this.location + ';noId:' + this.id, (l)=>f.s(Bundle[l].events.deadSee, this.id))
       this.type = 'corpse'
       this.status = {send: false, view: true}
-      Game.message('autoLanguage;location:' + this.location + ';noId:' + this.id, (l)=>f.s(Bundle[l].events.deadSee, this.id))
     }
   }
 }
