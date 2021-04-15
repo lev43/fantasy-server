@@ -120,7 +120,7 @@ wss.on('connection', function connection(ws, request, client) {
                 Game.location.get(Game.entity.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
               )
             })
-          } else Game.entity.add({id, training: true})
+          } else Game.entity.add({id, training: 1})
         }
         break;
 

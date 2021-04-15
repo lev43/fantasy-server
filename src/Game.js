@@ -71,27 +71,30 @@ class GameClass extends events{
     }else this.message('location:' + entity.location, `%id{${id}}%id: ${message}`)
 
     if(entity.training){
-      let eventSpawn = [...this.events.values()].find(e => e.type == 'player-training-spawn' && e.id == id)
+      // let eventSpawn = [...this.events.values()].find(e => e.type == 'player-training-spawn' && e.id == id)
       // console.log(command + message)
-      if(eventSpawn){
-        switch(eventSpawn.code){
-          case 1:
-            if(command + message == 'see location')eventSpawn.end(1)
-            break
-          case 2:
-            eventSpawn.end(1)
-            break
-          case 3:
-            eventSpawn.end(1)
-            break
-          case 6:
-            eventSpawn.end(1)
-            break
-          case 7:
-            eventSpawn.end(1)
-            break
-        }
+      let code = 0
+      switch(command + message){
+        case 'see location':
+          code = 1
+          break
+        case 'see health':
+          code = 2
+          break
+        case 'see road':
+          code = 3
+          break
+        case 'go 1':
+          code = 4
+          break
+        case 'go 1 1':
+          code = 4
+          break
+        case 'see entity 1':
+          code = 6
+          break
       }
+      if(code > entity.training - 1)steps[entity.id][code](1)
     }
   }
   async update(){
@@ -146,62 +149,73 @@ class GameClass extends events{
     this.entity.add({location: location[1]})
     let enemy = this.entity.getByParameters({location: location[1], id_not: true, id}).values().next().value
 
-    let steps = [
-      code => { // 0
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._1})
-        new Event(steps[1], 60000, {type: 'player-training-spawn', id, code: 1})
-      }, // Осматриватся
-      code => { // 1
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._2})
-        new Event(steps[2], 60000, {type: 'player-training-spawn', id, code: 2})
-      }, // Осматривает себя
-      code => { // 2
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._3})
-        new Event(steps[3], 60000, {type: 'player-training-spawn', id, code: 3})
-      }, // Осматривает дороги
-      code => { // 3
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._4}) 
-        let e = new Event(steps[4], 0, {type: 'player-training-spawn', id, code: 4})
-        
-        let t = setInterval(() => {
-          if(player.location == location[1]){
-            e.end(1)
-            clearInterval(t)
-          }
-        }, 1000)
-      }, // Идет по дороге
-      code => { // 4
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._5})
-        enemy.attack(id)
+    let t1 = setInterval(() => {
+      if(player.location != location[0]){
         this.location.delete(location[0])
-        let e = new Event(steps[5], 0, {type: 'player-training-spawn', id, code: 5})
-        let t = setInterval(() => {
-          if(enemy.type == 'corpse'){
-            e.end(1)
-            clearInterval(t)
-          }
-        }, 1000)
-      }, // Убивает противника
-      code => { // 5
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._6})
-        new Event(steps[6], 60000, {type: 'player-training-spawn', id, code: 6})
-      }, // Осматривает труп
-      code => { // 6
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._7})
-        new Event(steps[7], 60000, {type: 'player-training-spawn', id, code: 7})
-      }, // Хоронит
-      code => { // 7
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._8})
-        let t = setInterval(() => { // Уходит
+        let t2 = setInterval(() => {
           if(player.location != location[1]){
             this.location.delete(location[1])
             delete player.training
+            delete global.steps
+            clearInterval(t2)
+          }
+        }, 1000)
+        clearInterval(t1)
+      }
+    }, 1000)
+
+    global.steps = {}
+    global.steps[player.id] = [
+      code => { // 0
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._1})
+        player.training = 1
+      }, // Осматриватся
+      code => { // 1
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._2})
+        player.training = 2
+      }, // Осматривает себя
+      code => { // 2
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._3})
+        player.training = 3
+      }, // Осматривает дороги
+      code => { // 3
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._4}) 
+        steps[player.id][4](1)
+        player.training = 5
+      }, // Идет по дороге
+      code => { // 4
+        let t = setInterval(() => {
+          if(player.location == location[1]){
+            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._5})
+            enemy.attack(id)
+            this.location.delete(location[0])
+            steps[player.id][5](1)
             clearInterval(t)
           }
         }, 1000)
-      }  // Уходит
+        player.training = 5
+      }, // Убивает противника
+      code => { // 5
+        let t = setInterval(() => {
+          if(enemy.type == 'corpse'){
+            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._6})
+            clearInterval(t)
+          }
+        }, 1000)
+        player.training = 6
+      }, // Осматривает труп
+      code => { // 6
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._7})
+        let t = setInterval(() => {
+          if(!Game.entity.get(enemy.id) && player.location == location[1]){
+            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._8})
+            player.training = 7
+            clearInterval(t)
+          }
+        }, 1000)
+      }  // Хоронит
     ]
-    steps[0](1)
+    steps[player.id][0](1)
   }
 }
 
