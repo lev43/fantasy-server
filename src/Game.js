@@ -90,9 +90,14 @@ class GameClass extends events{
         case 'go 1 1':
           code = 4
           break
-        case 'see entity 1':
-          code = 6
+        case 'see entity':
+          if(entity.training > 5)code = 6
           break
+        case 'see entity 1':
+          code = 7
+          break
+        default:
+          if(command == 'set')code = 8
       }
       if(code > entity.training - 1)steps[entity.id][code](1)
     }
@@ -203,16 +208,24 @@ class GameClass extends events{
           }
         }, 1000)
         player.training = 6
-      }, // Осматривает труп
+      }, // Осматривает существ
       code => { // 6
         player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._7})
+        player.training = 7
+      }, // Осматривает труп
+      code => { // 7
+        player.send({type: 'msg', id: 'Голос', content: f.s(Bundle[player.language].training._8, enemy.id)})
+        player.training = 8
+      }, // Ставит имя
+      code => { // 8
+        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._9})
         let t = setInterval(() => {
           if(!Game.entity.get(enemy.id) && player.location == location[1]){
-            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._8})
-            player.training = 7
+            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._10})
             clearInterval(t)
           }
         }, 1000)
+        player.training = Infinity
       }  // Хоронит
     ]
     steps[player.id][0](1)
