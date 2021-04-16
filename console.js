@@ -320,8 +320,8 @@ const cmds = new Map([
   ['exit', () => {
     // console.log(Game.entity.getByParameters({training: '!'}))
     Game.entity.getByParameters({training: '!'}).forEach(entity => {
-      [...Game.events.values()].find(e => e.id == entity.id && e.type == 'training-end1').end();
-      [...Game.events.values()].find(e => e.id == entity.id && e.type == 'training-end2').end()
+      [...Game.events.values()].find(e => e.id == entity.id && e.type == 'training-end1')?.end();
+      [...Game.events.values()].find(e => e.id == entity.id && e.type == 'training-end2')?.end()
       Game.entity.delete(entity.id)
     })
     Game.save()

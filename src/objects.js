@@ -84,7 +84,8 @@ class Entity extends MyObject{
 
   constructor(par){
     super(par)
-    
+
+    if(par.language)this.language = par.language    
     if(!this.parameters)this.parameters = Object.assign({}, Patterns[this.type])
     if(Game.users.has(this.id) && !this.player){this.player = true}
     if(this.player && this._type == 'null')this.type = 'player'

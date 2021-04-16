@@ -108,9 +108,13 @@ wss.on('connection', function connection(ws, request, client) {
           function close(){
             log(`Socket(${request.connection.remoteAddress})[${id}] disconnect`, 'sockets', 'connections')
             Game.users.delete(id)
+            if(Game.entity.get(id)?.training > 0){
+              [...Game.events.values()].find(e => e.id == id && e.type == 'training-end1')?.end();
+              [...Game.events.values()].find(e => e.id == id && e.type == 'training-end2')?.end()
+              Game.entity.delete(id)
+            }
           }
           ws.on('close', close)
-
           if(Game.entity.get(id)){ 
             Game.entity.get(id).language = data.language
             ws.send({type: 'msg', id: 'SERVER', content:
@@ -120,7 +124,7 @@ wss.on('connection', function connection(ws, request, client) {
                 Game.location.get(Game.entity.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
               )
             })
-          } else Game.entity.add({id, training: 1})
+          } else Game.entity.add({id, training: 1, language: data.language})
         }
         break;
 

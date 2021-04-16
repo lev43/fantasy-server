@@ -144,98 +144,100 @@ class GameClass extends events{
   }
 
   async training(id){
-    var player = this.entity.get(id)
-    var location = [Game.generateID(), Game.generateID()]
-    this.location.add({id: location[0], name: {ru: 'Туман', en: 'Fog'}})
-    player.location = location[0]
-    this.location.add({id: location[1], name: {ru: 'Туман', en: 'Fog'}})
-    this.location.addRoad(location[0], location[1])
-    this.location.addRoad(location[1], this.location.spawn('player'))
-    this.entity.add({location: location[1]})
-    let enemy = this.entity.getByParameters({location: location[1], id_not: true, id}).values().next().value
+    setTimeout(() => {
+      var player = this.entity.get(id)
+      var location = [Game.generateID(), Game.generateID()]
+      this.location.add({id: location[0], name: {ru: 'Туман', en: 'Fog'}})
+      player.location = location[0]
+      this.location.add({id: location[1], name: {ru: 'Туман', en: 'Fog'}})
+      this.location.addRoad(location[0], location[1])
+      this.location.addRoad(location[1], this.location.spawn('player'))
+      this.entity.add({location: location[1]})
+      let enemy = this.entity.getByParameters({location: location[1], id_not: true, id}).values().next().value
 
-    let e1 = new Event(() => {
-      this.location.delete(location[0])
-    }, 0, {type: 'training-end1', id})
-    let e2 = new Event(() => {
-      this.location.delete(location[1])
-      delete player.training
-      delete global.steps
-    }, 0, {type: 'training-end2', id})
+      let e1 = new Event(() => {
+        this.location.delete(location[0])
+      }, 0, {type: 'training-end1', id})
+      let e2 = new Event(() => {
+        this.location.delete(location[1])
+        delete player.training
+        delete global.steps
+      }, 0, {type: 'training-end2', id})
 
-    let t1 = setInterval(() => {
-      if(player.location != location[0]){
-        e1.end()
-        let t2 = setInterval(() => {
-          if(player.location != location[1]){
-            e2.end()
-            clearInterval(t2)
-          }
-        }, 1000)
-        clearInterval(t1)
-      }
+      let t1 = setInterval(() => {
+        if(player.location != location[0]){
+          e1.end()
+          let t2 = setInterval(() => {
+            if(player.location != location[1]){
+              e2.end()
+              clearInterval(t2)
+            }
+          }, 1000)
+          clearInterval(t1)
+        }
+      }, 1000)
+
+      global.steps = {}
+      global.steps[player.id] = [
+        code => { // 0
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._1})
+          player.training = 1
+        }, // Осматриватся
+        code => { // 1
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._2})
+          player.training = 2
+        }, // Осматривает себя
+        code => { // 2
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._3})
+          player.training = 3
+        }, // Осматривает дороги
+        code => { // 3
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._4}) 
+          steps[player.id][4](1)
+          player.training = 5
+        }, // Идет по дороге
+        code => { // 4
+          let t = setInterval(() => {
+            if(player.location == location[1]){
+              player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._5})
+              enemy.attack(id)
+              this.location.delete(location[0])
+              steps[player.id][5](1)
+              clearInterval(t)
+            }
+          }, 1000)
+          player.training = 5
+        }, // Убивает противника
+        code => { // 5
+          let t = setInterval(() => {
+            if(enemy.type == 'corpse'){
+              player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._6})
+              clearInterval(t)
+            }
+          }, 1000)
+          player.training = 6
+        }, // Осматривает существ
+        code => { // 6
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._7})
+          player.training = 7
+        }, // Осматривает труп
+        code => { // 7
+          player.send({type: 'msg', id: 'Голос', content: f.s(Bundle[player.language].training._8, enemy.id)})
+          player.training = 8
+        }, // Ставит имя
+        code => { // 8
+          player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._9})
+          let t = setInterval(() => {
+            if(!Game.entity.get(enemy.id) && player.location == location[1]){
+              player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._10})
+              clearInterval(t)
+            }
+          }, 1000)
+          player.training = Infinity
+        }  // Хоронит
+      ]
+      steps[player.id][0](1)
     }, 1000)
-
-    global.steps = {}
-    global.steps[player.id] = [
-      code => { // 0
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._1})
-        player.training = 1
-      }, // Осматриватся
-      code => { // 1
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._2})
-        player.training = 2
-      }, // Осматривает себя
-      code => { // 2
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._3})
-        player.training = 3
-      }, // Осматривает дороги
-      code => { // 3
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._4}) 
-        steps[player.id][4](1)
-        player.training = 5
-      }, // Идет по дороге
-      code => { // 4
-        let t = setInterval(() => {
-          if(player.location == location[1]){
-            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._5})
-            enemy.attack(id)
-            this.location.delete(location[0])
-            steps[player.id][5](1)
-            clearInterval(t)
-          }
-        }, 1000)
-        player.training = 5
-      }, // Убивает противника
-      code => { // 5
-        let t = setInterval(() => {
-          if(enemy.type == 'corpse'){
-            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._6})
-            clearInterval(t)
-          }
-        }, 1000)
-        player.training = 6
-      }, // Осматривает существ
-      code => { // 6
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._7})
-        player.training = 7
-      }, // Осматривает труп
-      code => { // 7
-        player.send({type: 'msg', id: 'Голос', content: f.s(Bundle[player.language].training._8, enemy.id)})
-        player.training = 8
-      }, // Ставит имя
-      code => { // 8
-        player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._9})
-        let t = setInterval(() => {
-          if(!Game.entity.get(enemy.id) && player.location == location[1]){
-            player.send({type: 'msg', id: 'Голос', content: Bundle[player.language].training._10})
-            clearInterval(t)
-          }
-        }, 1000)
-        player.training = Infinity
-      }  // Хоронит
-    ]
-    steps[player.id][0](1)
   }
 }
 
@@ -361,7 +363,7 @@ Game.on('attack', (attacking, defender) => {
   }, time * 1000, {id: attacking.id, type: 'attack', _t: attacking.parameters.attackTime})
 
   attacking.message(f.s(Bundle[attacking.language].events.attack.attacking, defender.id, time, attack.i))
-  defender.message(f.s(Bundle[attacking.language].events.attack.receiving, attacking.id, time, attack.i, attack.i))
+  defender.message(f.s(Bundle[defender.language].events.attack.receiving, attacking.id, time, attack.i, attack.i))
   Game.message(`autoLanguage;location:${attacking.location};noId:${attacking.id};noId:${defender.id}`, (l)=>f.s(Bundle[l].events.attack.see, attacking.id, defender.id, time, attack.i))
 })
 
