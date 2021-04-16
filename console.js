@@ -318,8 +318,15 @@ const cmds = new Map([
   }],
 
   ['exit', () => {
+    // console.log(Game.entity.getByParameters({training: '!'}))
+    Game.entity.getByParameters({training: '!'}).forEach(e => {
+      Game.entity.delete(e.id)
+    })
+    Game.save()
     con('Close server')
-    process.exit()
+    setTimeout(() => {
+      process.exit()
+    }, 1000)
   }]
 ])
 

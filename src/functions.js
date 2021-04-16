@@ -14,7 +14,7 @@ readObj = function(obj, path){
   for(let i of path.split('.')){
     // console.log(i, obj[i], obj)
     if(obj[i])obj = obj[i]
-    else throw Error('Not element ' + i)
+    else return undefined
   }
   return obj
 }

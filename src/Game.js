@@ -52,7 +52,7 @@ class GameClass extends events{
     for(let s in this.#saves){
       fs.writeFileSync(`${DATA}/saves/save-${s}.json`, jsonToStr(mapToArr(this[s])))
     }
-    Setting.save('./src/DATA/setting.properties')//.then((s, e) => console.log(s, e))
+    // Setting.save('./src/DATA/setting.properties')//.then((s, e) => console.log(s, e))
   }
   async player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
     let id = this.id.get(hash), messageCopy = message

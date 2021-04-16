@@ -27,10 +27,14 @@ class ContentMap extends Map{
       let y = true
       for(let i in parameters){
         if(i.split('_').pop() != 'not'){
-          if(parameters[i + '_not'])
-            (readObj(obj[1], i) + '' == parameters[i] + '' ? y = false : null)
-          else
-            (readObj(obj[1], i) + '' != parameters[i] + '' ? y = false : null)
+          // console.log(i, readObj(obj[1], i), !readObj(obj[1], i))
+          if(parameters[i + '_not']){
+            if(parameters[i] == '!')y = !readObj(obj[1], i)
+            else (readObj(obj[1], i) + '' == parameters[i] + '' ? y = false : null)
+          } else {
+            if(parameters[i] == '!')y = readObj(obj[1], i)
+            else (readObj(obj[1], i) + '' != parameters[i] + '' ? y = false : null)
+          }
         }
       }
       return y
