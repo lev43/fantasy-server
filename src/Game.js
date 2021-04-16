@@ -154,14 +154,21 @@ class GameClass extends events{
     this.entity.add({location: location[1]})
     let enemy = this.entity.getByParameters({location: location[1], id_not: true, id}).values().next().value
 
+    let e1 = new Event(() => {
+      this.location.delete(location[0])
+    }, 0, {type: 'training-end1', id})
+    let e2 = new Event(() => {
+      this.location.delete(location[1])
+      delete player.training
+      delete global.steps
+    }, 0, {type: 'training-end2', id})
+
     let t1 = setInterval(() => {
       if(player.location != location[0]){
-        this.location.delete(location[0])
+        e1.end()
         let t2 = setInterval(() => {
           if(player.location != location[1]){
-            this.location.delete(location[1])
-            delete player.training
-            delete global.steps
+            e2.end()
             clearInterval(t2)
           }
         }, 1000)
