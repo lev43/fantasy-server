@@ -1,1 +1,30 @@
-EXIT Mon Mar 22 2021 15:34:48 GMT+0300 (GMT+03:00)
+code: undefined
+message: Hello!
+stack: Error: Hello!
+    at Object.<anonymous> (/home/lev43/Документы/code/nodejs/Fantasy-game/test.js:12:7)
+    at Module._compile (node:internal/modules/cjs/loader:1108:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1137:10)
+    at Module.load (node:internal/modules/cjs/loader:973:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:813:14)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:76:12)
+    at node:internal/main/run_main_module:17:47
+code: undefined
+message: Hello!
+stack: Error: Hello!
+    at Object.<anonymous> (/home/lev43/Документы/code/nodejs/Fantasy-game/test.js:12:7)
+    at Module._compile (node:internal/modules/cjs/loader:1108:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1137:10)
+    at Module.load (node:internal/modules/cjs/loader:973:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:813:14)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:76:12)
+    at node:internal/main/run_main_module:17:47
+code: undefined
+message: Hello!
+stack: Error: Hello!
+    at Object.<anonymous> (/home/lev43/Документы/code/nodejs/Fantasy-game/test.js:12:7)
+    at Module._compile (node:internal/modules/cjs/loader:1108:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1137:10)
+    at Module.load (node:internal/modules/cjs/loader:973:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:813:14)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:76:12)
+    at node:internal/main/run_main_module:17:47

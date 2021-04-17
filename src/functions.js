@@ -56,7 +56,7 @@ log = function(data, name, url, time = true){
 
 
     const url_ = `${DATA}/logs/<${date()}>/${(url?url + '/':'')}`,
-          data_ = `${time?`<${date_.toLocaleTimeString()}>`:''} ${data}\n`,
+          data_ = `${time?`<${date_.toLocaleTimeString()}>` + (data.indexOf('\n') != -1 ? '\n' : ' ') : ''}${data}\n`,
           file = `${name?name:'last'}_log.txt`
     fs.stat(url_, function(err, stat) {
       //console.log(url_)
@@ -75,10 +75,10 @@ log = function(data, name, url, time = true){
   })
 }
 
-con = function(data, name, url){
-  console.log(data)
+con = function(data, name, url, time = true){
+  console.log((time ? `<${date_.toLocaleTimeString()}>` + (data.indexOf('\n') != -1 ? '\n' : ' ') : '' ) + data)
 
-  log(data, name, url)
+  log(data, name, url, time)
 }
 
 f = {

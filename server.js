@@ -137,8 +137,21 @@ wss.on('connection', function connection(ws, request, client) {
 });
 
 
+process.on('uncaughtException', (err, origin) => {
+  con(`${err.code ? (`code: ${err.code}\n`) : ''}${err.message ? (`message: ${err.message}\n`) : ''}${err.stack}\n`, )
+  setTimeout(process.exit, 1000)
+});
 //process.on('IGBREAK', ()=>{}).on('SIGHUP', ()=>{}).on('SIGINT', ()=>{})
-// process.on('exit', ()=>{})
+process.on('exit', ()=>{
+  Game.entity.getByParameters({training: '!'}).forEach(entity => {
+    [...Game.events.values()].find(e => e.id == entity.id && e.type == 'training-end1')?.end();
+    [...Game.events.values()].find(e => e.id == entity.id && e.type == 'training-end2')?.end()
+    Game.entity.delete(entity.id)
+  })
+  Game.save()
+  con('Close server')
+  setTimeout(process.exit, 1000)
+})
 
 
 server.listen(port, host, () => {
