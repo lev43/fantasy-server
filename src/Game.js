@@ -55,7 +55,7 @@ class GameClass extends events{
     // Setting.save('./src/DATA/setting.properties')//.then((s, e) => console.log(s, e))
   }
   async player(hash, message, language){//Обрабатывает сообщения пользователей вызывая комманды или отправляя сообщения в чат
-    let id = this.id.get(hash), messageCopy = message
+    let id = this.id.get(hash)
     if(!id)return
     let entity = this.entity.get(id)
     entity.language = language
@@ -258,11 +258,11 @@ Game.on('entity-move', (id, road) => {
       let m = new Event((code, id_intercept) => {
         switch(code){
           case 0:
-            Game.message('id:' + id, f.s(Bundle[language].commands.go.successfully, location.name[language]), 'msg-edit', m.i);
-            Game.message('autoLanguage;location:' + entity.location + ';noId:' + entity.id, (l)=>f.s(Bundle[l].events.move.gone, id, location.name[l]), 'msg-edit', m.i)
+            Game.message('id:' + id, f.s(Bundle[language].commands.go.successfully, location.name[language]), 'msg-edit', m.i) // player
+            Game.message('autoLanguage;location:' + entity.location + ';noId:' + entity.id, (l)=>f.s(Bundle[l].events.move.gone, id, location.name[l]), 'msg-edit', m.i) // first location
 
               
-            Game.message('autoLanguage;location:' + entity.location + ';noId:' + entity.id, (l)=>f.s(Bundle[l].events.move.came, id, Game.location.get(entity.location).name[l]), 'msg-edit', m.i)
+            setTimeout(()=>Game.message('autoLanguage;location:' + location.id + ';noId:' + entity.id, (l)=>f.s(Bundle[l].events.move.came, id, location.name[l])), 10) // second location
                 
             entity.location = location.id
             if(roads.length > 0)go(roads)

@@ -14,9 +14,13 @@ if ("WebSocket" in window) {
   document.getElementById('setting').action = document.location.href
 
   function sendMessage(msg){
-    if(messageHistory[messageHistoryI - 1] != msg){
+    if(messageHistory[messageHistory.length - 1] != msg){
+      if(messageHistory.findIndex(i => i == msg) >= 0){
+        // console.log('Double!!!', messageHistory.findIndex(i => i == msg))
+        messageHistory.splice(messageHistory.findIndex(i => i == msg), 1)
+      }
       messageHistoryI = messageHistory.length
-      messageHistory[messageHistoryI] = msg
+      messageHistory.push(msg)
       messageHistoryI++
     }
     if(send)ws.send(jsonToStr({type: 'player-message', password: password, content: msg, language: params.language}))
@@ -51,6 +55,7 @@ if ("WebSocket" in window) {
   }.bind(document.getElementById('message'))
 
   document.getElementById('message').onkeyup = historyF
+  document.body.onkeyup = function(){document.getElementById('message').focus()}
 
   ws.onopen = ()=>{
     console.log("Start ws")

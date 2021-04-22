@@ -180,11 +180,7 @@ class Entity extends MyObject{
     
 
     //Если труп, то дальше не обновлять
-    if(this.type == 'corpse'){
-      this.send({type: 'msg', id: this.id, content: Bundle[this.language].events.dead})
-      this.send({type: 'status', id: this.id, send: false, view: false})
-      return
-    }
+    if(this.type == 'corpse')return
 
 
     //par => параметры, s => доля секунды (В зависимости от частоты обновлений меняем долю)
@@ -231,6 +227,8 @@ class Entity extends MyObject{
       Game.message('autoLanguage;location:' + this.location + ';noId:' + this.id, (l)=>f.s(Bundle[l].events.deadSee, this.id))
       this.type = 'corpse'
       this.status = {send: false, view: true}
+      this.send({type: 'msg', id: this.id, content: Bundle[this.language].events.dead})
+      this.send({type: 'status', id: this.id, send: false, view: false})
     }
   }
 }

@@ -58,6 +58,7 @@ wss.on('connection', function connection(ws, request, client) {
 
     switch(type){
       case 'player-message':
+        log(JSON.stringify(data), 'messages-' + Game.id.get(data.password), 'messages')
         if(content.length > 0)Game.player(data.password, content, data.language)
         break;
 
@@ -115,15 +116,20 @@ wss.on('connection', function connection(ws, request, client) {
             }
           }
           ws.on('close', close)
-          if(Game.entity.get(id)){ 
-            Game.entity.get(id).language = data.language
+          let entity = Game.entity.get(id)
+          if(entity){ 
+            entity.language = data.language
             ws.send({type: 'msg', id: 'SERVER', content:
               f.s(
                 Bundle[data.language].events.connect,
                 id,
-                Game.location.get(Game.entity.get(id)?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
+                Game.location.get(entity?.location)?.name[data.language] ?? Game.location.get(Game.location.spawn)?.name[data.language]
               )
             })
+            if(entity.type == 'corpse'){
+              entity.send({type: 'msg', id: id, content: Bundle[data.language].events.dead})
+              entity.send({type: 'status', id: id, send: false, view: false})
+            }
           } else Game.entity.add({id, training: 1, language: data.language})
         }
         break;
@@ -138,7 +144,7 @@ wss.on('connection', function connection(ws, request, client) {
 
 
 process.on('uncaughtException', (err, origin) => {
-  con(`${err.code ? (`code: ${err.code}\n`) : ''}${err.message ? (`message: ${err.message}\n`) : ''}${err.stack}\n`, )
+  con(`${err.code ? (`code: ${err.code}\n`) : ''}${err.message ? (`message: ${err.message}\n`) : ''}${err.stack}\n`, 'crashes')
   setTimeout(process.exit, 1000)
 });
 //process.on('IGBREAK', ()=>{}).on('SIGHUP', ()=>{}).on('SIGINT', ()=>{})
